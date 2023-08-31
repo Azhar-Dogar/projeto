@@ -54,8 +54,8 @@ class AppTextStyles {
   }
 
 
-  static TextStyle subTitleMedium({Color color = Colors.black}){
-    return captionMedium(size: 14, color: color);
+  static TextStyle subTitleMedium({Color color = Colors.black,double size = 14}){
+    return captionMedium(size:size, color: color);
   }
   static TextStyle subTitleRegular({Color color = Colors.black}){
     return captionMedium(size: 14, color: color, fontWeight: FontWeight.w400);

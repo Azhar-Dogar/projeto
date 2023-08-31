@@ -61,9 +61,13 @@ class TextFieldWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (prefixWidget != null)
-                prefixWidget!,
-                const SizedBox(
-                  width: 12,
+                Row(
+                  children: [
+                    prefixWidget!,
+                    const SizedBox(
+                      width: 12,
+                    ),
+                  ],
                 ),
           Expanded(
             child: TextField(
