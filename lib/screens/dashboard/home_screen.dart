@@ -53,7 +53,7 @@ Widget card(){
           children: [
          Image(image: AssetImage(AppImages.clock),width: 60,),
           const MarginWidget(isHorizontal: true,),
-          Column(   //comment
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
             CustomText(text: "Next Class",fontSize: 14,fontWeight: FontWeight.w500,),
