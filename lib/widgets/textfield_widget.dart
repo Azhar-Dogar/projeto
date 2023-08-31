@@ -60,14 +60,10 @@ class TextFieldWidget extends StatelessWidget {
       child: Row(
         children: [
           if (prefixWidget != null)
-            Row(
-              children: [
                 prefixWidget!,
                 const SizedBox(
                   width: 12,
                 ),
-              ],
-            ),
           Expanded(
             child: TextField(
               enabled: enabled,
@@ -113,8 +109,8 @@ class TextFieldWidget extends StatelessWidget {
                 // isDense: true,
                 hintStyle: AppTextStyles.sanFransiscoDisplay(
                   fontSize: (fontSize != null) ? fontSize : 10,
-                  fontWeight: FontWeight.normal,
-                  color: CColors.textFieldHintColor,
+                  fontWeight: FontWeight.w400,
+                  color: CColors.textFieldBorder,
                 ),
               ),
             ),

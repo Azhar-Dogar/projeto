@@ -49,8 +49,8 @@ class AppTextStyles {
 
     );
   }
-  static TextStyle captionRegular({Color color = Colors.black}){
-    return captionMedium( color: color, fontWeight: FontWeight.w400);
+  static TextStyle captionRegular({Color color = Colors.black,double size = 12}){
+    return captionMedium( color: color, fontWeight: FontWeight.w400,size: size);
   }
 
 
