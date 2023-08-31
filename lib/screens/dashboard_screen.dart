@@ -116,7 +116,6 @@ class _DashBoardState extends State<DashBoard> {
               selectedIndex = value;
             });
             _controller.jumpToTab(value);
-
           },
         ),
         itemCount: 5,
