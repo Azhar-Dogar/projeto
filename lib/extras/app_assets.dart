@@ -26,7 +26,8 @@ class AppImages {
   static var autoImage = getName("auto_image.png");
   static var clock = getName("Clock.png");
   static var demo = getName("demo.jpeg");
-
+  static var instructor = getName("instructor.png");
+  static var instructor_1 = getName("instructor_1.png");
   static String getName(String name) {
     return "$main$name";
   }
