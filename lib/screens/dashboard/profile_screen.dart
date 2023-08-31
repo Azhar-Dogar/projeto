@@ -4,6 +4,7 @@ import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/extensions.dart';
+import 'package:projeto/extras/functions.dart';
 import 'package:projeto/screens/dashboard/profile/balance.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/profile_header_widget.dart';
 import 'package:projeto/widgets/button_widget.dart';
@@ -74,10 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             listTile("Meu Progresso", AppIcons.trending),
             listTile("Carteira", AppIcons.brief),
             listTile("Inserir Crédito", AppIcons.dollar, onTap: () {
-              PersistentNavBarNavigator.pushNewScreen(
-                context,
-                screen: const Balance(),
-              );
+              Functions.push(context, const Balance());
             }),
             const Expanded(child: SizedBox()),
             bottomOption("Termos e Condições"),

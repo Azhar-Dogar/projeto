@@ -16,7 +16,7 @@ class Balance extends StatelessWidget {
     double padding = context.width * 0.04;
 
     return Scaffold(
-      appBar: profileAppBar(),
+      appBar: profileAppBar("Pagamento"),
       body: Container(
         width: double.infinity,
         height: double.infinity,
