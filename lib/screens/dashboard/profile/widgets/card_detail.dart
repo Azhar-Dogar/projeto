@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/extensions.dart';
-import 'package:projeto/screens/dashboard/profile/add_new_card.dart';
+import 'package:projeto/screens/dashboard/profile/credit/add_new_card.dart';
 
 import '../../../../extras/app_assets.dart';
 import '../../../../extras/app_textstyles.dart';

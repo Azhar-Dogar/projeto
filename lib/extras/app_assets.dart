@@ -34,6 +34,8 @@ class AppImages {
   static var demo = getName("demo.jpeg");
   static var instructor = getName("instructor.png");
   static var instructor_1 = getName("instructor_1.png");
+  static var instructor_2 = getName("instructor_2.png");
+
 
   static String getName(String name) {
     return "$main$name";

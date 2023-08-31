@@ -5,7 +5,9 @@ import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/extensions.dart';
 import 'package:projeto/extras/functions.dart';
-import 'package:projeto/screens/dashboard/profile/balance.dart';
+import 'package:projeto/screens/dashboard/profile/credit/balance.dart';
+import 'package:projeto/screens/dashboard/profile/meu_progresso.dart';
+import 'package:projeto/screens/dashboard/profile/terms_condition.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/profile_header_widget.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
@@ -72,13 +74,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 isDetails = true;
               });
             }),
-            listTile("Meu Progresso", AppIcons.trending),
+            InkWell(
+              onTap: () {
+                context.push(child: const MeuProgresso());
+              },
+              child: listTile("Meu Progresso", AppIcons.trending),
+            ),
             listTile("Carteira", AppIcons.brief),
             listTile("Inserir Crédito", AppIcons.dollar, onTap: () {
               Functions.push(context, const Balance());
             }),
             const Expanded(child: SizedBox()),
-            bottomOption("Termos e Condições"),
+            InkWell(
+              onTap: (){
+                context.push(child: const TermsCondition());
+              },
+              child: bottomOption("Termos e Condições"),
+            ),
             const MarginWidget(),
             sairDoAppBtn(),
             const MarginWidget(factor: 2),
@@ -197,7 +209,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   EdgeInsets padding2() => const EdgeInsets.only(left: 4, right: 4);
-
 
   Widget details() {
     return Expanded(

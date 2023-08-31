@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:projeto/extras/extensions.dart';
+import 'package:projeto/screens/dashboard/reviews/review_instructor.dart';
 
 import '../extras/app_textstyles.dart';
 import '../extras/colors.dart';
@@ -82,9 +84,14 @@ class InstructorWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Icon(
-                      Icons.messenger_outline,
-                      color: CColors.primary,
+                    InkWell(
+                      onTap: (){
+                        context.push(child:  ReviewInstructor());
+                      },
+                      child: Icon(
+                        Icons.messenger_outline,
+                        color: CColors.primary,
+                      ),
                     )
                   ],
                 ),

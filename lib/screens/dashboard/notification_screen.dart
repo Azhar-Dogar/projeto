@@ -41,7 +41,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
               const DividerWidget(),
               notificationRow(AppIcons.approval),
               const DividerWidget(),
-              notificationRow(AppIcons.calendar),
+              InkWell(
+                onTap: (){
+
+                },
+                child: notificationRow(AppIcons.calendar),
+              ),
               const DividerWidget(),
             ],
           ),

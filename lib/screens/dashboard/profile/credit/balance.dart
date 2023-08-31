@@ -4,7 +4,7 @@ import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/extensions.dart';
 import 'package:projeto/extras/functions.dart';
-import 'package:projeto/screens/dashboard/profile/add_balance.dart';
+import 'package:projeto/screens/dashboard/profile/credit/add_balance.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/card_detail.dart';
 import 'package:projeto/widgets/c_profile_app_bar.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';

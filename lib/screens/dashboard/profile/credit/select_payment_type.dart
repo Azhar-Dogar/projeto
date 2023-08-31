@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/extensions.dart';
-import 'package:projeto/screens/dashboard/profile/add_new_card.dart';
-import 'package:projeto/screens/dashboard/profile/bar_code_scan.dart';
-import 'package:projeto/screens/dashboard/profile/success_message.dart';
+import 'package:projeto/screens/dashboard/profile/credit/add_new_card.dart';
+import 'package:projeto/screens/dashboard/profile/credit/bar_code_scan.dart';
+import 'package:projeto/screens/dashboard/profile/credit/success_message.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/card_detail.dart';
 import 'package:projeto/widgets/c_profile_app_bar.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 
-import '../../../extras/functions.dart';
-import '../../../widgets/divider_widget.dart';
-import 'add_balance.dart';
+import '../../../../extras/functions.dart';
+import '../../../../widgets/divider_widget.dart';
 
 class SelectPaymentType extends StatefulWidget {
   const SelectPaymentType({Key? key}) : super(key: key);
@@ -70,9 +69,11 @@ class _SelectPaymentTypeState extends State<SelectPaymentType> {
               ),
             ),
             const Expanded(child: SizedBox()),
-            ButtonWidget(name: "Selecionar", onPressed: () {
-              context.push(child: const SuccessMessage());
-            }),
+            ButtonWidget(
+                name: "Selecionar",
+                onPressed: () {
+                  context.push(child: const SuccessMessage());
+                }),
             const MarginWidget(),
           ],
         ),
