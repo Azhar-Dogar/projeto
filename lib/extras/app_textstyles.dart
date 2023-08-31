@@ -41,6 +41,22 @@ class AppTextStyles {
     return textStyle  ;
   }
 
+  static TextStyle captionMedium({Color color = Colors.black, double size = 12}){
+    return GoogleFonts.poppins(
+      fontWeight: FontWeight.w500,
+      fontSize: size,
+      color: color
+    );
+  }
+
+  static TextStyle subTitleMedium({Color color = Colors.black}){
+    return captionMedium(size: 14, color: color);
+  }
+
+  static TextStyle titleMedium({Color color = Colors.black}){
+    return captionMedium(size: 16, color: color);
+  }
+
   static TextStyle workSans({TextStyle? style}) {
     return GoogleFonts.workSans(textStyle: style);
   }

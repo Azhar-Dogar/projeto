@@ -22,6 +22,8 @@ class CColors {
   static var lightGrey = const Color(0xff5B5B5B);
   static var white = const Color(0xffFFFFFF);
   static var greyWhite = const Color(0xff979797);
+  static var divider = const Color(0xffEFEFF4);
+
 
 
   static var dark = const Color(0xff222428);
