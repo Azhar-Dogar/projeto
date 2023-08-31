@@ -9,17 +9,21 @@ class AppIcons {
   static var dollar = getName("dollar.png");
   static var profile = getName("profile.png");
   static var trending = getName("trending.png");
+  static var upload = getName("upload.png");
+  static var timer = getName("timer.png");
 
   static String getName(String name) {
     return "$main$name";
   }
 }
-class AppImages{
+
+class AppImages {
   static var main = "assets/images/";
   static var profile = getName("profile.png");
   static var autoImage = getName("auto_image.png");
   static var clock = getName("Clock.png");
   static var demo = getName("demo.jpeg");
+
   static String getName(String name) {
     return "$main$name";
   }

@@ -6,6 +6,8 @@ import 'package:projeto/extras/extensions.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 
+import '../../widgets/textfield_widget.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -16,45 +18,66 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late double width, height, padding;
 
+  TextEditingController name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController rgController = TextEditingController();
+  TextEditingController cnhController = TextEditingController();
+  String? groupValue;
+
+  TextEditingController cEPController = TextEditingController();
+  TextEditingController ruaController = TextEditingController();
+  TextEditingController bairroController = TextEditingController();
+  TextEditingController nDegController = TextEditingController();
+
+  bool isDetails = false, isEdit = false;
+
   @override
   Widget build(BuildContext context) {
     width = context.width;
     height = context.height;
-
     padding = width * 0.04;
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        actions: [
-          headerTrailing(),
-        ],
-      ),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
+          const MarginWidget(factor: 3),
+          Align(
+            alignment: Alignment.centerRight,
+            child: headerTrailing(),
+          ),
+          const MarginWidget(factor: 0.8),
           header(),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(left: padding, right: padding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  listTile("Meus dados", AppIcons.profile),
-                  listTile("Meu Progresso", AppIcons.trending),
-                  listTile("Carteira", AppIcons.brief),
-                  Expanded(child: listTile("Inserir Crédito", AppIcons.dollar)),
-                  bottomOption("Termos e Condições"),
-                  const MarginWidget(),
-                  bottomOption("Sair do App"),
-                  const MarginWidget(factor: 2),
-                ],
-              ),
-            ),
-          )
+          isDetails ? details() : profileMain(),
         ],
       ),
     );
   }
+
+  Widget profileMain() {
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.only(left: padding, right: padding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            listTile("Meus dados", AppIcons.profile, widget: details()),
+            listTile("Meu Progresso", AppIcons.trending),
+            listTile("Carteira", AppIcons.brief),
+            listTile("Inserir Crédito", AppIcons.dollar),
+            const Expanded(child: SizedBox()),
+            bottomOption("Termos e Condições"),
+            const MarginWidget(),
+            sairDoAppBtn(),
+            const MarginWidget(factor: 2),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget sairDoAppBtn() => bottomOption("Sair do App");
 
   Widget header() {
     return Container(
@@ -100,8 +123,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       left: 32, right: 32, top: 8, bottom: 8),
                   child: Row(
                     children: [
-                      const Icon(Icons.upload),
-                      const MarginWidget(isHorizontal: true, factor: 0.5),
+                      CustomAssetImage(
+                        path: AppIcons.upload,
+                        height: 20,
+                        width: 20,
+                      ),
+                      const MarginWidget(isHorizontal: true, factor: 0.7),
                       Text(
                         "Alterar foto",
                         style: AppTextStyles.captionMedium(
@@ -129,29 +156,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget listTile(String header, String icon) {
-    return Column(
-      children: [
-        const MarginWidget(),
-        Padding(
-          padding: padding2(),
-          child: Row(
-            children: [
-              CustomAssetImage(height: 24, path: icon),
-              const MarginWidget(isHorizontal: true),
-              Text(
-                header,
-                style: AppTextStyles.captionMedium(),
-              )
-            ],
+  Widget listTile(String header, String icon, {Widget? widget}) {
+    return InkWell(
+      onTap: () {
+        if (widget != null) {
+          setState(() {
+            isDetails = true;
+          });
+        }
+      },
+      child: Column(
+        children: [
+          const MarginWidget(),
+          Padding(
+            padding: padding2(),
+            child: Row(
+              children: [
+                CustomAssetImage(height: 24, path: icon),
+                const MarginWidget(isHorizontal: true),
+                Text(
+                  header,
+                  style: AppTextStyles.captionMedium(),
+                )
+              ],
+            ),
           ),
-        ),
-        const MarginWidget(factor: 0.8),
-        Divider(
-          color: CColors.divider,
-          height: 1,
-        ),
-      ],
+          const MarginWidget(factor: 0.8),
+          Divider(
+            color: CColors.divider,
+            height: 1,
+          ),
+        ],
+      ),
     );
   }
 
@@ -172,6 +208,105 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: AppTextStyles.subTitleMedium(color: CColors.primary),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget details() {
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.only(left: padding, right: padding),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const MarginWidget(),
+              TextFieldWidget(
+                label: "Name",
+                controller: name,
+                hint: '',
+                enabled: isEdit,
+              ),
+              const MarginWidget(),
+              TextFieldWidget(
+                  label: "E-mail",
+                  controller: email,
+                  hint: ', enabled: isEdit'),
+              const MarginWidget(),
+              TextFieldWidget(
+                  label: "Número de Contato",
+                  controller: phone,
+                  hint: '',
+                  enabled: isEdit),
+              const MarginWidget(),
+              TextFieldWidget(
+                  label: "RG/CPF",
+                  controller: rgController,
+                  hint: '',
+                  enabled: isEdit),
+              const MarginWidget(),
+              TextFieldWidget(
+                  label: "Nº CNH",
+                  controller: cnhController,
+                  hint: '',
+                  enabled: isEdit),
+              const MarginWidget(),
+              Row(
+                children: [
+                  CustomAssetImage(
+                    path: AppIcons.timer,
+                    height: 24,
+                  ),
+                  const MarginWidget(isHorizontal: true),
+                  Text(
+                    "CNH em análise",
+                    style: AppTextStyles.captionMedium(color: CColors.primary),
+                  ),
+                ],
+              ),
+              const MarginWidget(),
+              Text(
+                "Endereço",
+                style: AppTextStyles.titleMedium(),
+              ),
+              const MarginWidget(),
+              TextFieldWidget(
+                  label: "CEP",
+                  controller: cEPController,
+                  hint: '',
+                  enabled: isEdit),
+              const MarginWidget(),
+              TextFieldWidget(
+                  label: "Rua",
+                  controller: ruaController,
+                  hint: '',
+                  enabled: isEdit),
+              const MarginWidget(),
+              TextFieldWidget(
+                  label: "Bairro",
+                  controller: bairroController,
+                  hint: '',
+                  enabled: isEdit),
+              const MarginWidget(),
+              TextFieldWidget(
+                  label: "Nº",
+                  controller: nDegController,
+                  hint: '',
+                  enabled: isEdit),
+              const MarginWidget(factor: 2),
+              Center(
+                child: Column(
+                  children: [
+                    bottomOption("Editar dados"),
+                    const MarginWidget(),
+                    sairDoAppBtn(),
+                    const MarginWidget(),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -22,6 +22,7 @@ class TextFieldWidget extends StatelessWidget {
     this.onSubmitted,
     this.suffixIcon,
     this.height,
+    this.enabled,
     Key? key,
   }) : super(key: key);
   void Function(String)? onChanged;
@@ -41,6 +42,8 @@ class TextFieldWidget extends StatelessWidget {
   Widget? prefixWidget;
   double? fontSize;
   Widget? suffixIcon;
+  bool? enabled;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -49,7 +52,7 @@ class TextFieldWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(
           8,
         ),
-        color: (backColor != null) ? backColor : Colors.transparent,
+        color: backColor ?? Colors.transparent,
       ),
       // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       child: Row(
@@ -65,6 +68,7 @@ class TextFieldWidget extends StatelessWidget {
             ),
           Expanded(
             child: TextField(
+              enabled: enabled,
               keyboardType: textInputType,
               inputFormatters: [
                 if (textInputType == TextInputType.phone) ...[
@@ -85,18 +89,18 @@ class TextFieldWidget extends StatelessWidget {
                 suffixIcon: suffixIcon,
                 labelText: label,
                 labelStyle: AppTextStyles.poppins(
-                    style:  TextStyle(
+                    style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
-                        color: labelColor??borderColor)),
+                        color: labelColor ?? CColors.labelColor)),
                 //contentPadding: EdgeInsets.zero,
                 hintText: hint,
-                enabledBorder:  OutlineInputBorder(
+                enabledBorder: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    borderSide: BorderSide(color: borderColor??Colors.white)),
-                focusedBorder:  OutlineInputBorder(
+                    borderSide: BorderSide(color: borderColor ?? CColors.textFieldBorder)),
+                focusedBorder: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    borderSide: BorderSide(color: borderColor??Colors.white)),
+                    borderSide: BorderSide(color: borderColor ?? CColors.textFieldBorder)),
                 // border: const OutlineInputBorder(
                 //     borderRadius: BorderRadius.all(Radius.circular(8)),
                 //     borderSide: BorderSide(color: Colors.white)
