@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../extras/app_assets.dart';
 import '../extras/app_textstyles.dart';
 import '../extras/colors.dart';
+import 'custom_asset_image.dart';
 
 class TextFieldWidget extends StatelessWidget {
   TextFieldWidget({
@@ -86,7 +88,13 @@ class TextFieldWidget extends StatelessWidget {
                 color: labelColor,
               ),
               decoration: InputDecoration(
-                suffixIcon: suffixIcon,
+                suffixIcon: suffixIcon ?? (enabled != null && enabled!  ? Transform.scale(
+                    scale: 0.5,
+                    child: CustomAssetImage(
+                      path: AppIcons.edit,
+                      height: 10,
+                      width: 10,
+                    )) : null) ,
                 labelText: label,
                 labelStyle: AppTextStyles.poppins(
                     style: TextStyle(
@@ -95,12 +103,9 @@ class TextFieldWidget extends StatelessWidget {
                         color: labelColor ?? CColors.labelColor)),
                 //contentPadding: EdgeInsets.zero,
                 hintText: hint,
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    borderSide: BorderSide(color: borderColor ?? CColors.textFieldBorder)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    borderSide: BorderSide(color: borderColor ?? CColors.textFieldBorder)),
+                disabledBorder: border(),
+                enabledBorder: border(),
+                focusedBorder: border(),
                 // border: const OutlineInputBorder(
                 //     borderRadius: BorderRadius.all(Radius.circular(8)),
                 //     borderSide: BorderSide(color: Colors.white)
@@ -114,9 +119,15 @@ class TextFieldWidget extends StatelessWidget {
               ),
             ),
           ),
-          suffix ?? Container()
+          // suffix ?? Container()
         ],
       ),
     );
+  }
+
+  OutlineInputBorder border() {
+    return OutlineInputBorder(
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(color: borderColor ?? CColors.textFieldBorder));
   }
 }

@@ -11,6 +11,7 @@ class AppIcons {
   static var trending = getName("trending.png");
   static var upload = getName("upload.png");
   static var timer = getName("timer.png");
+  static var edit = getName("edit.png");
 
   static String getName(String name) {
     return "$main$name";

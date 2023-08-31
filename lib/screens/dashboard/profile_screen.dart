@@ -3,6 +3,7 @@ import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/extensions.dart';
+import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 
@@ -231,6 +232,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               TextFieldWidget(
                   label: "E-mail",
                   controller: email,
+                  enabled: isEdit,
                   hint: ', enabled: isEdit'),
               const MarginWidget(),
               TextFieldWidget(
@@ -297,7 +299,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Center(
                 child: Column(
                   children: [
-                    bottomOption("Editar dados"),
+                    if (isEdit) ...[
+                      ButtonWidget(
+                          name: "Salvar Alterações",
+                          onPressed: () {
+                            setState(() {
+                              isEdit = false;
+                              isDetails = false;
+                            });
+                          }),
+                    ] else ...[
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            isEdit = !isEdit;
+                          });
+                        },
+                        child: bottomOption("Editar dados"),
+                      ),
+                    ],
                     const MarginWidget(),
                     sairDoAppBtn(),
                     const MarginWidget(),
