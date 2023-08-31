@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/extensions.dart';
+import 'package:projeto/screens/dashboard/profile/balance.dart';
+import 'package:projeto/screens/dashboard/profile/widgets/profile_header_widget.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/margin_widget.dart';
@@ -44,9 +47,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Column(
         children: [
           const MarginWidget(factor: 3),
-          Align(
+          const Align(
             alignment: Alignment.centerRight,
-            child: headerTrailing(),
+            child: ProfileHeaderWidget(),
           ),
           const MarginWidget(factor: 0.8),
           header(),
@@ -63,10 +66,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            listTile("Meus dados", AppIcons.profile, widget: details()),
+            listTile("Meus dados", AppIcons.profile, onTap: () {
+              setState(() {
+                isDetails = true;
+              });
+            }),
             listTile("Meu Progresso", AppIcons.trending),
             listTile("Carteira", AppIcons.brief),
-            listTile("Inserir Crédito", AppIcons.dollar),
+            listTile("Inserir Crédito", AppIcons.dollar, onTap: () {
+              PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: const Balance(),
+              );
+            }),
             const Expanded(child: SizedBox()),
             bottomOption("Termos e Condições"),
             const MarginWidget(),
@@ -157,15 +169,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget listTile(String header, String icon, {Widget? widget}) {
+  Widget listTile(String header, String icon, {Function()? onTap}) {
     return InkWell(
-      onTap: () {
-        if (widget != null) {
-          setState(() {
-            isDetails = true;
-          });
-        }
-      },
+      onTap: onTap,
       child: Column(
         children: [
           const MarginWidget(),
@@ -194,24 +200,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   EdgeInsets padding2() => const EdgeInsets.only(left: 4, right: 4);
 
-  Widget headerTrailing() {
-    return Padding(
-      padding: EdgeInsets.only(right: width * 0.04),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            "Crédito",
-            style: AppTextStyles.captionMedium(),
-          ),
-          Text(
-            "R\$ 800,00",
-            style: AppTextStyles.subTitleMedium(color: CColors.primary),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget details() {
     return Expanded(

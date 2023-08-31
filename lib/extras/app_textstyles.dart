@@ -41,11 +41,12 @@ class AppTextStyles {
     return textStyle  ;
   }
 
-  static TextStyle captionMedium({Color color = Colors.black, double size = 12}){
+  static TextStyle captionMedium({Color color = Colors.black, double size = 12, FontWeight fontWeight = FontWeight.w500}){
     return GoogleFonts.poppins(
-      fontWeight: FontWeight.w500,
+      fontWeight: fontWeight,
       fontSize: size,
-      color: color
+      color: color,
+
     );
   }
 
@@ -53,8 +54,12 @@ class AppTextStyles {
     return captionMedium(size: 14, color: color);
   }
 
-  static TextStyle titleMedium({Color color = Colors.black}){
-    return captionMedium(size: 16, color: color);
+  static TextStyle h4Medium({Color color = Colors.black}){
+    return captionMedium(size: 28, color: color);
+  }
+
+  static TextStyle titleMedium({Color color = Colors.black, FontWeight weight = FontWeight.w500}){
+    return captionMedium(size: 16, color: color, fontWeight: weight);
   }
 
   static TextStyle workSans({TextStyle? style}) {
