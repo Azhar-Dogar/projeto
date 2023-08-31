@@ -5,6 +5,7 @@ import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/extensions.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/screens/dashboard/profile/add_balance.dart';
+import 'package:projeto/screens/dashboard/profile/widgets/card_detail.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/prodileAppBar.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/divider_widget.dart';
@@ -54,9 +55,11 @@ class Balance extends StatelessWidget {
               style: AppTextStyles.subTitleMedium(),
             ),
             const MarginWidget(factor: 2),
-            cardDetail(isPrinciple: true),
+            const CardDetail(isPrinciple: true),
+            const DividerWidget(),
             const MarginWidget(),
-            cardDetail(),
+            const CardDetail(),
+            const DividerWidget(),
             const MarginWidget(factor: 2),
             InkWell(
               onTap: (){
@@ -80,67 +83,8 @@ class Balance extends StatelessWidget {
     );
   }
 
-  Widget cardDetail({bool isPrinciple = false}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: CColors.paymentContainer,
-              ),
-              alignment: Alignment.center,
-              child: CustomAssetImage(
-                path: AppIcons.visa,
-                width: 24,
-              ),
-            ),
-            const MarginWidget(isHorizontal: true),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "**** **** **** 1234",
-                    style: AppTextStyles.captionMedium(),
-                  ),
-                  const MarginWidget(factor: 0.5),
-                  Text(
-                    "Crédito",
-                    style: AppTextStyles.captionMedium(),
-                  ),
-                ],
-              ),
-            ),
-            if (isPrinciple) principle(),
-          ],
-        ),
-        const MarginWidget(factor: 0.7),
-        const DividerWidget(),
-      ],
-    );
-  }
 
-  Widget principle() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4, right: 4),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        padding: const EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8),
-        child: Text(
-          "Principal",
-          style: AppTextStyles.captionRegular(color: Colors.white),
-        ),
-      ),
-    );
-  }
+
 
   Widget topWidget() {
     return Column(
