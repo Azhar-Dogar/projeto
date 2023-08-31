@@ -115,6 +115,8 @@ class _DashBoardState extends State<DashBoard> {
             setState(() {
               selectedIndex = value;
             });
+            _controller.jumpToTab(value);
+
           },
         ),
         itemCount: 5,
@@ -195,6 +197,7 @@ class CustomNavBarWidget extends StatelessWidget {
         ),
       );
 }
+
 // class DashBoard extends StatefulWidget {
 //   const DashBoard({super.key});
 //
