@@ -12,6 +12,8 @@ class AppIcons {
   static var upload = getName("upload.png");
   static var timer = getName("timer.png");
   static var edit = getName("edit.png");
+  static var visa = getName("visa.png");
+  static var master = getName("masterCard.png");
 
   static String getName(String name) {
     return "$main$name";

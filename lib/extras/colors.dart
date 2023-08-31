@@ -23,6 +23,11 @@ class CColors {
   static var white = const Color(0xffFFFFFF);
   static var greyWhite = const Color(0xff979797);
   static var divider = const Color(0xffEFEFF4);
+  static var paymentContainer = const Color(0xffF1F2F6);
+
+
+
+
 
   static var labelColor = const Color(0xff393939);
 
