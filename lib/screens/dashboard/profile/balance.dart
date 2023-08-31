@@ -3,6 +3,8 @@ import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/extensions.dart';
+import 'package:projeto/extras/functions.dart';
+import 'package:projeto/screens/dashboard/profile/add_balance.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/prodileAppBar.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/divider_widget.dart';
@@ -24,14 +26,14 @@ class Balance extends StatelessWidget {
         child: Column(
           children: [
             topWidget(),
-            cardDetailSection(padding),
+            cardDetailSection(padding,context),
           ],
         ),
       ),
     );
   }
 
-  Widget cardDetailSection(double padding) {
+  Widget cardDetailSection(double padding, BuildContext context) {
     return Expanded(
       child: Container(
         width: double.infinity,
@@ -56,16 +58,21 @@ class Balance extends StatelessWidget {
             const MarginWidget(),
             cardDetail(),
             const MarginWidget(factor: 2),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.add),
-                const MarginWidget(isHorizontal: true),
-                Text(
-                  "Adicionar Cartão",
-                  style: AppTextStyles.captionMedium(color: CColors.primary),
-                )
-              ],
+            InkWell(
+              onTap: (){
+                Functions.push(context, const AddBalance());
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.add),
+                  const MarginWidget(isHorizontal: true),
+                  Text(
+                    "Adicionar Cartão",
+                    style: AppTextStyles.captionMedium(color: CColors.primary),
+                  )
+                ],
+              ),
             )
           ],
         ),
