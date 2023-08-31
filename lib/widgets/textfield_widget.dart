@@ -60,9 +60,13 @@ class TextFieldWidget extends StatelessWidget {
       child: Row(
         children: [
           if (prefixWidget != null)
-                prefixWidget!,
-                const SizedBox(
-                  width: 12,
+                Row(
+                  children: [
+                    prefixWidget!,
+                    const SizedBox(
+                      width: 12,
+                    ),
+                  ],
                 ),
           Expanded(
             child: TextField(

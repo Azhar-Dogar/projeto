@@ -3,8 +3,12 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/extensions.dart';
+import 'package:projeto/extras/functions.dart';
+import 'package:projeto/screens/dashboard/home/instructors_screen.dart';
+import 'package:projeto/screens/dashboard/home/scheduling.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_text.dart';
+import 'package:projeto/widgets/instructor_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
 
@@ -42,120 +46,25 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             const MarginWidget(),
-            Text(
-              "Search instructors near me",
-              style: AppTextStyles.captionMedium(color: CColors.primary),
+            InkWell(
+              onTap: (){
+                Functions.push(context, InstructorsScreen());
+              },
+              child: Text(
+                "Search instructors near me",
+                style: AppTextStyles.captionMedium(color: CColors.primary),
+              ),
             ),
             searchBar(),
-            instructor("Annette Johnson",AppImages.instructor),
-            MarginWidget(),
-            instructor("Jacob Jones", AppImages.instructor_1)
+            InstructorWidget(name:"Annette Johnson",imagePath:AppImages.instructor,showButton: true,),
+            const MarginWidget(),
+            InstructorWidget(name:"Jacob Jones",imagePath: AppImages.instructor_1,showButton: true,)
           ],
         ),
       ),
     );
   }
 
-  Widget instructor(String name,String imagePath) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Card(
-         color: CColors.white,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              color: CColors.dashboard,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image(
-                      image: AssetImage(imagePath),
-                      width: 30,
-                    ),
-                    const MarginWidget(
-                      isHorizontal: true,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                name,
-                                style: AppTextStyles.subTitleMedium(),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(left: 12),
-                                decoration: BoxDecoration(
-                                    color: CColors.primary, shape: BoxShape.circle),
-                                width: 15,
-                                height: 15,
-                              )
-                            ],
-                          ),
-                          RatingBar.builder(
-                            itemSize: 18,
-                            initialRating: 3,
-                            minRating: 1,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
-                            itemBuilder: (context, _) => const Icon(
-                              Icons.star,
-                              size: 10,
-                              color: Colors.amber,
-                            ),
-                            onRatingUpdate: (rating) {
-                              print(rating);
-                            },
-                          )
-                        ],
-                      ),
-                    ),
-                    Icon(Icons.messenger_outline,color: CColors.primary,)
-                  ],
-                ),
-              ),
-            ),
-            Divider(color: CColors.divider,height: 1,),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-               info("Car", "Celtic, 2018"),
-                  Divider(color: CColors.divider,height: 1,),
-                  info("Address", "105 William St, Chicago, US"),
-                  Divider(color: CColors.divider,height: 1,),
-                  info("Hora / Aula", "R\$ 80,00"),
-                  Divider(color: CColors.divider,height: 1,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: ButtonWidget(name: "To schedule", onPressed: (){}),
-                  )
-              ],),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-  Widget info(String name,String value){
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-        Text(name,style: AppTextStyles.captionRegular(),),
-        Text(value,style: AppTextStyles.captionRegular(size: 14),)
-      ],),
-    );
-  }
   Widget searchBar() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -165,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         child: TextFieldWidget(
           fontSize: 12,
-          hint: "Search instructors near me",
+          hint: "Enter an instructor's name",
           prefixWidget: Icon(
             Icons.search,
             color: CColors.textFieldBorder,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class CColors {
   static var primary = const Color(0xff00A847);
   static var borderBlue = const Color(0xff5B9FE5);
+  static var checkBackground = const Color(0xff00A847);
   static var dashboard = const Color(0xffF7F7F7);
   static var textBlue = const Color(0xff399BFF);
   static var textFieldBorder = const Color(0xffACACAC);
