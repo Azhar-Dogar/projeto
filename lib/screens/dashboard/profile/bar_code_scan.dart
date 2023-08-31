@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/extensions.dart';
-import 'package:projeto/screens/dashboard/profile/widgets/prodileAppBar.dart';
+import 'package:projeto/widgets/c_profile_app_bar.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
@@ -25,7 +25,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
     padding = width * 0.04;
 
     return Scaffold(
-      appBar: profileAppBar("Inserir Crédito"),
+      appBar: CustomAppBar("Inserir Crédito"),
       body: Padding(
         padding: EdgeInsets.only(left: padding, right: padding),
         child: Center(

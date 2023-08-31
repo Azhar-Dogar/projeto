@@ -16,6 +16,10 @@ class AppIcons {
   static var master = getName("masterCard.png");
   static var qr = getName("qr.png");
   static var copy = getName("copy.png");
+  static var send = getName("send.png");
+  static var message = getName("message.png");
+  static var setting = getName("setting.png");
+  static var approval = getName("approval.png");
 
   static String getName(String name) {
     return "$main$name";
@@ -30,6 +34,7 @@ class AppImages {
   static var demo = getName("demo.jpeg");
   static var instructor = getName("instructor.png");
   static var instructor_1 = getName("instructor_1.png");
+
   static String getName(String name) {
     return "$main$name";
   }

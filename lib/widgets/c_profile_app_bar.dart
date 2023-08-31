@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/profile_header_widget.dart';
-import '../../../../extras/app_textstyles.dart';
+import '../extras/app_textstyles.dart';
 
-AppBar profileAppBar(String str) {
+AppBar CustomAppBar(String str) {
   return AppBar(
     title: Text(
       str,

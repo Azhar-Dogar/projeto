@@ -6,7 +6,7 @@ import 'package:projeto/extras/extensions.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/screens/dashboard/profile/add_balance.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/card_detail.dart';
-import 'package:projeto/screens/dashboard/profile/widgets/prodileAppBar.dart';
+import 'package:projeto/widgets/c_profile_app_bar.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/divider_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
@@ -19,7 +19,7 @@ class Balance extends StatelessWidget {
     double padding = context.width * 0.04;
 
     return Scaffold(
-      appBar: profileAppBar("Pagamento"),
+      appBar: CustomAppBar("Pagamento"),
       body: Container(
         width: double.infinity,
         height: double.infinity,

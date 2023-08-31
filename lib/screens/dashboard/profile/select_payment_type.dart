@@ -4,8 +4,9 @@ import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/extensions.dart';
 import 'package:projeto/screens/dashboard/profile/add_new_card.dart';
 import 'package:projeto/screens/dashboard/profile/bar_code_scan.dart';
+import 'package:projeto/screens/dashboard/profile/success_message.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/card_detail.dart';
-import 'package:projeto/screens/dashboard/profile/widgets/prodileAppBar.dart';
+import 'package:projeto/widgets/c_profile_app_bar.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 
@@ -28,7 +29,7 @@ class _SelectPaymentTypeState extends State<SelectPaymentType> {
     width = context.width;
     padding = width * 0.04;
     return Scaffold(
-      appBar: profileAppBar("Inserir Crédito"),
+      appBar: CustomAppBar("Inserir Crédito"),
       body: Padding(
         padding: EdgeInsets.only(left: padding, right: padding),
         child: Column(
@@ -69,7 +70,9 @@ class _SelectPaymentTypeState extends State<SelectPaymentType> {
               ),
             ),
             const Expanded(child: SizedBox()),
-            ButtonWidget(name: "Selecionar", onPressed: () {}),
+            ButtonWidget(name: "Selecionar", onPressed: () {
+              context.push(child: const SuccessMessage());
+            }),
             const MarginWidget(),
           ],
         ),

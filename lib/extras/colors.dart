@@ -18,7 +18,7 @@ class CColors {
   static var textColor = const Color(0xff4F4F4F);
   static var blue = const Color(0xff3880FF);
   static var lightBlue = const Color(0xff99D8FF);
-
+  static const shadowColor = Color(0x511e1e1e);
   static var lightGrey = const Color(0xff5B5B5B);
   static var white = const Color(0xffFFFFFF);
   static var greyWhite = const Color(0xff979797);

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/extras/extensions.dart';
+import 'package:projeto/screens/dashboard/profile/add_new_card.dart';
 
 import '../../../../extras/app_assets.dart';
 import '../../../../extras/app_textstyles.dart';
@@ -57,12 +59,16 @@ class CardDetail extends StatelessWidget {
                     ),
                     const MarginWidget(isHorizontal: true,factor: 1.5),
                     if(isEdit)
-                      CustomAssetImage(
-                        path: AppIcons.edit,
-                        height: 20,
-                        width: 20,
+                      InkWell(
+                        onTap: (){
+                          context.push(child: AddNewCard(isEdit : true));
+                        },
+                        child: CustomAssetImage(
+                          path: AppIcons.edit,
+                          height: 20,
+                          width: 20,
+                        ),
                       )
-
                   ],
                 ),
               ),

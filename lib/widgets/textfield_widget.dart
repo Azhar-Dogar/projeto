@@ -58,6 +58,7 @@ class TextFieldWidget extends StatelessWidget {
       ),
       // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (prefixWidget != null)
                 prefixWidget!,

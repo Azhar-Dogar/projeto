@@ -5,14 +5,16 @@ import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/extensions.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/screens/dashboard/profile/success_message.dart';
-import 'package:projeto/screens/dashboard/profile/widgets/prodileAppBar.dart';
+import 'package:projeto/widgets/c_profile_app_bar.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
 
 class AddNewCard extends StatefulWidget {
-  const AddNewCard({Key? key}) : super(key: key);
+  const AddNewCard({Key? key, this.isEdit = false}) : super(key: key);
+
+  final bool isEdit;
 
   @override
   State<AddNewCard> createState() => _AddNewCardState();
@@ -34,7 +36,7 @@ class _AddNewCardState extends State<AddNewCard> {
     padding = width * 0.04;
 
     return Scaffold(
-      appBar: profileAppBar("Forma de Pagamento"),
+      appBar: CustomAppBar("Forma de Pagamento"),
       body: Padding(
         padding: EdgeInsets.only(left: padding, right: padding),
         child: Column(
@@ -48,36 +50,38 @@ class _AddNewCardState extends State<AddNewCard> {
             const MarginWidget(factor: 1.5),
             cardSketch(),
             const MarginWidget(),
-            TextFieldWidget(
-              controller: numberC,
-              hint: '',
-              label: 'Número do Cartão',
-            ),
-            const MarginWidget(),
-            TextFieldWidget(
-              controller: nameC,
-              hint: '',
-              label: 'Nome do Titular',
-            ),
-            const MarginWidget(),
-            Row(
-              children: [
-                Expanded(
-                    child: TextFieldWidget(
-                  controller: validityC,
-                  hint: '',
-                  label: 'Validade',
-                )),
-                const MarginWidget(isHorizontal: true),
-                Expanded(
-                    child: TextFieldWidget(
-                  controller: codeC,
-                  hint: '',
-                  label: 'CVV',
-                )),
-              ],
-            ),
-            const MarginWidget(),
+            if (!widget.isEdit) ...[
+              TextFieldWidget(
+                controller: numberC,
+                hint: '',
+                label: 'Número do Cartão',
+              ),
+              const MarginWidget(),
+              TextFieldWidget(
+                controller: nameC,
+                hint: '',
+                label: 'Nome do Titular',
+              ),
+              const MarginWidget(),
+              Row(
+                children: [
+                  Expanded(
+                      child: TextFieldWidget(
+                    controller: validityC,
+                    hint: '',
+                    label: 'Validade',
+                  )),
+                  const MarginWidget(isHorizontal: true),
+                  Expanded(
+                      child: TextFieldWidget(
+                    controller: codeC,
+                    hint: '',
+                    label: 'CVV',
+                  )),
+                ],
+              ),
+              const MarginWidget(),
+            ],
             Row(
               children: [
                 Switch(
@@ -95,9 +99,19 @@ class _AddNewCardState extends State<AddNewCard> {
                 )
               ],
             ),
+            if (widget.isEdit) ...[
+              const MarginWidget(),
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Excluir Cartão",
+                  style: AppTextStyles.captionMedium(color: CColors.primary),
+                ),
+              ),
+            ],
             const Expanded(child: SizedBox()),
             ButtonWidget(
-                name: "Adicionar Cartão",
+                name: widget.isEdit ? "Salvar" : "Adicionar Cartão",
                 onPressed: () {
                   Functions.push(context, const SuccessMessage());
                 }),

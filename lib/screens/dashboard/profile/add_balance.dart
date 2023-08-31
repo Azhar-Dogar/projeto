@@ -3,7 +3,7 @@ import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/extensions.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/screens/dashboard/profile/select_payment_type.dart';
-import 'package:projeto/screens/dashboard/profile/widgets/prodileAppBar.dart';
+import 'package:projeto/widgets/c_profile_app_bar.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
@@ -27,7 +27,7 @@ class _AddBalanceState extends State<AddBalance> {
     padding = width * 0.04;
 
     return Scaffold(
-      appBar: profileAppBar("Inserir Crédito"),
+      appBar: CustomAppBar("Inserir Crédito"),
       body: Padding(
         padding: EdgeInsets.only(left: padding, right: padding),
         child: Column(
