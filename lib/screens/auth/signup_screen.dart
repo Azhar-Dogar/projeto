@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/extensions.dart';
@@ -22,136 +23,173 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController phone = TextEditingController();
   TextEditingController rgController = TextEditingController();
   TextEditingController cnhController = TextEditingController();
-  String? groupValue;
+  String userType = "student";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const MarginWidget(
-                factor: 3,
-              ),
-              CustomText(
-                text: "Registration",
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
-              ),
-              const MarginWidget(
-                factor: 0.3,
-              ),
-              CustomText(
-                text: "Include your details below",
-                fontSize: 16,
-                fontWeight: FontWeight.w300,
-              ),
-              const MarginWidget(
-                factor: 1,
-              ),
-              CustomText(
-                text: "personal data",
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
-              ),
-              const MarginWidget(
-                factor: 1,
-              ),
-              TextFieldWidget(
-                  borderColor: CColors.textFieldBorder,
-                  backColor: Colors.transparent,
-                  label: "Full Name",
-                  controller: name,
-                  hint: ''),
-              const MarginWidget(
-                factor: 1,
-              ),
-              TextFieldWidget(
-                  borderColor: CColors.textFieldBorder,
-                  backColor: Colors.transparent,
-                  label: "E-mail",
-                  controller: email,
-                  hint: ''),
-              const MarginWidget(
-                factor: 1,
-              ),
-              TextFieldWidget(
-                  borderColor: CColors.textFieldBorder,
-                  backColor: Colors.transparent,
-                  label: "Contact Number",
-                  controller: phone,
-                  hint: ''),
-              const MarginWidget(
-                factor: 1,
-              ),
-              TextFieldWidget(
-                  borderColor: CColors.textFieldBorder,
-                  backColor: Colors.transparent,
-                  label: "RG/CPF",
-                  controller: rgController,
-                  hint: ''),
-              const MarginWidget(
-                factor: 1,
-              ),
-              TextFieldWidget(
-                  borderColor: CColors.textFieldBorder,
-                  backColor: Colors.transparent,
-                  label: "Nº CNH",
-                  controller: cnhController,
-                  hint: ''),
-              const MarginWidget(
-                factor: 1,
-              ),
-              TextFieldWidget(
-                  borderColor: CColors.textFieldBorder,
-                  backColor: Colors.transparent,
-                  label: "Driver's License Category",
-                  controller: cnhController,
-                  hint: ''),
-              const MarginWidget(
-                factor: 0.5,
-              ),
-              uploadDocument(),
-              const MarginWidget(
-                factor: 1.5,
-              ),
-              addressForm(),
-              const MarginWidget(
-                factor: 1.5,
-              ),
-              bankData(),
-              const MarginWidget(
-                factor: 1.5,
-              ),
-              radioButton(),
-              const MarginWidget(
-                factor: 1.5,
-              ),
-              ButtonWidget(name: "Register", onPressed: (){
-                context.push(child: RegisterPassword());
-              })
-            ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const MarginWidget(
+                  factor: 1,
+                ),
+                CustomText(
+                  text: "Cadastro",
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                ),
+                const MarginWidget(
+                  factor: 0.3,
+                ),
+                CustomText(
+                  text: "Inclua seus dados abaixo",
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300,
+                ),
+                const MarginWidget(
+                  factor: 1,
+                ),
+                CustomText(
+                  text: "Dados pessoais",
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                ),
+                const MarginWidget(
+                  factor: 1,
+                ),
+                TextFieldWidget(
+                    borderColor: CColors.textFieldBorder,
+                    backColor: Colors.transparent,
+                    label: "Nome Completo",
+                    controller: name,
+                    hint: ''),
+                const MarginWidget(
+                  factor: 1,
+                ),
+                TextFieldWidget(
+                    borderColor: CColors.textFieldBorder,
+                    backColor: Colors.transparent,
+                    label: "E-mail",
+                    controller: email,
+                    hint: ''),
+                const MarginWidget(
+                  factor: 1,
+                ),
+                TextFieldWidget(
+                    borderColor: CColors.textFieldBorder,
+                    backColor: Colors.transparent,
+                    label: "Número de Contato",
+                    controller: phone,
+                    hint: ''),
+                const MarginWidget(
+                  factor: 1,
+                ),
+                TextFieldWidget(
+                    borderColor: CColors.textFieldBorder,
+                    backColor: Colors.transparent,
+                    label: "RG / CPF",
+                    controller: rgController,
+                    hint: ''),
+                const MarginWidget(
+                  factor: 1,
+                ),
+                TextFieldWidget(
+                    borderColor: CColors.textFieldBorder,
+                    backColor: Colors.transparent,
+                    label: "Nº CNH",
+                    controller: cnhController,
+                    hint: ''),
+                const MarginWidget(
+                  factor: 1,
+                ),
+                TextFieldWidget(
+                    borderColor: CColors.textFieldBorder,
+                    backColor: Colors.transparent,
+                    label: "Categoria da CNH",
+                    controller: cnhController,
+                    hint: ''),
+                const MarginWidget(
+                  factor: 0.5,
+                ),
+                uploadDocument(),
+                const MarginWidget(
+                  factor: 1.5,
+                ),
+                addressForm(),
+                const MarginWidget(
+                  factor: 1.5,
+                ),
+                if (userType == "student" || carType == "own") bankData(),
+                const MarginWidget(
+                  factor: 1.5,
+                ),
+                userTypeWidget(),
+                const MarginWidget(
+                  factor: 1.5,
+                ),
+                if (userType == "instructor") ...[
+                  vehicleWidget(),
+                  carTypeWidget(),
+                  const MarginWidget(
+                    factor: 1.5,
+                  ),
+                  if (carType == "own") ...[
+                    dualCommandVehicle(),
+                    const MarginWidget(
+                      factor: 1.5,
+                    ),
+                  ],
+                  documentsWidget(),
+                  const MarginWidget(
+                    factor: 1.5,
+                  ),
+                  expectedBudgetWidget(),
+                  const MarginWidget(
+                    factor: 1.5,
+                  ),
+                  if (carType == "rented") ...[
+                    bankData(),
+                    const MarginWidget(
+                      factor: 1.5,
+                    ),
+                  ],
+                ],
+                ButtonWidget(
+                  name: "Register",
+                  onPressed: () {
+                    context.push(
+                      child: RegisterPassword(
+                        isInstructor: userType == "instructor",
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget radioButton() {
+  Widget userTypeWidget() {
     return Row(
       children: [
         Expanded(
           child: RadioListTile(
               contentPadding: EdgeInsets.zero,
               visualDensity: const VisualDensity(horizontal: -4),
-              title: const Text("I'm a student"),
+              title: const Text("Sou aluno"),
               value: "student",
-              groupValue: groupValue,
+              groupValue: userType,
               onChanged: (v) {
                 setState(() {
-                  groupValue = v.toString();
+                  userType = v.toString();
                 });
               }),
         ),
@@ -160,16 +198,16 @@ class _SignupScreenState extends State<SignupScreen> {
               contentPadding: EdgeInsets.zero,
               visualDensity: const VisualDensity(horizontal: -4),
               title: Text(
-                "I'm an instructor",
+                "Sou instrutor",
                 style: AppTextStyles.poppins(
-                    style:
-                        const TextStyle(fontSize: 14, fontWeight: FontWeight.w400)),
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w400)),
               ),
               value: "instructor",
-              groupValue: groupValue,
+              groupValue: userType,
               onChanged: (v) {
                 setState(() {
-                  groupValue = v;
+                  userType = v ?? "student";
                 });
               }),
         ),
@@ -178,17 +216,25 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget uploadDocument() {
+    return documentWidget(
+        "assets/icons/upload.png", "Carregar documento da CNH");
+  }
+
+  Widget documentWidget(
+    String image,
+    String text,
+  ) {
     return Row(
       children: [
-        const Image(
-          image: AssetImage("assets/icons/upload.png"),
+        Image(
+          image: AssetImage(image),
           width: 20,
         ),
         const MarginWidget(
           isHorizontal: true,
         ),
         CustomText(
-          text: "Upload CNH document",
+          text: text,
           fontSize: 12,
           fontWeight: FontWeight.w500,
           textColor: CColors.primary,
@@ -202,7 +248,7 @@ class _SignupScreenState extends State<SignupScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText(
-          text: "Address",
+          text: "Endereço",
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -210,7 +256,7 @@ class _SignupScreenState extends State<SignupScreen> {
         TextFieldWidget(
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
-            label: "Zip Code",
+            label: "CEP",
             controller: cnhController,
             hint: ''),
         const MarginWidget(
@@ -219,7 +265,7 @@ class _SignupScreenState extends State<SignupScreen> {
         TextFieldWidget(
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
-            label: "Road",
+            label: "Rua",
             controller: cnhController,
             hint: ''),
         const MarginWidget(
@@ -228,7 +274,7 @@ class _SignupScreenState extends State<SignupScreen> {
         TextFieldWidget(
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
-            label: "Neighborhood",
+            label: "Bairro",
             controller: cnhController,
             hint: ''),
         const MarginWidget(
@@ -240,7 +286,7 @@ class _SignupScreenState extends State<SignupScreen> {
               child: TextFieldWidget(
                   borderColor: CColors.textFieldBorder,
                   backColor: Colors.transparent,
-                  label: "No",
+                  label: "Nº",
                   controller: cnhController,
                   hint: ''),
             ),
@@ -251,7 +297,7 @@ class _SignupScreenState extends State<SignupScreen> {
               child: TextFieldWidget(
                   borderColor: CColors.textFieldBorder,
                   backColor: Colors.transparent,
-                  label: "Complement",
+                  label: "Complemento",
                   controller: cnhController,
                   hint: ''),
             ),
@@ -266,7 +312,7 @@ class _SignupScreenState extends State<SignupScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText(
-          text: "Bank Data",
+          text: "Dados Bancários",
           fontWeight: FontWeight.w500,
           fontSize: 16,
         ),
@@ -274,23 +320,202 @@ class _SignupScreenState extends State<SignupScreen> {
         TextFieldWidget(
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
-            label: "Bank",
+            label: "Banco",
             controller: cnhController,
             hint: ''),
         const MarginWidget(),
         TextFieldWidget(
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
-            label: "Agency",
+            label: "Agência",
             controller: cnhController,
             hint: ''),
         const MarginWidget(),
         TextFieldWidget(
+          borderColor: CColors.textFieldBorder,
+          backColor: Colors.transparent,
+          label: "Conta",
+          controller: cnhController,
+          hint: '',
+        ),
+      ],
+    );
+  }
+
+  Widget vehicleWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustomText(
+          text: "Seu Veículo",
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+        const MarginWidget(),
+        TextFieldWidget(
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
-            label: "Account",
+            label: "Marca",
             controller: cnhController,
             hint: ''),
+        const MarginWidget(
+          factor: 1,
+        ),
+        TextFieldWidget(
+            borderColor: CColors.textFieldBorder,
+            backColor: Colors.transparent,
+            label: "Ano",
+            controller: cnhController,
+            hint: ''),
+        const MarginWidget(
+          factor: 1,
+        ),
+        TextFieldWidget(
+          borderColor: CColors.textFieldBorder,
+          backColor: Colors.transparent,
+          label: "Veículo",
+          controller: cnhController,
+          hint: '',
+        ),
+        const MarginWidget(
+          factor: 1,
+        ),
+      ],
+    );
+  }
+
+  String carType = "own";
+
+  carTypeWidget() {
+    return Row(
+      children: [
+        Expanded(
+          child: RadioListTile(
+              contentPadding: EdgeInsets.zero,
+              visualDensity: const VisualDensity(horizontal: -4),
+              title: const Text("Carro próprio"),
+              value: "own",
+              groupValue: carType,
+              onChanged: (v) {
+                setState(() {
+                  carType = v.toString();
+                });
+              }),
+        ),
+        Expanded(
+          child: RadioListTile(
+              contentPadding: EdgeInsets.zero,
+              visualDensity: const VisualDensity(horizontal: -4),
+              title: Text(
+                "Carro alugado",
+                style: AppTextStyles.poppins(
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w400)),
+              ),
+              value: "rented",
+              groupValue: carType,
+              onChanged: (v) {
+                setState(() {
+                  carType = v ?? "student";
+                });
+              }),
+        ),
+      ],
+    );
+  }
+
+  var isDualCommand = false;
+
+  Widget dualCommandVehicle() {
+    return Row(
+      children: [
+        CupertinoSwitch(
+          value: isDualCommand,
+          onChanged: (value) {
+            setState(() {
+              isDualCommand = value;
+            });
+          },
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: Text(
+            "Veículo com duplo comando",
+            style: AppTextStyles.captionMedium(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget documentsWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustomText(
+          text: "Enviar documentos do veículo",
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+        const MarginWidget(),
+        documentWidget(
+          "assets/icons/upload.png",
+          "Foto do Veículo",
+        ),
+        const MarginWidget(
+          factor: 0.7,
+        ),
+        documentWidget(
+          "assets/icons/upload.png",
+          "Documento do Veículo",
+        ),
+        const MarginWidget(
+          factor: 0.7,
+        ),
+        documentWidget(
+          "assets/icons/upload.png",
+          "Licencimento do Veículo",
+        ),
+        const MarginWidget(
+          factor: 0.7,
+        ),
+        documentWidget(
+          "assets/icons/upload.png",
+          "Seguro do Veículo",
+        ),
+        const MarginWidget(
+          factor: 0.7,
+        ),
+        if (carType != "own")
+          documentWidget(
+            "assets/icons/upload.png",
+            "Contrato de Locação",
+          ),
+      ],
+    );
+  }
+
+  Widget expectedBudgetWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustomText(
+          text: "Quanto gostaria de receber por hora/aula?",
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+        const MarginWidget(
+          factor: 0.7,
+        ),
+        TextFieldWidget(
+          borderColor: CColors.textFieldBorder,
+          backColor: Colors.transparent,
+          label: "Valor",
+          controller: name,
+          hint: '',
+        ),
       ],
     );
   }
