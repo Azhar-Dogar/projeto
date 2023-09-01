@@ -24,7 +24,7 @@ class _DashBoardState extends State<DashBoard> {
     const ClassesScreen(),
     const HomeScreen(),
     const NotificationScreen(),
-    const ChatScreen(),
+     ChatScreen(),
   ];
 
   int selectedIndex = 2;

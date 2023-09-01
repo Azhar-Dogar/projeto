@@ -27,7 +27,7 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
     const Schedule(),
     const InstructorHome(),
     const NotificationScreen(),
-    const ChatScreen(),
+     ChatScreen(isInstructor: true,),
   ];
 
   int selectedIndex = 2;

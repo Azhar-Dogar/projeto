@@ -105,7 +105,7 @@ class _RegisterPasswordState extends State<RegisterPassword> {
               ),
               const Expanded(child: SizedBox()),
               ButtonWidget(name: "Register", onPressed: () {
-                context.push(child: widget.isInstructor ? const InstructorDashboard() : const DashBoard());
+                context.push(child: widget.isInstructor ?  InstructorDashboard() : const DashBoard());
               })
             ],
           ),

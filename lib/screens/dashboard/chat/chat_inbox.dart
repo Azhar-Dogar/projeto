@@ -11,8 +11,8 @@ import '../../../widgets/c_profile_app_bar.dart';
 import '../../../widgets/chat_bubble_widget.dart';
 
 class InboxScreen extends StatefulWidget {
-  const InboxScreen({super.key});
-
+   InboxScreen({super.key,this.isInstructor});
+bool? isInstructor;
   @override
   State<InboxScreen> createState() => _InboxScreenState();
 }
@@ -28,7 +28,7 @@ class _InboxScreenState extends State<InboxScreen> {
     padding = width * 0.04;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar("Chat"),
+      appBar: CustomAppBar("Chat",isInstructor: widget.isInstructor),
       body: Column(
         children: [
           Container(
