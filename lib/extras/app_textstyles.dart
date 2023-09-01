@@ -68,6 +68,9 @@ class AppTextStyles {
   static TextStyle titleMedium({Color color = Colors.black, FontWeight weight = FontWeight.w500}){
     return captionMedium(size: 16, color: color, fontWeight: weight);
   }
+  static TextStyle titleRegular({Color color = Colors.black, FontWeight weight = FontWeight.w400}){
+    return captionMedium(size: 16, color: color, fontWeight: weight);
+  }
 
   static TextStyle workSans({TextStyle? style}) {
     return GoogleFonts.workSans(textStyle: style);
