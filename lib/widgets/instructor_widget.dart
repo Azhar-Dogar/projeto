@@ -106,12 +106,12 @@ class InstructorWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  info("Car", "Celtic, 2018"),
+                  info("Carro", "Celtic, 2018"),
                   Divider(
                     color: CColors.divider,
                     height: 1,
                   ),
-                  info("Address", "105 William St, Chicago, US"),
+                  info("Endereço", "105 William St, Chicago, US"),
                   Divider(
                     color: CColors.divider,
                     height: 1,
@@ -125,7 +125,7 @@ class InstructorWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: ButtonWidget(
-                        name: "To schedule",
+                        name: "Agendar",
                         onPressed: () {
                           Functions.push(context, SchedulingScreen());
                         }),

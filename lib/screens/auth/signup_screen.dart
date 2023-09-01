@@ -160,7 +160,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ],
                 ],
                 ButtonWidget(
-                  name: "Register",
+                  name: "Cadastrar",
                   onPressed: () {
                     context.push(
                       child: RegisterPassword(

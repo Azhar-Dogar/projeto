@@ -37,7 +37,7 @@ class _RegisterPasswordState extends State<RegisterPassword> {
                 factor: 1,
               ),
               CustomText(
-                text: "Register Password",
+                text: "Cadastrar senha",
                 fontSize: 22,
                 fontWeight: FontWeight.w500,
               ),
@@ -45,14 +45,14 @@ class _RegisterPasswordState extends State<RegisterPassword> {
                 factor: 1,
               ),
               CustomText(
-                text: "Register a new password",
+                text: "Cadastre uma nova senha",
                 fontWeight: FontWeight.w300,
               ),
               const MarginWidget(
                 factor: 0.5,
               ),
               CustomText(
-                text: "Password",
+                text: "Senha",
                 fontWeight: FontWeight.w500,
               ),
               const MarginWidget(),
@@ -67,7 +67,7 @@ class _RegisterPasswordState extends State<RegisterPassword> {
                     icon: Icon(
                         (isShowCurrent) ? Icons.visibility_off : Icons.visibility)),
                 controller: currentPassword,
-                label: "Current Password",
+                label: "Senha Atual",
                 borderColor: CColors.textFieldBorder,
                 labelColor: CColors.black,
               ),
@@ -83,7 +83,7 @@ class _RegisterPasswordState extends State<RegisterPassword> {
                     icon: Icon(
                         (isShowNew) ? Icons.visibility_off : Icons.visibility)),
                 controller: newPassword,
-                label: "New Password",
+                label: "Nova Senha",
                 borderColor: CColors.textFieldBorder,
                 labelColor: CColors.black,
               ),
@@ -99,12 +99,12 @@ class _RegisterPasswordState extends State<RegisterPassword> {
                     icon: Icon(
                         (isShowConfirm) ? Icons.visibility_off : Icons.visibility)),
                 controller: confirmPassword,
-                label: "Confirm New Password",
+                label: "Confirmar Nova Senha",
                 borderColor: CColors.textFieldBorder,
                 labelColor: CColors.black,
               ),
               const Expanded(child: SizedBox()),
-              ButtonWidget(name: "Register", onPressed: () {
+              ButtonWidget(name: "Cadastrar", onPressed: () {
                 context.push(child: widget.isInstructor ?  InstructorDashboard() : const DashBoard());
               })
             ],

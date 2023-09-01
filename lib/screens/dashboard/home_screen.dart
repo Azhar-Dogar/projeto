@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Functions.push(context, InstructorsScreen());
               },
               child: Text(
-                "Search instructors near me",
+                "Pesquisar instrutores perto de mim",
                 style: AppTextStyles.captionMedium(color: CColors.primary),
               ),
             ),
@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         child: TextFieldWidget(
           fontSize: 12,
-          hint: "Enter an instructor's name",
+          hint: "Digitar o nome de um instrutor",
           prefixWidget: Icon(
             Icons.search,
             color: CColors.textFieldBorder,
@@ -111,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: "Next Class",
+                      text: "Próxima aula",
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -135,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Text(
-                "see classes",
+                "Ver aulas",
                 style:
                     AppTextStyles.captionMedium(color: CColors.textFieldBorder),
               )
@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomText(
-                text: "Credit",
+                text: "Crédito",
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),

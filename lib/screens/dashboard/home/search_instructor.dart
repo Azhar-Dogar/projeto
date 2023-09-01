@@ -13,6 +13,7 @@ import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import '../../../extras/app_textstyles.dart';
 import '../../../extras/colors.dart';
+import '../../../widgets/c_profile_app_bar.dart';
 
 class SearchInstructor extends StatefulWidget {
   const SearchInstructor({super.key});
@@ -64,39 +65,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: CColors.white,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: CColors.black,
-          ),
-          onPressed: () {
-            context.pop();
-          },
-        ),
-        title: Text(
-          "Pesquisa",
-          style: AppTextStyles.captionMedium(size: 14),
-        ),
-        actions: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Credit",
-                style: AppTextStyles.captionMedium(),
-              ),
-              Text(
-                "R\$ 800,00",
-                style: AppTextStyles.captionMedium(color: CColors.primary),
-              )
-            ],
-          )
-        ],
-      ),
+      appBar: CustomAppBar("Pesquisa"),
       body: Column(
         children: [
           Expanded(

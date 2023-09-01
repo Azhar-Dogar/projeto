@@ -33,7 +33,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
            context.pop();
          },),
         title: Text(
-          "Scheduling",
+          "Agendamento",
           style: AppTextStyles.captionMedium(size: 14),
         ),
         actions: [
@@ -79,7 +79,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Change Instructor",
+                        "Trocar Instrutor",
                         style:
                             AppTextStyles.captionMedium(color: CColors.primary),
                       ),
@@ -103,31 +103,31 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Class Information",
+              "Informações da Aula",
               style: AppTextStyles.subTitleMedium(),
             ),
             const MarginWidget(),
             TextFieldWidget(
               controller: time,
               borderColor: CColors.textFieldBorder,
-              label: "Time",
+              label: "Horário",
               suffixIcon: const Icon(Icons.keyboard_arrow_down),
             ),
             const MarginWidget(),
             TextFieldWidget(
                 controller: time,
                 borderColor: CColors.textFieldBorder,
-                label: "Number of classes",
+                label: "Quantidade de Aulas",
                 suffixIcon: const Icon(Icons.keyboard_arrow_down)),
             const MarginWidget(),
             TextFieldWidget(
               controller: time,
               borderColor: CColors.textFieldBorder,
-              label: "Amount",
+              label: "Valor Total",
             ),
             const MarginWidget(),
             ButtonWidget(
-                name: "Confirm",
+                name: "Confirmar",
                 onPressed: () {
                   context.push(child: SearchInstructor());
                   // setState(() {
