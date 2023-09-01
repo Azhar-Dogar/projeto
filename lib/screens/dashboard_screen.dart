@@ -7,7 +7,6 @@ import 'package:projeto/screens/dashboard/home_screen.dart';
 import 'package:projeto/screens/dashboard/notification_screen.dart';
 import 'package:projeto/screens/dashboard/profile_screen.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
-import 'package:projeto/widgets/custom_text.dart';
 
 import '../extras/colors.dart';
 
@@ -24,7 +23,7 @@ class _DashBoardState extends State<DashBoard> {
     const ClassesScreen(),
     const HomeScreen(),
     const NotificationScreen(),
-    const ChatScreen(),
+     ChatScreen(),
   ];
 
   int selectedIndex = 2;

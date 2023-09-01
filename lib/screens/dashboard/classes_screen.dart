@@ -32,9 +32,6 @@ class _ClassesScreenState extends State<ClassesScreen> {
 
   int selectedDate = 3;
   int yearNow = 2016;
-  int year1 = 2020;
-
-  // late CalendarController _calendarController;
 
   late DateTime _selectedDate;
 
@@ -69,17 +66,23 @@ class _ClassesScreenState extends State<ClassesScreen> {
                 child: Column(
                   children: [
                     const MarginWidget(factor: 0.5),
-                    yearRow(yearNow),
-                    const MarginWidget(factor: 1.5),
-                    yearRow(year1),
+                    Wrap(
+                      spacing: 30,
+                      children: [
+                        for (int i = 0; i < 8; i++) yearBox("${yearNow + i}"),
+                      ],
+                    ),
                     const MarginWidget(),
                     const DividerWidget(),
                     const MarginWidget(),
                     Wrap(
+                      spacing: 30,
                       children: [
-                        for (int i = 0; i < 10; i++) yearBox("Jan"),
+                        for (var month in Constants.months) yearBox(month),
                       ],
-                    )
+                    ),
+                    const MarginWidget(),
+                    const DividerWidget(),
                   ],
                 ),
               )

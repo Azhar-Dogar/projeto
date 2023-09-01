@@ -11,8 +11,8 @@ import 'package:projeto/widgets/margin_widget.dart';
 import '../../widgets/c_profile_app_bar.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
-
+  ChatScreen({super.key,this.isInstructor});
+bool? isInstructor;
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
@@ -26,7 +26,7 @@ class _ChatScreenState extends State<ChatScreen> {
     padding = width * 0.04;
 
     return Scaffold(
-      appBar: CustomAppBar("Chat"),
+      appBar: CustomAppBar("Chat",isInstructor: widget.isInstructor),
       body: Padding(
         padding: EdgeInsets.only(left: padding, right: padding),
         child: Column(
@@ -56,7 +56,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget chatHeader() {
     return InkWell(
       onTap: (){
-        context.push(child: const InboxScreen());
+        context.push(child:  InboxScreen(isInstructor: widget.isInstructor,));
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

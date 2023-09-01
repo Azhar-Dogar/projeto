@@ -20,6 +20,8 @@ class AppIcons {
   static var message = getName("message.png");
   static var setting = getName("setting.png");
   static var approval = getName("approval.png");
+  static var carIcon = getName("carIcon.png");
+  static var star = getName("star.png");
 
   static String getName(String name) {
     return "$main$name";

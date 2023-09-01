@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:projeto/screens/instructor/dashboard/instructor_home.dart';
+import 'package:projeto/screens/instructor/dashboard/instructor_profile_screen.dart';
 import 'package:projeto/screens/instructor/dashboard/schedule.dart';
 
 import '../../extras/app_assets.dart';
@@ -23,11 +24,11 @@ class InstructorDashboard extends StatefulWidget {
 class _InstructorDashboardState extends State<InstructorDashboard> {
 
   List<Widget> pages = [
-    const ProfileScreen(),
+    const InstructorProfileScreen(),
     const Schedule(),
     const InstructorHome(),
     const NotificationScreen(),
-    const ChatScreen(),
+     ChatScreen(isInstructor: true,),
   ];
 
   int selectedIndex = 2;

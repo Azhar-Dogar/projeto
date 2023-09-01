@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
@@ -11,16 +12,17 @@ import 'package:projeto/screens/dashboard/profile/widgets/profile_header_widget.
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/margin_widget.dart';
-import '../../widgets/textfield_widget.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+import '../../../widgets/textfield_widget.dart';
+
+class InstructorProfileScreen extends StatefulWidget {
+  const InstructorProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<InstructorProfileScreen> createState() => _InstructorProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
   late double width, height, padding;
 
   TextEditingController name = TextEditingController();
@@ -48,10 +50,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Column(
         children: [
           const MarginWidget(factor: 3),
-          const Align(
-            alignment: Alignment.centerRight,
-            child: ProfileHeaderWidget(),
-          ),
           const MarginWidget(factor: 0.8),
           header(),
           isDetails ? details() : profileMain(),
@@ -76,12 +74,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () {
                 context.push(child: const MeuProgresso());
               },
-              child: listTile("Meu Progresso", AppIcons.trending),
+              child: listTile("Meus Veículos", AppIcons.carIcon),
             ),
-            listTile("Carteira", AppIcons.brief),
-            listTile("Inserir Crédito", AppIcons.dollar, onTap: () {
-              Functions.push(context, const Balance());
-            }),
+            listTile("Minhas Avaliações", AppIcons.star),
             const Expanded(child: SizedBox()),
             InkWell(
               onTap: (){
@@ -131,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Claudia Silva",
+                  "Ronaldo Silva",
                   style: AppTextStyles.titleMedium(),
                 ),
                 const MarginWidget(factor: 0.7),
