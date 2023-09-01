@@ -14,8 +14,7 @@ import 'package:projeto/widgets/margin_widget.dart';
 import '../../widgets/textfield_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
-
+   const ProfileScreen({super.key,});
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }

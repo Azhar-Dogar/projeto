@@ -30,7 +30,7 @@ class SuccessMessage extends StatelessWidget {
               ),
             ),
             ButtonWidget(name: "Volta para pagamento", onPressed: (){
-              context.pushAndRemoveUntil(child: const ProfileScreen());
+              context.pushAndRemoveUntil(child:  ProfileScreen());
             }),
             const MarginWidget(),
           ],

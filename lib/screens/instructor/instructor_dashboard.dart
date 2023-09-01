@@ -27,7 +27,7 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
     const InstructorProfileScreen(),
     const Schedule(),
     const InstructorHome(),
-    const NotificationScreen(),
+     NotificationScreen(isInstructor: true,),
      ChatScreen(isInstructor: true,),
   ];
 
