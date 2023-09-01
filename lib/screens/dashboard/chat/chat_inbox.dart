@@ -5,11 +5,10 @@ import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/extensions.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
-import 'package:projeto/widgets/divider_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
-
 import '../../../widgets/c_profile_app_bar.dart';
+import '../../../widgets/chat_bubble_widget.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({super.key});
@@ -28,6 +27,7 @@ class _InboxScreenState extends State<InboxScreen> {
     width = context.width;
     padding = width * 0.04;
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: CustomAppBar("Chat"),
       body: Column(
         children: [
@@ -74,6 +74,21 @@ class _InboxScreenState extends State<InboxScreen> {
           Expanded(
             child: Container(
               color: CColors.dashboard,
+              padding: EdgeInsets.only(left: padding, right: padding),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const MarginWidget(),
+                    ChatBubbleWidget(
+                        message: "bubble special tow with tail",
+                        isSender: true),
+                    const MarginWidget(),
+                    ChatBubbleWidget(
+                        message: "bubble special tow with tail",
+                        isSender: false),
+                  ],
+                ),
+              ),
             ),
           ),
           Padding(

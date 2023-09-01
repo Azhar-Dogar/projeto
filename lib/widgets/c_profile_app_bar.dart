@@ -4,6 +4,11 @@ import '../extras/app_textstyles.dart';
 
 AppBar CustomAppBar(String str) {
   return AppBar(
+    elevation: 0,
+    backgroundColor: Colors.white,
+    iconTheme: IconThemeData(
+      color: Colors.black
+    ),
     title: Text(
       str,
       style: AppTextStyles.captionMedium(),
