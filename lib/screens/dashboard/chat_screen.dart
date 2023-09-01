@@ -70,7 +70,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Container(
                   height: 60,
                   width: 60,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                   ),
                   child: ClipOval(
