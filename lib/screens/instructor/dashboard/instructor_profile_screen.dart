@@ -280,8 +280,56 @@ class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
                   hint: '',
                   enabled: isEdit),
               const MarginWidget(),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFieldWidget(
+                        label: "Nº",
+                        controller: nDegController,
+                        hint: '',
+                        enabled: isEdit),
+                  ),
+                  const MarginWidget(isHorizontal: true,),
+                  Expanded(
+                    child: TextFieldWidget(
+                        label: "Complemento",
+                        controller: nDegController,
+                        hint: '',
+                        enabled: isEdit),
+                  ),
+                ],
+              ),
+              const MarginWidget(),
+              Text(
+                "Valor por aula",
+                style: AppTextStyles.titleMedium(),
+              ),
+              const MarginWidget(),
               TextFieldWidget(
-                  label: "Nº",
+                  label: "R\$ 50,00",
+                  controller: nDegController,
+                  hint: '',
+                  enabled: isEdit),
+              const MarginWidget(),
+              Text(
+                "Dados Bancários",
+                style: AppTextStyles.titleMedium(),
+              ),
+              const MarginWidget(),
+              TextFieldWidget(
+                  label: "Banco",
+                  controller: nDegController,
+                  hint: '',
+                  enabled: isEdit),
+              const MarginWidget(),
+              TextFieldWidget(
+                  label: "Agência",
+                  controller: nDegController,
+                  hint: '',
+                  enabled: isEdit),
+              const MarginWidget(),
+              TextFieldWidget(
+                  label: "Conta",
                   controller: nDegController,
                   hint: '',
                   enabled: isEdit),

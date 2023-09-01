@@ -284,11 +284,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   hint: '',
                   enabled: isEdit),
               const MarginWidget(),
-              TextFieldWidget(
-                  label: "Nº",
-                  controller: nDegController,
-                  hint: '',
-                  enabled: isEdit),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFieldWidget(
+                        label: "Nº",
+                        controller: nDegController,
+                        hint: '',
+                        enabled: isEdit),
+                  ),
+                  const MarginWidget(isHorizontal: true,),
+                  Expanded(
+                    child: TextFieldWidget(
+                        label: "Complemento",
+                        controller: nDegController,
+                        hint: '',
+                        enabled: isEdit),
+                  ),
+                ],
+              ),
               const MarginWidget(factor: 2),
               Center(
                 child: Column(
