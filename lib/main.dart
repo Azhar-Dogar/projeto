@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/screens/splash_screen.dart';
 
 import 'extras/colors.dart';
@@ -16,6 +17,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          backgroundColor: CColors.white,
+          elevation: 0,
+          titleTextStyle: AppTextStyles.subTitleMedium(),
+          iconTheme: IconThemeData(
+            color: CColors.black,
+          )
+        ),
         colorScheme: ColorScheme.fromSeed(seedColor: CColors.primary),
         useMaterial3: false,
       ),
