@@ -38,6 +38,8 @@ dependencies:
   google_fonts: ^5.1.0
   persistent_bottom_nav_bar: ^5.0.2
   flutter_rating_bar: ^4.0.1
+  table_calendar: ^3.0.9
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
