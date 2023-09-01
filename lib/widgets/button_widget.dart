@@ -15,7 +15,7 @@ void Function()? onPressed;
    double height = MediaQuery.of(context).size.height;
     return SizedBox(
       width: width,
-      height: height * 0.07,
+      height: height * 0.06,
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(

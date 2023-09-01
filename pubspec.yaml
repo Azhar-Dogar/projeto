@@ -38,9 +38,17 @@ dependencies:
   google_fonts: ^5.1.0
   persistent_bottom_nav_bar: ^5.0.2
   flutter_rating_bar: ^4.0.1
-  chat_bubbles: ^1.5.0
+  table_calendar: ^3.0.9 # Use the latest version
+
+
+
+  utility_extensions:
+    git:
+      url: https://github.com/hamzali4642/utility_extensions
+
   google_maps_flutter: ^2.5.0
   flutter_native_image: ^0.0.6
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
