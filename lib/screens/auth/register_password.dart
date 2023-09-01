@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/extensions.dart';
 import 'package:projeto/screens/dashboard_screen.dart';
+import 'package:projeto/screens/instructor/instructor_dashboard.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_text.dart';
 import 'package:projeto/widgets/margin_widget.dart';
@@ -104,7 +105,7 @@ class _RegisterPasswordState extends State<RegisterPassword> {
               ),
               const Expanded(child: SizedBox()),
               ButtonWidget(name: "Register", onPressed: () {
-                context.push(child: const DashBoard());
+                context.push(child: widget.isInstructor ? const InstructorDashboard() : const DashBoard());
               })
             ],
           ),
