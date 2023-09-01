@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/widgets/button_widget.dart';
+import 'package:projeto/widgets/calendar_widget.dart';
 import 'package:projeto/widgets/instructor_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
@@ -50,6 +51,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  CalendarWidget(),
                   InstructorWidget(
                     name: "Annette Johnson",
                     imagePath: AppImages.instructor,
