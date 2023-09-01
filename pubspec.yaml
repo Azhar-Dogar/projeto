@@ -43,6 +43,13 @@ dependencies:
 
 
 
+  utility_extensions:
+    git:
+      url: https://github.com/hamzali4642/utility_extensions
+
+  google_maps_flutter: ^2.5.0
+  flutter_native_image: ^0.0.6
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

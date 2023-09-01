@@ -25,6 +25,7 @@ class CColors {
   static var greyWhite = const Color(0xff979797);
   static var divider = const Color(0xffEFEFF4);
   static var paymentContainer = const Color(0xffF1F2F6);
+  static var rating = const Color(0xffEBEF21);
 
   static var bluePrima = const Color(0xff8584A16);
 
