@@ -28,6 +28,8 @@ class CColors {
 
   static var bluePrima = const Color(0xff8584A16);
 
+  static var segmentedGrey = const Color(0xffBDBDBD);
+
 
 
 
