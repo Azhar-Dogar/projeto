@@ -33,9 +33,7 @@ class _InboxScreenState extends State<InboxScreen> {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: Constants.shadow()
-            ),
+                color: Colors.white, boxShadow: Constants.shadow()),
             child: Padding(
               padding: EdgeInsets.only(left: padding, right: padding),
               child: Column(
@@ -78,30 +76,30 @@ class _InboxScreenState extends State<InboxScreen> {
               color: CColors.dashboard,
             ),
           ),
-          Container(
-            height: 80,
-            width: double.infinity,
-            color: Colors.white,
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextFieldWidget(
-                    height: 50,
-                    controller: message,
-                    hint: 'Escreva a mensagem',
+          Padding(
+            padding: EdgeInsets.only(left: padding, right: padding),
+            child: Container(
+              height: 80,
+              width: double.infinity,
+              color: Colors.white,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFieldWidget(
+                      height: 50,
+                      controller: message,
+                      hint: 'Escreva a mensagem',
+                    ),
                   ),
-                ),
-                const MarginWidget(
-                  isHorizontal: true,
-                ),
-                CustomAssetImage(
-                  path: AppIcons.send,
-                  height: 24,
-                ),
-                const MarginWidget(
-                  isHorizontal: true,
-                ),
-              ],
+                  const MarginWidget(
+                    isHorizontal: true,
+                  ),
+                  CustomAssetImage(
+                    path: AppIcons.send,
+                    height: 24,
+                  ),
+                ],
+              ),
             ),
           )
         ],
