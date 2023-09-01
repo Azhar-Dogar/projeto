@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/extensions.dart';
 import 'package:projeto/screens/auth/signup_screen.dart';
+import 'package:projeto/screens/instructor/instructor_dashboard.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
@@ -85,13 +86,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     context.push(child: const SignupScreen());
                   }),
                   const MarginWidget(factor: 0.5,),
-                  Text(
-                    "Não tem cadastro?",
-                    style: AppTextStyles.poppins(
-                        style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white)),
+                  InkWell(
+                    onTap: (){
+                      context.pushReplacement(child: InstructorDashboard());
+                    },
+                    child: Text(
+                      "Não tem cadastro?",
+                      style: AppTextStyles.poppins(
+                          style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white)),
+                    ),
                   ),
                 ],
               ),
