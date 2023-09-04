@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
-import 'package:projeto/extras/extensions.dart';
+import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/screens/dashboard/classes_screen.dart';
 import 'package:projeto/screens/instructor/schedule/availability.dart';
 

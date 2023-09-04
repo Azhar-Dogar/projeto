@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
-import 'package:projeto/extras/extensions.dart';
+import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/screens/dashboard/profile/credit/select_payment_type.dart';
 import 'package:projeto/widgets/c_profile_app_bar.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projeto/extras/extensions.dart';
+import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/screens/dashboard_screen.dart';
 import 'package:projeto/screens/instructor/instructor_dashboard.dart';
 import 'package:projeto/widgets/button_widget.dart';

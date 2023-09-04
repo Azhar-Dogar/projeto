@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:projeto/extras/extensions.dart';
+import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/generated/assets.dart';
 import 'package:utility_extensions/extensions/font_utilities.dart';
 

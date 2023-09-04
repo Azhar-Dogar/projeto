@@ -8,7 +8,7 @@ import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:projeto/extras/app_assets.dart';
-import 'package:projeto/extras/extensions.dart';
+import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import '../../../extras/app_textstyles.dart';

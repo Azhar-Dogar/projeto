@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/app_textstyles.dart';
-import 'package:projeto/extras/extensions.dart';
+import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/screens/auth/register_password.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_text.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projeto/extras/extensions.dart';
 import 'package:projeto/screens/auth/signup_screen.dart';
+import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/screens/instructor/instructor_dashboard.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
@@ -83,12 +83,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const MarginWidget(factor: 1.5  ,),
                   ButtonWidget(name: "Enter", onPressed: (){
-                    context.push(child: const SignupScreen());
+
                   }),
                   const MarginWidget(factor: 0.5,),
                   InkWell(
                     onTap: (){
-                      context.pushReplacement(child: InstructorDashboard());
+                      context.push(child: const SignupScreen());
                     },
                     child: Text(
                       "Não tem cadastro?",

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projeto/extras/extensions.dart';
+import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/screens/dashboard/profile/credit/add_new_card.dart';
 
 import '../../../../extras/app_assets.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:projeto/extras/extensions.dart';
-
+import 'package:utility_extensions/utility_extensions.dart';
 class Functions {
   static push(BuildContext context, Widget widget) {
     // PersistentNavBarNavigator.pushNewScreen(
