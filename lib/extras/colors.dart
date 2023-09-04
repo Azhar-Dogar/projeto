@@ -69,8 +69,8 @@ class CColors {
     0.76,
   );
 
-  static MaterialColor getMaterialColor(Color color) {
-    return MaterialColor(color.value, CColors.getSwatch(color));
+  static MaterialColor getMaterialColor() {
+    return MaterialColor(primary.value, CColors.getSwatch(primary));
   }
 
   static Map<int, Color> getSwatch(Color color) {

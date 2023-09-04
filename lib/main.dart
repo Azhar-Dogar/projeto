@@ -1,10 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/screens/splash_screen.dart';
 
 import 'extras/colors.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -25,7 +31,8 @@ class MyApp extends StatelessWidget {
             color: CColors.black,
           )
         ),
-        colorScheme: ColorScheme.fromSeed(seedColor: CColors.primary),
+
+        colorScheme: ColorScheme.fromSeed(seedColor: CColors.getMaterialColor()),
         useMaterial3: false,
       ),
       home: const SplashScreen(),
