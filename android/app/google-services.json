@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "783700198550",
+    "project_id": "mazzi-b3641",
+    "storage_bucket": "mazzi-b3641.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:783700198550:android:1cacb4ac130602fd2daeb7",
+        "android_client_info": {
+          "package_name": "com.example.projeto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "783700198550-utrmarqnthpl83tap5l89iunj13241uk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABpGb5OIguuXzLLkZK9nfUQt7TRAvHEik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "783700198550-utrmarqnthpl83tap5l89iunj13241uk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
