@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/model/user_model.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/screens/dashboard_screen.dart';
 import 'package:projeto/screens/instructor/instructor_dashboard.dart';
@@ -10,9 +11,9 @@ import 'package:projeto/widgets/textfield_widget.dart';
 import '../../extras/colors.dart';
 
 class RegisterPassword extends StatefulWidget {
-  const RegisterPassword({super.key, required this.isInstructor});
+  const RegisterPassword({super.key, this.user,});
 
-  final bool isInstructor;
+  final UserModel? user;
   @override
   State<RegisterPassword> createState() => _RegisterPasswordState();
 }
@@ -105,7 +106,7 @@ class _RegisterPasswordState extends State<RegisterPassword> {
               ),
               const Expanded(child: SizedBox()),
               ButtonWidget(name: "Cadastrar", onPressed: () {
-                context.push(child: widget.isInstructor ?  InstructorDashboard() : const DashBoard());
+                // context.push(child: widget.isInstructor ?  InstructorDashboard() : const DashBoard());
               })
             ],
           ),

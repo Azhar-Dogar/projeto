@@ -1,5 +1,11 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:projeto/extras/constants.dart';
+import 'package:projeto/extras/functions.dart';
+import 'package:projeto/model/user_model.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/screens/auth/register_password.dart';
@@ -25,21 +31,18 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController drivingLicenceNumber = TextEditingController();
   TextEditingController drivingLicenceCategory = TextEditingController();
 
-
   TextEditingController zipCode = TextEditingController();
   TextEditingController road = TextEditingController();
   TextEditingController neighborhood = TextEditingController();
   TextEditingController number = TextEditingController();
   TextEditingController complement = TextEditingController();
 
-
+  //bank
   TextEditingController bank = TextEditingController();
   TextEditingController agency = TextEditingController();
   TextEditingController account = TextEditingController();
 
-
-
-
+  File? licenseDocument;
 
   String userType = "student";
 
@@ -129,12 +132,18 @@ class _SignupScreenState extends State<SignupScreen> {
                     borderColor: CColors.textFieldBorder,
                     backColor: Colors.transparent,
                     label: "Categoria da CNH",
-                    controller: drivingLicenceNumber,
+                    controller: drivingLicenceCategory,
                     hint: ''),
+                const MarginWidget(),
+                uploadDocument(),
                 const MarginWidget(
                   factor: 0.5,
                 ),
-                uploadDocument(),
+                if (licenseDocument != null)
+                  Text(
+                    "Você receberá uma notificação no aplicativo com informações sobre a aprovação.",
+                    style: AppTextStyles.captionRegular(),
+                  ),
                 const MarginWidget(
                   factor: 1.5,
                 ),
@@ -180,11 +189,38 @@ class _SignupScreenState extends State<SignupScreen> {
                 ButtonWidget(
                   name: "Cadastrar",
                   onPressed: () {
-                    context.push(
-                      child: RegisterPassword(
-                        isInstructor: userType == "instructor",
-                      ),
-                    );
+                    if (userType == "instructor") {
+                    } else {
+                      if (validateFields([
+                        name,
+                        email,
+                        phone,
+                        rgController,
+                        drivingLicenceNumber,
+                        drivingLicenceCategory,
+                        zipCode,
+                        road,
+                        neighborhood,
+                        number,
+                        complement,
+                        bank,
+                        agency,
+                        account,
+                      ])) {
+                        if (licenseDocument == null) {
+                          Functions.showSnackBar(
+                              context, "Selecione o documento CNH");
+                        } else {}
+                      } else {
+                        Functions.showSnackBar(context,
+                            "Por favor, preencha todos os campos obrigatórios");
+                      }
+                    }
+                    // context.push(
+                    //   child: RegisterPassword(
+                    //     isInstructor: userType == "instructor",
+                    //   ),
+                    // );
                   },
                 ),
               ],
@@ -235,29 +271,50 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Widget uploadDocument() {
     return documentWidget(
-        "assets/icons/upload.png", "Carregar documento da CNH");
+      image: licenseDocument == null
+          ? Icons.file_upload_outlined
+          : Icons.access_time_outlined,
+      text: licenseDocument != null
+          ? "Documento enviado para aprovação"
+          : "Carregar documento da CNH",
+      onTap: (file) {
+        setState(() {
+          licenseDocument = file;
+        });
+      },
+    );
   }
 
-  Widget documentWidget(
-    String image,
-    String text,
-  ) {
-    return Row(
-      children: [
-        Image(
-          image: AssetImage(image),
-          width: 20,
-        ),
-        const MarginWidget(
-          isHorizontal: true,
-        ),
-        CustomText(
-          text: text,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          textColor: CColors.primary,
-        )
-      ],
+  Widget documentWidget({
+    required IconData image,
+    required String text,
+    required Function(File) onTap,
+  }) {
+    return InkWell(
+      onTap: () async {
+        FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+        if (result != null) {
+          File file = File(result.files.single.path!);
+          onTap(file);
+        } else {
+          // User canceled the picker
+        }
+      },
+      child: Row(
+        children: [
+          Icon(image),
+          const MarginWidget(
+            isHorizontal: true,
+          ),
+          CustomText(
+            text: text,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            textColor: CColors.primary,
+          )
+        ],
+      ),
     );
   }
 
@@ -275,7 +332,7 @@ class _SignupScreenState extends State<SignupScreen> {
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
             label: "CEP",
-            controller: drivingLicenceNumber,
+            controller: zipCode,
             hint: ''),
         const MarginWidget(
           factor: 1,
@@ -284,7 +341,7 @@ class _SignupScreenState extends State<SignupScreen> {
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
             label: "Rua",
-            controller: drivingLicenceNumber,
+            controller: road,
             hint: ''),
         const MarginWidget(
           factor: 1,
@@ -293,7 +350,7 @@ class _SignupScreenState extends State<SignupScreen> {
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
             label: "Bairro",
-            controller: drivingLicenceNumber,
+            controller: neighborhood,
             hint: ''),
         const MarginWidget(
           factor: 1,
@@ -305,7 +362,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   borderColor: CColors.textFieldBorder,
                   backColor: Colors.transparent,
                   label: "Nº",
-                  controller: drivingLicenceNumber,
+                  controller: number,
                   hint: ''),
             ),
             const MarginWidget(
@@ -313,11 +370,11 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             Expanded(
               child: TextFieldWidget(
-                  borderColor: CColors.textFieldBorder,
-                  backColor: Colors.transparent,
-                  label: "Complemento",
-                  controller: drivingLicenceNumber,
-                  hint: ''),
+                borderColor: CColors.textFieldBorder,
+                backColor: Colors.transparent,
+                label: "Complemento",
+                controller: complement,
+              ),
             ),
           ],
         )
@@ -354,7 +411,7 @@ class _SignupScreenState extends State<SignupScreen> {
           backColor: Colors.transparent,
           label: "Conta",
           controller: drivingLicenceNumber,
-          hint: '',
+          
         ),
       ],
     );
@@ -393,7 +450,7 @@ class _SignupScreenState extends State<SignupScreen> {
           backColor: Colors.transparent,
           label: "Veículo",
           controller: drivingLicenceNumber,
-          hint: '',
+          
         ),
         const MarginWidget(
           factor: 1,
@@ -479,37 +536,42 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
         const MarginWidget(),
         documentWidget(
-          "assets/icons/upload.png",
-          "Foto do Veículo",
+          image: Icons.file_upload_outlined,
+          text: "Foto do Veículo",
+          onTap: (file) {},
         ),
         const MarginWidget(
           factor: 0.7,
         ),
         documentWidget(
-          "assets/icons/upload.png",
-          "Documento do Veículo",
+          image: Icons.file_upload_outlined,
+          text: "Documento do Veículo",
+          onTap: (file) {},
         ),
         const MarginWidget(
           factor: 0.7,
         ),
         documentWidget(
-          "assets/icons/upload.png",
-          "Licencimento do Veículo",
+          image: Icons.file_upload_outlined,
+          text: "Licencimento do Veículo",
+          onTap: (file) {},
         ),
         const MarginWidget(
           factor: 0.7,
         ),
         documentWidget(
-          "assets/icons/upload.png",
-          "Seguro do Veículo",
+          image: Icons.file_upload_outlined,
+          text: "Seguro do Veículo",
+          onTap: (file) {},
         ),
         const MarginWidget(
           factor: 0.7,
         ),
         if (carType != "own")
           documentWidget(
-            "assets/icons/upload.png",
-            "Contrato de Locação",
+            image: Icons.file_upload_outlined,
+            text: "Contrato de Locação",
+            onTap: (file) {},
           ),
       ],
     );
@@ -532,9 +594,34 @@ class _SignupScreenState extends State<SignupScreen> {
           backColor: Colors.transparent,
           label: "Valor",
           controller: name,
-          hint: '',
+          
         ),
       ],
     );
+  }
+
+  Future<void> registerUser() async {
+    var model = UserModel(
+      name: name.text,
+      email: email.text,
+      phone: phone.text,
+      rgCpf: rgController.text,
+      licenceNumber: drivingLicenceNumber.text,
+      licenseCategory: drivingLicenceCategory.text,
+      zipCode: zipCode.text,
+      road: road.text,
+      neighbourhood: neighborhood.text,
+      number: number.text,
+      complement: complement.text,
+      bank: bank.text,
+      agency: agency.text,
+      account: account.text,
+    );
+
+    model.licenseDocumentFile = licenseDocument;
+    context.push(
+        child: RegisterPassword(
+      user: model,
+    ));
   }
 }
