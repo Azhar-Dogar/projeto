@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'colors.dart';
@@ -27,4 +28,19 @@ class Constants{
     "Nov",
     "Dez",
   ];
+
+
+  //auth
+
+  static FirebaseAuth auth() {
+    return FirebaseAuth.instance;
+  }
+
+  static User? user() {
+    return auth().currentUser;
+  }
+
+  static String uid() {
+    return auth().currentUser!.uid;
+  }
 }

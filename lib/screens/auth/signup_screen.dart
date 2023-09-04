@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/app_textstyles.dart';
-import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/screens/auth/register_password.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_text.dart';
@@ -23,7 +22,25 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController rgController = TextEditingController();
-  TextEditingController cnhController = TextEditingController();
+  TextEditingController drivingLicenceNumber = TextEditingController();
+  TextEditingController drivingLicenceCategory = TextEditingController();
+
+
+  TextEditingController zipCode = TextEditingController();
+  TextEditingController road = TextEditingController();
+  TextEditingController neighborhood = TextEditingController();
+  TextEditingController number = TextEditingController();
+  TextEditingController complement = TextEditingController();
+
+
+  TextEditingController bank = TextEditingController();
+  TextEditingController agency = TextEditingController();
+  TextEditingController account = TextEditingController();
+
+
+
+
+
   String userType = "student";
 
   @override
@@ -103,7 +120,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     borderColor: CColors.textFieldBorder,
                     backColor: Colors.transparent,
                     label: "Nº CNH",
-                    controller: cnhController,
+                    controller: drivingLicenceNumber,
                     hint: ''),
                 const MarginWidget(
                   factor: 1,
@@ -112,7 +129,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     borderColor: CColors.textFieldBorder,
                     backColor: Colors.transparent,
                     label: "Categoria da CNH",
-                    controller: cnhController,
+                    controller: drivingLicenceNumber,
                     hint: ''),
                 const MarginWidget(
                   factor: 0.5,
@@ -258,7 +275,7 @@ class _SignupScreenState extends State<SignupScreen> {
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
             label: "CEP",
-            controller: cnhController,
+            controller: drivingLicenceNumber,
             hint: ''),
         const MarginWidget(
           factor: 1,
@@ -267,7 +284,7 @@ class _SignupScreenState extends State<SignupScreen> {
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
             label: "Rua",
-            controller: cnhController,
+            controller: drivingLicenceNumber,
             hint: ''),
         const MarginWidget(
           factor: 1,
@@ -276,7 +293,7 @@ class _SignupScreenState extends State<SignupScreen> {
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
             label: "Bairro",
-            controller: cnhController,
+            controller: drivingLicenceNumber,
             hint: ''),
         const MarginWidget(
           factor: 1,
@@ -288,7 +305,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   borderColor: CColors.textFieldBorder,
                   backColor: Colors.transparent,
                   label: "Nº",
-                  controller: cnhController,
+                  controller: drivingLicenceNumber,
                   hint: ''),
             ),
             const MarginWidget(
@@ -299,7 +316,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   borderColor: CColors.textFieldBorder,
                   backColor: Colors.transparent,
                   label: "Complemento",
-                  controller: cnhController,
+                  controller: drivingLicenceNumber,
                   hint: ''),
             ),
           ],
@@ -322,21 +339,21 @@ class _SignupScreenState extends State<SignupScreen> {
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
             label: "Banco",
-            controller: cnhController,
+            controller: drivingLicenceNumber,
             hint: ''),
         const MarginWidget(),
         TextFieldWidget(
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
             label: "Agência",
-            controller: cnhController,
+            controller: drivingLicenceNumber,
             hint: ''),
         const MarginWidget(),
         TextFieldWidget(
           borderColor: CColors.textFieldBorder,
           backColor: Colors.transparent,
           label: "Conta",
-          controller: cnhController,
+          controller: drivingLicenceNumber,
           hint: '',
         ),
       ],
@@ -357,7 +374,7 @@ class _SignupScreenState extends State<SignupScreen> {
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
             label: "Marca",
-            controller: cnhController,
+            controller: drivingLicenceNumber,
             hint: ''),
         const MarginWidget(
           factor: 1,
@@ -366,7 +383,7 @@ class _SignupScreenState extends State<SignupScreen> {
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
             label: "Ano",
-            controller: cnhController,
+            controller: drivingLicenceNumber,
             hint: ''),
         const MarginWidget(
           factor: 1,
@@ -375,7 +392,7 @@ class _SignupScreenState extends State<SignupScreen> {
           borderColor: CColors.textFieldBorder,
           backColor: Colors.transparent,
           label: "Veículo",
-          controller: cnhController,
+          controller: drivingLicenceNumber,
           hint: '',
         ),
         const MarginWidget(
