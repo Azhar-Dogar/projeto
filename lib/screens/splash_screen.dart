@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/screens/auth/login_screen.dart';
+import 'package:projeto/screens/check_data.dart';
+import 'package:utility_extensions/utility_extensions.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,16 +20,16 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(const Duration(seconds: 1)).then((value) {
       if(Constants.user() == null){
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (_) => const LoginScreen()),
-                (route) => false);
-      }else{}
+        context.pushAndRemoveUntil(child: LoginScreen());
+      }else{
+        context.pushAndRemoveUntil(child: CheckData());
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     return Scaffold(

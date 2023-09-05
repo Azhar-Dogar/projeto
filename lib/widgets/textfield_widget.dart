@@ -103,15 +103,10 @@ class TextFieldWidget extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                         color: labelColor ?? CColors.labelColor)),
                 //contentPadding: EdgeInsets.zero,
-                hintText: hint,
                 disabledBorder: border(),
                 enabledBorder: border(),
                 focusedBorder: border(),
-                // border: const OutlineInputBorder(
-                //     borderRadius: BorderRadius.all(Radius.circular(8)),
-                //     borderSide: BorderSide(color: Colors.white)
-                // ),
-                // isDense: true,
+                hintText: hint,
                 hintStyle: AppTextStyles.sanFransiscoDisplay(
                   fontSize: (fontSize != null) ? fontSize : 10,
                   fontWeight: FontWeight.w400,

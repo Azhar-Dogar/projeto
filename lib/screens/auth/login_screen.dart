@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:projeto/extras/constants.dart';
+import 'package:projeto/extras/functions.dart';
 import 'package:projeto/screens/auth/signup_screen.dart';
+import 'package:projeto/screens/check_data.dart';
 import 'package:utility_extensions/utility_extensions.dart';
-import 'package:projeto/screens/instructor/instructor_dashboard.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
@@ -20,6 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   late double width, height;
+
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -56,18 +60,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: height * 0.3,
                   ),
                   richText(),
-                  const MarginWidget(factor: 1.5  ,),
+                  const MarginWidget(
+                    factor: 1.5,
+                  ),
                   TextFieldWidget(
-                      backColor: Colors.transparent,
-                      label: "Email",
-                      controller: emailController,
-                      hint: ''),
-                  const MarginWidget(factor: 1,),
+                    backColor: Colors.transparent,
+                    label: "Email",
+                    controller: emailController,
+                  ),
+                  const MarginWidget(
+                    factor: 1,
+                  ),
                   TextFieldWidget(
-                      backColor: Colors.transparent,
-                      label: "Senha",
-                      controller: passwordController,
-                      hint: ''),
+                    backColor: Colors.transparent,
+                    label: "Senha",
+                    controller: passwordController,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -81,13 +89,27 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-                  const MarginWidget(factor: 1.5  ,),
-                  ButtonWidget(name: "Enter", onPressed: (){
-
-                  }),
-                  const MarginWidget(factor: 0.5,),
+                  const MarginWidget(
+                    factor: 1.5,
+                  ),
+                  ButtonWidget(
+                      name: "Enter",
+                      onPressed: () {
+                        if (!emailController.text.trim().isValidEmail) {
+                          Functions.showSnackBar(context,
+                              "Por favor insira um endereço de e-mail válido.");
+                        } else if (passwordController.text.trim().length < 6) {
+                          Functions.showSnackBar(context,
+                              "a senha deve conter pelo menos 6 caracteres.");
+                        } else {
+                          login();
+                        }
+                      }),
+                  const MarginWidget(
+                    factor: 0.5,
+                  ),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       context.push(child: const SignupScreen());
                     },
                     child: Text(
@@ -132,5 +154,21 @@ class _LoginScreenState extends State<LoginScreen> {
             ]),
       ),
     );
+  }
+
+  login() {
+    Functions.showLoading(context);
+    Constants.auth()
+        .signInWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    )
+        .then((value) {
+      context.pushAndRemoveUntil(child: const CheckData());
+    }).catchError((error) {
+      context.pop();
+      var e = error as FirebaseAuthException;
+      Functions.showSnackBar(context, e.message ?? "");
+    });
   }
 }

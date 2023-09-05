@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/model/user_model.dart';
+import 'package:projeto/widgets/drop_down_widget.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/screens/auth/register_password.dart';
@@ -128,12 +129,14 @@ class _SignupScreenState extends State<SignupScreen> {
                 const MarginWidget(
                   factor: 1,
                 ),
-                TextFieldWidget(
-                    borderColor: CColors.textFieldBorder,
-                    backColor: Colors.transparent,
-                    label: "Categoria da CNH",
-                    controller: drivingLicenceCategory,
-                    hint: ''),
+                DropDownWidget(
+                  dropdownItems: Constants.drivingLicenseCategoriesPortugal,
+                  onSelect: (value) {
+                    drivingLicenceCategory.text = value;
+                  },
+                  label: "Categoria da CNH",
+                  borderColor: CColors.textFieldBorder,
+                ),
                 const MarginWidget(),
                 uploadDocument(),
                 const MarginWidget(
@@ -148,10 +151,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   factor: 1.5,
                 ),
                 addressForm(),
-                const MarginWidget(
-                  factor: 1.5,
-                ),
-                if (userType == "student" || carType == "own") bankData(),
                 const MarginWidget(
                   factor: 1.5,
                 ),
@@ -179,7 +178,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   const MarginWidget(
                     factor: 1.5,
                   ),
-                  if (carType == "rented") ...[
+                  if (userType == "owner") ...[
                     bankData(),
                     const MarginWidget(
                       factor: 1.5,
@@ -203,17 +202,20 @@ class _SignupScreenState extends State<SignupScreen> {
                         neighborhood,
                         number,
                         complement,
-                        bank,
-                        agency,
-                        account,
                       ])) {
+                        if(!email.text.isValidEmail){
+                          Functions.showSnackBar(
+                              context, "Por favor insira um endereço de e-mail válido.");
+                        }else
                         if (licenseDocument == null) {
                           Functions.showSnackBar(
-                              context, "Selecione o documento CNH");
-                        } else {}
+                              context, "Selecione o documento CNH.");
+                        } else {
+                          registerUser();
+                        }
                       } else {
                         Functions.showSnackBar(context,
-                            "Por favor, preencha todos os campos obrigatórios");
+                            "Por favor, preencha todos os campos obrigatórios.");
                       }
                     }
                     // context.push(
@@ -392,26 +394,28 @@ class _SignupScreenState extends State<SignupScreen> {
           fontSize: 16,
         ),
         const MarginWidget(),
-        TextFieldWidget(
-            borderColor: CColors.textFieldBorder,
-            backColor: Colors.transparent,
-            label: "Banco",
-            controller: drivingLicenceNumber,
-            hint: ''),
+        DropDownWidget(
+          dropdownItems: Constants.banksInPortugal,
+          onSelect: (value) {
+            bank.text = value;
+          },
+          label: "Banco",
+          borderColor: CColors.textFieldBorder,
+        ),
+
         const MarginWidget(),
         TextFieldWidget(
             borderColor: CColors.textFieldBorder,
             backColor: Colors.transparent,
             label: "Agência",
-            controller: drivingLicenceNumber,
+            controller: agency,
             hint: ''),
         const MarginWidget(),
         TextFieldWidget(
           borderColor: CColors.textFieldBorder,
           backColor: Colors.transparent,
           label: "Conta",
-          controller: drivingLicenceNumber,
-          
+          controller: account,
         ),
       ],
     );
@@ -450,7 +454,6 @@ class _SignupScreenState extends State<SignupScreen> {
           backColor: Colors.transparent,
           label: "Veículo",
           controller: drivingLicenceNumber,
-          
         ),
         const MarginWidget(
           factor: 1,
@@ -594,7 +597,6 @@ class _SignupScreenState extends State<SignupScreen> {
           backColor: Colors.transparent,
           label: "Valor",
           controller: name,
-          
         ),
       ],
     );
@@ -613,9 +615,6 @@ class _SignupScreenState extends State<SignupScreen> {
       neighbourhood: neighborhood.text,
       number: number.text,
       complement: complement.text,
-      bank: bank.text,
-      agency: agency.text,
-      account: account.text,
     );
 
     model.licenseDocumentFile = licenseDocument;

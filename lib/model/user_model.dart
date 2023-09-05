@@ -5,6 +5,7 @@ class UserModel {
   late String email;
   late String phone;
 
+  String? image;
   //license
   late String rgCpf;
   late String licenceNumber;
@@ -19,10 +20,12 @@ class UserModel {
   late String complement;
 
   //bank
-  late String bank;
-  late String agency;
-  late String account;
+  String? bank;
+  String? agency;
+  String? account;
 
+
+  bool? isUser;
   //local data
   File? licenseDocumentFile;
   UserModel({
@@ -37,15 +40,14 @@ class UserModel {
     required this.neighbourhood,
     required this.number,
     required this.complement,
-    required this.bank,
-    required this.agency,
-    required this.account,
+
   });
 
   UserModel.fromMap(Map<String, dynamic> data){
     name = data["name"];
     email = data["email"];
     phone = data["phone"];
+    image = data["image"];
     rgCpf = data["rgCpf"];
     licenceNumber = data["licenceNumber"];
     licenseCategory = data["licenseCategory"];
@@ -55,12 +57,12 @@ class UserModel {
     neighbourhood = data["neighbourhood"];
     number = data["number"];
     complement = data["complement"];
-    bank = data["bank"];
-    agency = data["agency"];
-    account = data["account"];
+    
+
+    isUser = data["isUser"];
   }
 
-  Map<String, dynamic> toMap(){
+  Map<String, dynamic> toMapUserCreate(){
     return {
       "name" : name,
       "email" : email,
@@ -75,9 +77,21 @@ class UserModel {
       "neighbourhood" : neighbourhood,
       "number" : number,
       "complement" : complement,
-      "bank" : bank,
-      "agency" : agency,
-      "account" : account,
+    };
+  }
+  Map<String, dynamic> toMapUserUpdate(){
+    return {
+      "name" : name,
+      "email" : email,
+      "phone" : phone,
+      "rgCpf" : rgCpf,
+      "licenceNumber" : licenceNumber,
+      "licenseCategory" : licenseCategory,
+      "zipCode" : zipCode,
+      "road" : road,
+      "neighbourhood" : neighbourhood,
+      "number" : number,
+      "complement" : complement,
     };
   }
 }

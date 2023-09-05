@@ -5,6 +5,8 @@ class Assets {
   static const String iconsApproval = 'assets/icons/approval.png';
   static const String iconsBrief = 'assets/icons/brief.png';
   static const String iconsCalendar = 'assets/icons/calendar.png';
+  static const String iconsCar = 'assets/icons/car.png';
+  static const String iconsCarIcon = 'assets/icons/carIcon.png';
   static const String iconsChat = 'assets/icons/chat.png';
   static const String iconsCopy = 'assets/icons/copy.png';
   static const String iconsDollar = 'assets/icons/dollar.png';
@@ -17,6 +19,7 @@ class Assets {
   static const String iconsQr = 'assets/icons/qr.png';
   static const String iconsSend = 'assets/icons/send.png';
   static const String iconsSetting = 'assets/icons/setting.png';
+  static const String iconsStar = 'assets/icons/star.png';
   static const String iconsTimer = 'assets/icons/timer.png';
   static const String iconsTrending = 'assets/icons/trending.png';
   static const String iconsUpload = 'assets/icons/upload.png';
@@ -29,6 +32,7 @@ class Assets {
   static const String imagesInstructor = 'assets/images/instructor.png';
   static const String imagesInstructor1 = 'assets/images/instructor_1.png';
   static const String imagesInstructor2 = 'assets/images/instructor_2.png';
+  static const String imagesPlaceHolder = 'assets/images/placeHolder.png';
   static const String imagesProfile = 'assets/images/profile.png';
   static const String imagesSplashImage = 'assets/images/splash_image.png';
 

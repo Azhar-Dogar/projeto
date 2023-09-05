@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:projeto/extras/constants.dart';
+import 'package:projeto/extras/functions.dart';
 import 'package:projeto/model/user_model.dart';
+import 'package:projeto/screens/check_data.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/screens/dashboard_screen.dart';
-import 'package:projeto/screens/instructor/instructor_dashboard.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_text.dart';
 import 'package:projeto/widgets/margin_widget.dart';
@@ -11,9 +14,13 @@ import 'package:projeto/widgets/textfield_widget.dart';
 import '../../extras/colors.dart';
 
 class RegisterPassword extends StatefulWidget {
-  const RegisterPassword({super.key, this.user,});
+  const RegisterPassword({
+    super.key,
+    this.user,
+  });
 
   final UserModel? user;
+
   @override
   State<RegisterPassword> createState() => _RegisterPasswordState();
 }
@@ -25,8 +32,10 @@ class _RegisterPasswordState extends State<RegisterPassword> {
   bool isShowNew = false;
   bool isShowCurrent = false;
   bool isShowConfirm = false;
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -57,22 +66,25 @@ class _RegisterPasswordState extends State<RegisterPassword> {
                 fontWeight: FontWeight.w500,
               ),
               const MarginWidget(),
-              TextFieldWidget(
-                secureText: isShowCurrent,
-                suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isShowCurrent = !isShowCurrent;
-                      });
-                    },
-                    icon: Icon(
-                        (isShowCurrent) ? Icons.visibility_off : Icons.visibility)),
-                controller: currentPassword,
-                label: "Senha Atual",
-                borderColor: CColors.textFieldBorder,
-                labelColor: CColors.black,
-              ),
-              const MarginWidget(),
+              if (widget.user == null) ...[
+                TextFieldWidget(
+                  secureText: isShowCurrent,
+                  suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isShowCurrent = !isShowCurrent;
+                        });
+                      },
+                      icon: Icon((isShowCurrent)
+                          ? Icons.visibility_off
+                          : Icons.visibility)),
+                  controller: currentPassword,
+                  label: "Senha Atual",
+                  borderColor: CColors.textFieldBorder,
+                  labelColor: CColors.black,
+                ),
+                const MarginWidget(),
+              ],
               TextFieldWidget(
                 secureText: isShowNew,
                 suffixIcon: IconButton(
@@ -97,21 +109,60 @@ class _RegisterPasswordState extends State<RegisterPassword> {
                         isShowConfirm = !isShowConfirm;
                       });
                     },
-                    icon: Icon(
-                        (isShowConfirm) ? Icons.visibility_off : Icons.visibility)),
+                    icon: Icon((isShowConfirm)
+                        ? Icons.visibility_off
+                        : Icons.visibility)),
                 controller: confirmPassword,
                 label: "Confirmar Nova Senha",
                 borderColor: CColors.textFieldBorder,
                 labelColor: CColors.black,
               ),
               const Expanded(child: SizedBox()),
-              ButtonWidget(name: "Cadastrar", onPressed: () {
-                // context.push(child: widget.isInstructor ?  InstructorDashboard() : const DashBoard());
-              })
+              ButtonWidget(
+                name: "Cadastrar",
+                onPressed: () async {
+
+                  if (newPassword.text.trim().length < 6) {
+                    Functions.showSnackBar(context,
+                        "a senha deve conter pelo menos 6 caracteres.");
+                  } else if (newPassword.text.trim() !=
+                      confirmPassword.text.trim()) {
+                    Functions.showSnackBar(context, "A senha não corresponde.");
+                  } else {
+
+                    Functions.showLoading(context);
+                    if (await createUser()) {
+                      var imageDocumentLink = await Functions.uploadFile(widget.user!.licenseDocumentFile!, path: "licenseDocument/${Constants.uid()}.${widget.user!.licenseDocumentFile!.path.split(".").last}");
+                      widget.user!.licenseDocument = imageDocumentLink;
+
+                      Constants.users.doc(Constants.uid()).set(widget.user!.toMapUserCreate());
+
+                      context.pushAndRemoveUntil(child: CheckData());
+                    }else{
+                      context.pop();
+                    }
+                  }
+                },
+              )
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<bool> createUser() async {
+    try{
+      await Constants.auth().createUserWithEmailAndPassword(
+        email: widget.user!.email,
+        password: newPassword.text.trim(),
+      );
+      return true;
+    }catch(e){
+      var exception = e as FirebaseAuthException;
+      Functions.showSnackBar(context, exception.message ?? "");
+      return false;
+    }
+
   }
 }
