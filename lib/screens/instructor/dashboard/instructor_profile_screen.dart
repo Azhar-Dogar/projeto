@@ -6,6 +6,7 @@ import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:projeto/provider/data_provider.dart';
+import 'package:projeto/screens/instructor/dashboard/my_cars.dart';
 import 'package:projeto/widgets/drop_down_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
@@ -76,11 +77,16 @@ class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
             }),
             InkWell(
               onTap: () {
-                context.push(child: const MeuProgresso());
+                context.push(child: const MyCars());
               },
               child: listTile("Meus Veículos", AppIcons.carIcon),
             ),
-            listTile("Minhas Avaliações", AppIcons.star),
+            InkWell(
+              onTap: () {
+                context.push(child: const MeuProgresso());
+              },
+              child: listTile("Minhas Avaliações", AppIcons.star),
+            ),
             const Expanded(child: SizedBox()),
             InkWell(
               onTap: () {
@@ -311,11 +317,7 @@ class _ProfileFormState extends State<ProfileForm> {
   TextEditingController agency = TextEditingController();
   TextEditingController account = TextEditingController();
 
-  //vehicle
 
-  TextEditingController brand = TextEditingController();
-  TextEditingController year = TextEditingController();
-  TextEditingController vehicle = TextEditingController();
 
   //rate
   TextEditingController amount = TextEditingController();
@@ -338,12 +340,6 @@ class _ProfileFormState extends State<ProfileForm> {
     bank.text = user.bank ?? "";
     agency.text = user.agency ?? "";
     account.text = user.account ?? "";
-
-    //vehicle
-
-    brand.text = user.brand ?? "";
-    year.text = user.year ?? "";
-    vehicle.text = user.vehicle ?? "";
 
     //rate
     amount.text = user.amount ?? "";
@@ -507,15 +503,12 @@ class _ProfileFormState extends State<ProfileForm> {
                     bank: bank.text,
                     agency: agency.text,
                     account: account.text,
-                    brand: brand.text,
-                    year: year.text,
-                    vehicle: vehicle.text,
                     amount: amount.text,
                   );
 
                   Constants.users.doc(Constants.uid()).update(
-                    model.toMapInstructorUpdate(),
-                  );
+                        model.toMapInstructorUpdate(),
+                      );
                   widget.onSave();
                 }),
         ],

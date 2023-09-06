@@ -194,9 +194,6 @@ class UserModel {
       "bank": bank,
       "agency": agency,
       "account": account,
-      "brand": brand,
-      "year": year,
-      "vehicle": vehicle,
       "amount": amount,
     };
   }
