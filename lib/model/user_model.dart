@@ -9,6 +9,7 @@ class UserModel {
 
   String? image;
 
+  late String uid;
   //license
   late String rgCpf;
   late String licenceNumber;
@@ -37,32 +38,14 @@ class UserModel {
   //local data
   File? licenseDocumentFile;
 
-  //vehicle
-
-  String? brand;
-  String? year;
-  String? vehicle;
 
   //rate
   String? amount;
 
-  File? vehiclePhotoFile;
-  File? vehicleDocumentFile;
-  File? vehicleLicenseFile;
-  File? vehicleInsuranceFile;
-  File? leaseAgreementFile;
 
-  String? vehiclePhoto;
-  String? vehicleDocument;
-  String? vehicleLicense;
-  String? vehicleInsurance;
-  String? leaseAgreement;
-
-  String? carType;
-
-  bool? isDualCommand;
 
   UserModel({
+
     required this.name,
     required this.email,
     required this.phone,
@@ -78,16 +61,12 @@ class UserModel {
     this.bank,
     this.agency,
     this.account,
-    this.brand,
-    this.year,
-    this.vehicle,
     this.amount,
-    this.carType,
-    this.isDualCommand,
     this.credits,
   });
 
   UserModel.fromMap(Map<String, dynamic> data) {
+    uid = data["uid"];
     name = data["name"];
     email = data["email"];
     phone = data["phone"];
@@ -110,23 +89,14 @@ class UserModel {
     bank = data["bank"];
     agency = data["agency"];
     account = data["account"];
-    brand = data["brand"];
-    year = data["year"];
-    vehicle = data["vehicle"];
     amount = data["amount"];
-    carType = data["carType"];
-    isDualCommand = data["isDualCommand"];
-    vehiclePhoto = data["vehiclePhoto"];
-    vehicleDocument = data["vehicleDocument"];
-    vehicleLicense = data["vehicleLicense"];
-    vehicleInsurance = data["vehicleInsurance"];
-    leaseAgreement = data["leaseAgreement"];
     List cardsList = data["cardsList"] ?? [];
     this.cardsList = cardsList.map((e) => CardModel.fromMap(e)).toList();
   }
 
   Map<String, dynamic> toMapInstructorCreate() {
     return {
+      "uid": uid,
       "name": name,
       "email": email,
       "phone": phone,
@@ -143,23 +113,14 @@ class UserModel {
       "bank": bank,
       "agency": agency,
       "account": account,
-      "brand": brand,
-      "year": year,
-      "vehicle": vehicle,
       "amount": amount,
-      "carType": carType,
-      "isDualCommand": isDualCommand,
-      "vehiclePhoto": vehiclePhoto,
-      "vehicleDocument": vehicleDocument,
-      "vehicleLicense": vehicleLicense,
-      "vehicleInsurance": vehicleInsurance,
-      "leaseAgreement": leaseAgreement,
       "cardsList": cardsList.map((e) => e.toMap()).toList(),
     };
   }
 
   Map<String, dynamic> toMapUserCreate() {
     return {
+      "uid": uid,
       "name": name,
       "email": email,
       "phone": phone,

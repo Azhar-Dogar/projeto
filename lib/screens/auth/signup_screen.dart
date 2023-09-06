@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
+import 'package:projeto/model/car_model.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:projeto/widgets/drop_down_widget.dart';
 import 'package:utility_extensions/utility_extensions.dart';
@@ -730,20 +731,22 @@ class _SignupScreenState extends State<SignupScreen> {
       bank: isUser ? null : bank.text,
       agency: isUser ? null : agency.text,
       account: isUser ? null : account.text,
-      brand: isUser ? null : brand.text,
-      year: isUser ? null : year.text,
-      vehicle: isUser ? null : vehicle.text,
       amount: isUser ? null : amount.text,
-      carType: isUser ? null : carType,
-      isDualCommand: isUser ? null : isDualCommand,
     );
 
     model.licenseDocumentFile = licenseDocument;
-    model.vehicleDocumentFile = vehicleDocument;
-    model.vehiclePhotoFile = vehiclePhoto;
-    model.vehicleLicenseFile = vehicleLicense;
-    model.vehicleInsuranceFile = vehicleInsurance;
-    model.leaseAgreementFile = leaseAgreement;
+
+
+
+
+
+    var car = CarModel(brand: brand.text, year: year.text, vehicle: vehicle.text, carType: carType, isDualCommand: isDualCommand);
+
+    car.vehicleDocumentFile = vehicleDocument;
+    car.vehiclePhotoFile = vehiclePhoto;
+    car.vehicleLicenseFile = vehicleLicense;
+    car.vehicleInsuranceFile = vehicleInsurance;
+    car.leaseAgreementFile = leaseAgreement;
 
 
     context.push(

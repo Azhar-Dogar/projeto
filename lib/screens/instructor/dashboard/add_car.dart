@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/constants.dart';
+import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/drop_down_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
 
@@ -42,25 +43,45 @@ class _AddCarState extends State<AddCar> {
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           children: [
-            DropDownWidget(
-              dropdownItems: Constants.portugueseVehicleBrands,
-              onSelect: (value) {
-                brand.text = value;
+            Expanded(
+              child: Column(
+                children: [
+                  DropDownWidget(
+                    dropdownItems: Constants.portugueseVehicleBrands,
+                    onSelect: (value) {
+                      brand.text = value;
+                    },
+                    label: "Marca",
+                  ),
+                  MarginWidget(),
+                  TextFieldWidget(
+                    controller: year,
+                    label: "Ano",
+                  ),
+                  MarginWidget(),
+                  TextFieldWidget(
+                    controller: vehicle,
+                    label: "Veículo",
+                  ),
+                  MarginWidget(),
+                  documentsWidget(),
+                ],
+              ),
+            ),
+            ButtonWidget(
+              name: "Salvar Alterações",
+              onPressed: () {
+                // Constants.users.get().then((value){
+                //   var docs = value.docs.where((element) => element.exists && element.data()["uid"] == null);
+                //   for(var doc in docs){
+                //     Constants.users.doc(doc.id).update({
+                //       "uid" : doc.id,
+                //     });
+                //   }
+                //
+                // });
               },
-              label: "Marca",
             ),
-            MarginWidget(),
-            TextFieldWidget(
-              controller: year,
-              label: "Ano",
-            ),
-            MarginWidget(),
-            TextFieldWidget(
-              controller: vehicle,
-              label: "Veículo",
-            ),
-            MarginWidget(),
-            documentsWidget(),
           ],
         ),
       ),
