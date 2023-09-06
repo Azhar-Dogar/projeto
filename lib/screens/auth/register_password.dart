@@ -135,11 +135,18 @@ class _RegisterPasswordState extends State<RegisterPassword> {
                       if (await createUser()) {
                         var imageDocumentLink = await Functions.uploadFile(user.licenseDocumentFile!, path: "licenseDocument/${Constants.uid()}.${user.licenseDocumentFile!.path.split(".").last}");
                         user.licenseDocument = imageDocumentLink;
+
+
+
+                        // vehicleDocument;
+                        // File? vehicleLicense;
+                        // File? vehicleInsurance;
+                        // File? leaseAgreement;
                         user.vehiclePhoto = user.vehiclePhotoFile == null ? null : await Functions.uploadFile(user.vehiclePhotoFile!, path: "vehiclePhoto/${Constants.uid()}.${user.vehiclePhotoFile!.path.split(".").last}");
-                        user.vehiclePhoto = user.vehiclePhotoFile == null ? null : await Functions.uploadFile(user.vehiclePhotoFile!, path: "vehiclePhoto/${Constants.uid()}.${user.vehiclePhotoFile!.path.split(".").last}");
-                        user.vehiclePhoto = user.vehiclePhotoFile == null ? null : await Functions.uploadFile(user.vehiclePhotoFile!, path: "vehiclePhoto/${Constants.uid()}.${user.vehiclePhotoFile!.path.split(".").last}");
-                        user.vehiclePhoto = user.vehiclePhotoFile == null ? null : await Functions.uploadFile(user.vehiclePhotoFile!, path: "vehiclePhoto/${Constants.uid()}.${user.vehiclePhotoFile!.path.split(".").last}");
-                        user.vehiclePhoto = user.vehiclePhotoFile == null ? null : await Functions.uploadFile(user.vehiclePhotoFile!, path: "vehiclePhoto/${Constants.uid()}.${user.vehiclePhotoFile!.path.split(".").last}");
+                        user.vehicleDocument = user.vehicleDocumentFile == null ? null : await Functions.uploadFile(user.vehicleDocumentFile!, path: "vehiclePhoto/${Constants.uid()}.${user.vehicleDocumentFile!.path.split(".").last}");
+                        user.vehicleLicense = user.vehicleLicenseFile == null ? null : await Functions.uploadFile(user.vehicleLicenseFile!, path: "vehiclePhoto/${Constants.uid()}.${user.vehicleLicenseFile!.path.split(".").last}");
+                        user.vehicleInsurance = user.vehicleInsuranceFile == null ? null : await Functions.uploadFile(user.vehicleInsuranceFile!, path: "vehiclePhoto/${Constants.uid()}.${user.vehicleInsuranceFile!.path.split(".").last}");
+                        user.leaseAgreement = user.leaseAgreementFile == null ? null : await Functions.uploadFile(user.leaseAgreementFile!, path: "vehiclePhoto/${Constants.uid()}.${user.leaseAgreementFile!.path.split(".").last}");
 
                   Constants.users.doc(Constants.uid()).set(user.isUser ? user.toMapUserCreate() : user.toMapInstructorCreate());
                   context.pushAndRemoveUntil(child: CheckData());

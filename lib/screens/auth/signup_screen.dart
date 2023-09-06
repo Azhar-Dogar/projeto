@@ -59,6 +59,8 @@ class _SignupScreenState extends State<SignupScreen> {
   File? vehicleInsurance;
   File? leaseAgreement;
 
+
+
   String userType = "student";
 
   @override

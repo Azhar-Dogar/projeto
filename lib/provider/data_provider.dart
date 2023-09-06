@@ -34,7 +34,12 @@ class DataProvider with ChangeNotifier {
   getProfile() {
     profileStream =
         Constants.users.doc(Constants.uid()).snapshots().listen((snapshot) {
-          userModel = UserModel.fromMap(snapshot.data()!);
+          if(snapshot.exists){
+            userModel = UserModel.fromMap(snapshot.data()!);
+          }else{
+            userModel = null;
+          }
+
           notifyListeners();
         });
   }

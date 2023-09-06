@@ -3,6 +3,10 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
+import 'package:projeto/extras/constants.dart';
+import 'package:projeto/model/user_model.dart';
+import 'package:projeto/provider/data_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/screens/dashboard/profile/credit/balance.dart';
@@ -13,13 +17,16 @@ import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 
+import '../../../generated/assets.dart';
 import '../../../widgets/textfield_widget.dart';
+import '../../auth/login_screen.dart';
 
 class InstructorProfileScreen extends StatefulWidget {
   const InstructorProfileScreen({super.key});
 
   @override
-  State<InstructorProfileScreen> createState() => _InstructorProfileScreenState();
+  State<InstructorProfileScreen> createState() =>
+      _InstructorProfileScreenState();
 }
 
 class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
@@ -39,23 +46,31 @@ class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
 
   bool isDetails = false, isEdit = false;
 
+  late DataProvider dataProvider;
+
+  late UserModel user;
+
   @override
   Widget build(BuildContext context) {
     width = context.width;
     height = context.height;
     padding = width * 0.04;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          const MarginWidget(factor: 3),
-          const MarginWidget(factor: 0.8),
-          header(),
-          isDetails ? details() : profileMain(),
-        ],
-      ),
-    );
+    return Consumer<DataProvider>(builder: (context, value, child) {
+      dataProvider = value;
+      user = dataProvider.userModel!;
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          children: [
+            const MarginWidget(factor: 3),
+            const MarginWidget(factor: 0.8),
+            header(),
+            isDetails ? details() : profileMain(),
+          ],
+        ),
+      );
+    });
   }
 
   Widget profileMain() {
@@ -79,7 +94,7 @@ class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
             listTile("Minhas Avaliações", AppIcons.star),
             const Expanded(child: SizedBox()),
             InkWell(
-              onTap: (){
+              onTap: () {
                 context.push(child: const TermsCondition());
               },
               child: bottomOption("Termos e Condições"),
@@ -93,7 +108,19 @@ class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
     );
   }
 
-  Widget sairDoAppBtn() => bottomOption("Sair do App");
+  Widget sairDoAppBtn() {
+    return InkWell(
+      onTap: () {
+        Constants.auth().signOut();
+        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (ctx) => const LoginScreen(),
+            ),
+            (route) => false);
+      },
+      child: bottomOption("Sair do App"),
+    );
+  }
 
   Widget header() {
     return Container(
@@ -115,9 +142,11 @@ class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
                   border: Border.all(
                       color: Colors.black.withOpacity(0.5), width: 4)),
               child: ClipOval(
-                child: CustomAssetImage(
+                child: Image(
+                  image: user.image == null
+                      ? const AssetImage(Assets.imagesPlaceHolder)
+                      : NetworkImage(user.image!) as ImageProvider,
                   fit: BoxFit.cover,
-                  path: AppImages.demo,
                 ),
               ),
             ),
@@ -126,32 +155,48 @@ class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Ronaldo Silva",
+                  user.name,
                   style: AppTextStyles.titleMedium(),
                 ),
                 const MarginWidget(factor: 0.7),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: CColors.primary, width: 2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  padding: const EdgeInsets.only(
-                      left: 32, right: 32, top: 8, bottom: 8),
-                  child: Row(
-                    children: [
-                      CustomAssetImage(
-                        path: AppIcons.upload,
-                        height: 20,
-                        width: 20,
-                      ),
-                      const MarginWidget(isHorizontal: true, factor: 0.7),
-                      Text(
-                        "Alterar foto",
-                        style: AppTextStyles.captionMedium(
-                          color: CColors.primary,
+                InkWell(
+                  onTap: () async {
+                    var file = await Functions.pickImage();
+                    if(file != null){
+                      Functions.showLoading(context);
+                      var link = await Functions.uploadImage(file, path: "profile/${Constants.uid()}.${file.path.split(".").last}");
+
+                      Constants.users.doc(Constants.uid()).update({
+                        "image" : link,
+                      });
+
+                      Navigator.of(context, rootNavigator: true).pop();
+
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: CColors.primary, width: 2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.only(
+                        left: 32, right: 32, top: 8, bottom: 8),
+                    child: Row(
+                      children: [
+                        CustomAssetImage(
+                          path: AppIcons.upload,
+                          height: 20,
+                          width: 20,
                         ),
-                      )
-                    ],
+                        const MarginWidget(isHorizontal: true, factor: 0.7),
+                        Text(
+                          "Alterar foto",
+                          style: AppTextStyles.captionMedium(
+                            color: CColors.primary,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 )
               ],
@@ -289,7 +334,9 @@ class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
                         hint: '',
                         enabled: isEdit),
                   ),
-                  const MarginWidget(isHorizontal: true,),
+                  const MarginWidget(
+                    isHorizontal: true,
+                  ),
                   Expanded(
                     child: TextFieldWidget(
                         label: "Complemento",
