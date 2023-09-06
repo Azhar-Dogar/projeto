@@ -43,6 +43,15 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController agency = TextEditingController();
   TextEditingController account = TextEditingController();
 
+  //vehicle
+
+  TextEditingController brand = TextEditingController();
+  TextEditingController year = TextEditingController();
+  TextEditingController vehicle = TextEditingController();
+
+  //rate
+  TextEditingController amount = TextEditingController();
+
   File? licenseDocument;
 
   String userType = "student";
@@ -178,7 +187,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   const MarginWidget(
                     factor: 1.5,
                   ),
-                  if (userType == "owner") ...[
+                  if (userType == "instructor") ...[
                     bankData(),
                     const MarginWidget(
                       factor: 1.5,
@@ -203,11 +212,10 @@ class _SignupScreenState extends State<SignupScreen> {
                         number,
                         complement,
                       ])) {
-                        if(!email.text.isValidEmail){
-                          Functions.showSnackBar(
-                              context, "Por favor insira um endereço de e-mail válido.");
-                        }else
-                        if (licenseDocument == null) {
+                        if (!email.text.isValidEmail) {
+                          Functions.showSnackBar(context,
+                              "Por favor insira um endereço de e-mail válido.");
+                        } else if (licenseDocument == null) {
                           Functions.showSnackBar(
                               context, "Selecione o documento CNH.");
                         } else {
@@ -402,7 +410,6 @@ class _SignupScreenState extends State<SignupScreen> {
           label: "Banco",
           borderColor: CColors.textFieldBorder,
         ),
-
         const MarginWidget(),
         TextFieldWidget(
             borderColor: CColors.textFieldBorder,
@@ -431,29 +438,38 @@ class _SignupScreenState extends State<SignupScreen> {
           fontWeight: FontWeight.w500,
         ),
         const MarginWidget(),
-        TextFieldWidget(
-            borderColor: CColors.textFieldBorder,
-            backColor: Colors.transparent,
-            label: "Marca",
-            controller: drivingLicenceNumber,
-            hint: ''),
+        DropDownWidget(
+          dropdownItems: Constants.portugueseVehicleBrands,
+          onSelect: (value) {
+            brand.text = value;
+          },
+          label: "Marca",
+        ),
         const MarginWidget(
           factor: 1,
         ),
-        TextFieldWidget(
-            borderColor: CColors.textFieldBorder,
-            backColor: Colors.transparent,
-            label: "Ano",
-            controller: drivingLicenceNumber,
-            hint: ''),
+        Builder(
+          builder: (context) {
+            var currentYear = DateTime.now().year;
+            return DropDownWidget(
+              dropdownItems: List.generate(40, (i) => (currentYear - i).toString()),
+              onSelect: (value) {
+                year.text = value;
+              },
+              label: "Ano",
+            );
+          }
+        ),
         const MarginWidget(
           factor: 1,
         ),
-        TextFieldWidget(
-          borderColor: CColors.textFieldBorder,
-          backColor: Colors.transparent,
+
+        DropDownWidget(
+          dropdownItems: Constants.portugueseVehicleBrands,
+          onSelect: (value) {
+            vehicle.text = value;
+          },
           label: "Veículo",
-          controller: drivingLicenceNumber,
         ),
         const MarginWidget(
           factor: 1,
@@ -596,7 +612,7 @@ class _SignupScreenState extends State<SignupScreen> {
           borderColor: CColors.textFieldBorder,
           backColor: Colors.transparent,
           label: "Valor",
-          controller: name,
+          controller: amount,
         ),
       ],
     );

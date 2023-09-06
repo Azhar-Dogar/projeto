@@ -65,6 +65,31 @@ class Constants{
   ];
 
 
+  static List<String> portugueseVehicleBrands = [
+    "Renault",
+    "Peugeot",
+    "Citroën",
+    "Volkswagen",
+    "Mercedes-Benz",
+    "BMW",
+    "Audi",
+    "Ford",
+    "Fiat",
+    "Opel",
+    "Nissan",
+    "Toyota",
+    "Hyundai",
+    "Kia",
+    "Mitsubishi",
+    "Mazda",
+    "Volvo",
+    "Skoda",
+    "Seat",
+    "Jeep",
+  ];
+
+
+
 
   //auth
 
