@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:utility_extensions/utility_extensions.dart';
@@ -38,34 +36,7 @@ class _AddBalanceState extends State<AddBalance> {
         padding: EdgeInsets.only(left: padding, right: padding),
         child: Column(
           children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const MarginWidget(),
-                    Text(
-                      "Qual valor você deseja inserir?",
-                      style: AppTextStyles.titleMedium(),
-                    ),
-                    const MarginWidget(),
-                    amount("R\$ 50,00",5000),
-                    amount("R\$ 100,00",10000),
-                    amount("R\$ 150,00",15000),
-                    amount("R\$ 200,00",20000),
-                    amount("R\$ 300,00",30000),
-                    amount("Outro valor",0),
-                    if(selected == 0)
-                    TextFieldWidget(
-                      textInputType: TextInputType.number,
-                      controller: otherC,
-                      hint: 'R\$ 0,00',
-                    ),
-                  ],
-                ),
-
-              ),
-            ),
+            amountSelection(),
             Row(
               children: [
                 Expanded(
@@ -86,16 +57,21 @@ class _AddBalanceState extends State<AddBalance> {
               ],
             ),
             const MarginWidget(),
-            ButtonWidget(name: "Inserir Crédito", onPressed: () {
-
-              double amount = 0;
-              if (selected == 0) {
-                amount = double.parse(otherC.text.trim());
-              }  else{
-                amount = selected.toDouble();
-              }
-              Functions.push(context,  SelectPaymentType(amount: amount,));
-            }),
+            ButtonWidget(
+                name: "Inserir Crédito",
+                onPressed: () {
+                  double amount = 0;
+                  if (selected == 0) {
+                    amount = double.parse(otherC.text.trim());
+                  } else {
+                    amount = selected.toDouble();
+                  }
+                  Functions.push(
+                      context,
+                      SelectPaymentType(
+                        amount: amount,
+                      ));
+                }),
             const MarginWidget(),
           ],
         ),
@@ -103,8 +79,37 @@ class _AddBalanceState extends State<AddBalance> {
     );
   }
 
-  Widget amount(String str,int value) {
+  Widget amountSelection() {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const MarginWidget(),
+            Text(
+              "Qual valor você deseja inserir?",
+              style: AppTextStyles.titleMedium(),
+            ),
+            const MarginWidget(),
+            amount("R\$ 50,00", 5000),
+            amount("R\$ 100,00", 10000),
+            amount("R\$ 150,00", 15000),
+            amount("R\$ 200,00", 20000),
+            amount("R\$ 300,00", 30000),
+            amount("Outro valor", 0),
+            if (selected == 0)
+              TextFieldWidget(
+                textInputType: TextInputType.number,
+                controller: otherC,
+                hint: 'R\$ 0,00',
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 
+  Widget amount(String str, int value) {
     return RadioMenuButton(
       value: value,
       groupValue: selected,
