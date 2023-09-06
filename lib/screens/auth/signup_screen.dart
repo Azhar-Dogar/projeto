@@ -233,8 +233,8 @@ class _SignupScreenState extends State<SignupScreen> {
                             vehicleInsurance == null) {
                           Functions.showSnackBar(
                               context, "Anexe todos os documentos necessários");
-                        } else
-                        if ((carType == "own" && leaseAgreement == null)) {
+                        } else if ((carType == "rented" &&
+                            leaseAgreement == null)) {
                           Functions.showSnackBar(
                               context, "Anexe todos os documentos necessários");
                         } else {
@@ -490,12 +490,10 @@ class _SignupScreenState extends State<SignupScreen> {
           factor: 1,
         ),
         Builder(builder: (context) {
-          var currentYear = DateTime
-              .now()
-              .year;
+          var currentYear = DateTime.now().year;
           return DropDownWidget(
             dropdownItems:
-            List.generate(40, (i) => (currentYear - i).toString()),
+                List.generate(40, (i) => (currentYear - i).toString()),
             onSelect: (value) {
               year.text = value;
             },
@@ -534,6 +532,9 @@ class _SignupScreenState extends State<SignupScreen> {
               onChanged: (v) {
                 setState(() {
                   carType = v.toString();
+                  if(carType == "own"){
+                    leaseAgreement = null;
+                  }
                 });
               }),
         ),
@@ -551,7 +552,7 @@ class _SignupScreenState extends State<SignupScreen> {
               groupValue: carType,
               onChanged: (v) {
                 setState(() {
-                  carType = v ?? "student";
+                  carType = v ?? "own";
                 });
               }),
         ),
@@ -651,7 +652,10 @@ class _SignupScreenState extends State<SignupScreen> {
               ? "Seguro do Veículo"
               : "Seguro enviado para aprovação",
           onTap: (file) {
-            vehicleInsurance = file;
+            setState(() {
+              vehicleInsurance = file;
+            });
+
           },
         ),
         const MarginWidget(
@@ -671,15 +675,15 @@ class _SignupScreenState extends State<SignupScreen> {
               });
             },
           ),
-
-
-        if(vehiclePhoto != null || vehicleDocument != null ||
-            vehicleLicense != null || vehicleInsurance != null || leaseAgreement != null)
+        if (vehiclePhoto != null ||
+            vehicleDocument != null ||
+            vehicleLicense != null ||
+            vehicleInsurance != null ||
+            leaseAgreement != null)
           Text(
             "Você receberá uma notificação no aplicativo com informações sobre a aprovação.",
             style: AppTextStyles.captionRegular(),
           ),
-
       ],
     );
   }
@@ -707,7 +711,7 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Future<void> registerUser() async {
-    bool isUser = userType == "user";
+    bool isUser = userType == "student";
     var model = UserModel(
       name: name.text,
       email: email.text,
@@ -733,9 +737,16 @@ class _SignupScreenState extends State<SignupScreen> {
     );
 
     model.licenseDocumentFile = licenseDocument;
+    model.vehicleDocumentFile = vehicleDocument;
+    model.vehiclePhotoFile = vehiclePhoto;
+    model.vehicleLicenseFile = vehicleLicense;
+    model.vehicleInsuranceFile = vehicleInsurance;
+    model.leaseAgreementFile = leaseAgreement;
+
+
     context.push(
         child: RegisterPassword(
-          user: model,
-        ));
+      user: model,
+    ));
   }
 }

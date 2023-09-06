@@ -5,7 +5,6 @@ import 'package:projeto/extras/functions.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:projeto/screens/check_data.dart';
 import 'package:utility_extensions/utility_extensions.dart';
-import 'package:projeto/screens/dashboard_screen.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_text.dart';
 import 'package:projeto/widgets/margin_widget.dart';
@@ -122,26 +121,34 @@ class _RegisterPasswordState extends State<RegisterPassword> {
                 name: "Cadastrar",
                 onPressed: () async {
 
-                  if (newPassword.text.trim().length < 6) {
-                    Functions.showSnackBar(context,
-                        "a senha deve conter pelo menos 6 caracteres.");
-                  } else if (newPassword.text.trim() !=
-                      confirmPassword.text.trim()) {
-                    Functions.showSnackBar(context, "A senha não corresponde.");
-                  } else {
+                  if(widget.user != null){
+                    if (newPassword.text.trim().length < 6) {
+                      Functions.showSnackBar(context,
+                          "a senha deve conter pelo menos 6 caracteres.");
+                    } else if (newPassword.text.trim() !=
+                        confirmPassword.text.trim()) {
+                      Functions.showSnackBar(context, "A senha não corresponde.");
+                    } else {
 
-                    Functions.showLoading(context);
-                    if (await createUser()) {
-                      var imageDocumentLink = await Functions.uploadFile(widget.user!.licenseDocumentFile!, path: "licenseDocument/${Constants.uid()}.${widget.user!.licenseDocumentFile!.path.split(".").last}");
-                      widget.user!.licenseDocument = imageDocumentLink;
+                      Functions.showLoading(context);
+                      var user = widget.user!;
+                      if (await createUser()) {
+                        var imageDocumentLink = await Functions.uploadFile(user.licenseDocumentFile!, path: "licenseDocument/${Constants.uid()}.${user.licenseDocumentFile!.path.split(".").last}");
+                        user.licenseDocument = imageDocumentLink;
+                        user.vehiclePhoto = user.vehiclePhotoFile == null ? null : await Functions.uploadFile(user.vehiclePhotoFile!, path: "vehiclePhoto/${Constants.uid()}.${user.vehiclePhotoFile!.path.split(".").last}");
+                        user.vehiclePhoto = user.vehiclePhotoFile == null ? null : await Functions.uploadFile(user.vehiclePhotoFile!, path: "vehiclePhoto/${Constants.uid()}.${user.vehiclePhotoFile!.path.split(".").last}");
+                        user.vehiclePhoto = user.vehiclePhotoFile == null ? null : await Functions.uploadFile(user.vehiclePhotoFile!, path: "vehiclePhoto/${Constants.uid()}.${user.vehiclePhotoFile!.path.split(".").last}");
+                        user.vehiclePhoto = user.vehiclePhotoFile == null ? null : await Functions.uploadFile(user.vehiclePhotoFile!, path: "vehiclePhoto/${Constants.uid()}.${user.vehiclePhotoFile!.path.split(".").last}");
+                        user.vehiclePhoto = user.vehiclePhotoFile == null ? null : await Functions.uploadFile(user.vehiclePhotoFile!, path: "vehiclePhoto/${Constants.uid()}.${user.vehiclePhotoFile!.path.split(".").last}");
 
-                      Constants.users.doc(Constants.uid()).set(widget.user!.toMapUserCreate());
-
-                      context.pushAndRemoveUntil(child: CheckData());
-                    }else{
-                      context.pop();
-                    }
+                  Constants.users.doc(Constants.uid()).set(user.isUser ? user.toMapUserCreate() : user.toMapInstructorCreate());
+                  context.pushAndRemoveUntil(child: CheckData());
+                  }else{
+                  context.pop();
                   }
+                }
+                  }
+
                 },
               )
             ],

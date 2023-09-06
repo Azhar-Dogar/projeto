@@ -25,7 +25,7 @@ class UserModel {
   String? account;
 
 
-  bool? isUser;
+  late bool isUser;
   //local data
   File? licenseDocumentFile;
 
@@ -74,7 +74,7 @@ class UserModel {
     required this.complement,
 
 
-    this.isUser,
+    required this.isUser,
 
     this.bank,
     this.agency,
