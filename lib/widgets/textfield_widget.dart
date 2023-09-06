@@ -6,7 +6,7 @@ import '../extras/colors.dart';
 import 'custom_asset_image.dart';
 
 class TextFieldWidget extends StatelessWidget {
-  TextFieldWidget({
+  const TextFieldWidget({
     required this.controller,
     this.hint,
     this.textInputType,
@@ -25,26 +25,28 @@ class TextFieldWidget extends StatelessWidget {
     this.suffixIcon,
     this.height,
     this.enabled,
+    this.textColor,
     Key? key,
   }) : super(key: key);
-  void Function(String)? onChanged;
-  void Function(String)? onSubmitted;
-  TextEditingController controller;
-  TextInputType? textInputType;
-  String? hint;
-  double? height;
-  Color? labelColor;
-  Color? borderColor;
-  int maxLines;
-  String? label;
-  bool? secureText;
-  bool showBorder;
-  Color? backColor;
-  Widget? suffix;
-  Widget? prefixWidget;
-  double? fontSize;
-  Widget? suffixIcon;
-  bool? enabled;
+  final Function(String)? onChanged;
+  final Function(String)? onSubmitted;
+  final TextEditingController controller;
+  final TextInputType? textInputType;
+  final String? hint;
+  final double? height;
+  final Color? labelColor;
+  final Color? borderColor;
+  final int maxLines;
+  final String? label;
+  final bool? secureText;
+  final bool showBorder;
+  final Color? backColor;
+  final Widget? suffix;
+  final Widget? prefixWidget;
+  final double? fontSize;
+  final Widget? suffixIcon;
+  final bool? enabled;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +88,7 @@ class TextFieldWidget extends StatelessWidget {
               style: AppTextStyles.sanFransiscoDisplay(
                 fontSize: (fontSize != null) ? fontSize : 10,
                 fontWeight: FontWeight.normal,
-                color: labelColor,
+                color: textColor ?? labelColor,
               ),
               decoration: InputDecoration(
                 suffixIcon: suffixIcon ?? (enabled != null && enabled!  ? Transform.scale(

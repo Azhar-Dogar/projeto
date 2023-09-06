@@ -53,6 +53,11 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController amount = TextEditingController();
 
   File? licenseDocument;
+  File? vehiclePhoto;
+  File? vehicleDocument;
+  File? vehicleLicense;
+  File? vehicleInsurance;
+  File? leaseAgreement;
 
   String userType = "student";
 
@@ -198,6 +203,47 @@ class _SignupScreenState extends State<SignupScreen> {
                   name: "Cadastrar",
                   onPressed: () {
                     if (userType == "instructor") {
+                      if (validateFields([
+                        name,
+                        email,
+                        phone,
+                        rgController,
+                        drivingLicenceNumber,
+                        drivingLicenceCategory,
+                        zipCode,
+                        road,
+                        neighborhood,
+                        number,
+                        complement,
+                        bank,
+                        agency,
+                        account,
+                        brand,
+                        year,
+                        vehicle,
+                        amount,
+                      ])) {
+                        if (!email.text.isValidEmail) {
+                          Functions.showSnackBar(context,
+                              "Por favor insira um endereço de e-mail válido.");
+                        } else if (licenseDocument == null ||
+                            vehiclePhoto == null ||
+                            vehicleDocument == null ||
+                            vehicleLicense == null ||
+                            vehicleInsurance == null) {
+                          Functions.showSnackBar(
+                              context, "Anexe todos os documentos necessários");
+                        } else
+                        if ((carType == "own" && leaseAgreement == null)) {
+                          Functions.showSnackBar(
+                              context, "Anexe todos os documentos necessários");
+                        } else {
+                          registerUser();
+                        }
+                      } else {
+                        Functions.showSnackBar(context,
+                            "Por favor, preencha todos os campos obrigatórios.");
+                      }
                     } else {
                       if (validateFields([
                         name,
@@ -226,11 +272,6 @@ class _SignupScreenState extends State<SignupScreen> {
                             "Por favor, preencha todos os campos obrigatórios.");
                       }
                     }
-                    // context.push(
-                    //   child: RegisterPassword(
-                    //     isInstructor: userType == "instructor",
-                    //   ),
-                    // );
                   },
                 ),
               ],
@@ -448,22 +489,22 @@ class _SignupScreenState extends State<SignupScreen> {
         const MarginWidget(
           factor: 1,
         ),
-        Builder(
-          builder: (context) {
-            var currentYear = DateTime.now().year;
-            return DropDownWidget(
-              dropdownItems: List.generate(40, (i) => (currentYear - i).toString()),
-              onSelect: (value) {
-                year.text = value;
-              },
-              label: "Ano",
-            );
-          }
-        ),
+        Builder(builder: (context) {
+          var currentYear = DateTime
+              .now()
+              .year;
+          return DropDownWidget(
+            dropdownItems:
+            List.generate(40, (i) => (currentYear - i).toString()),
+            onSelect: (value) {
+              year.text = value;
+            },
+            label: "Ano",
+          );
+        }),
         const MarginWidget(
           factor: 1,
         ),
-
         DropDownWidget(
           dropdownItems: Constants.portugueseVehicleBrands,
           onSelect: (value) {
@@ -555,43 +596,90 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
         const MarginWidget(),
         documentWidget(
-          image: Icons.file_upload_outlined,
-          text: "Foto do Veículo",
-          onTap: (file) {},
+          image: vehiclePhoto == null
+              ? Icons.file_upload_outlined
+              : Icons.access_time_outlined,
+          text: vehiclePhoto == null
+              ? "Foto do Veículo"
+              : "Foto enviada para aprovação",
+          onTap: (file) {
+            setState(() {
+              vehiclePhoto = file;
+            });
+          },
         ),
         const MarginWidget(
           factor: 0.7,
         ),
         documentWidget(
-          image: Icons.file_upload_outlined,
-          text: "Documento do Veículo",
-          onTap: (file) {},
+          image: vehicleDocument == null
+              ? Icons.file_upload_outlined
+              : Icons.access_time_outlined,
+          text: vehicleDocument == null
+              ? "Documento do Veículo"
+              : "Documento enviado para aprovação",
+          onTap: (file) {
+            setState(() {
+              vehicleDocument = file;
+            });
+          },
         ),
         const MarginWidget(
           factor: 0.7,
         ),
         documentWidget(
-          image: Icons.file_upload_outlined,
-          text: "Licencimento do Veículo",
-          onTap: (file) {},
+          image: vehicleLicense == null
+              ? Icons.file_upload_outlined
+              : Icons.access_time_outlined,
+          text: vehicleLicense == null
+              ? "Licencimento do Veículo"
+              : "Licenciamento enviado para aprovação",
+          onTap: (file) {
+            setState(() {
+              vehicleLicense = file;
+            });
+          },
         ),
         const MarginWidget(
           factor: 0.7,
         ),
         documentWidget(
-          image: Icons.file_upload_outlined,
-          text: "Seguro do Veículo",
-          onTap: (file) {},
+          image: vehicleInsurance == null
+              ? Icons.file_upload_outlined
+              : Icons.access_time_outlined,
+          text: vehicleInsurance == null
+              ? "Seguro do Veículo"
+              : "Seguro enviado para aprovação",
+          onTap: (file) {
+            vehicleInsurance = file;
+          },
         ),
         const MarginWidget(
           factor: 0.7,
         ),
         if (carType != "own")
           documentWidget(
-            image: Icons.file_upload_outlined,
-            text: "Contrato de Locação",
-            onTap: (file) {},
+            image: leaseAgreement == null
+                ? Icons.file_upload_outlined
+                : Icons.access_time_outlined,
+            text: leaseAgreement == null
+                ? "Contrato de Locação"
+                : "Contrato de locação submetido para aprovação",
+            onTap: (file) {
+              setState(() {
+                leaseAgreement = file;
+              });
+            },
           ),
+
+
+        if(vehiclePhoto != null || vehicleDocument != null ||
+            vehicleLicense != null || vehicleInsurance != null || leaseAgreement != null)
+          Text(
+            "Você receberá uma notificação no aplicativo com informações sobre a aprovação.",
+            style: AppTextStyles.captionRegular(),
+          ),
+
       ],
     );
   }
@@ -619,6 +707,7 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Future<void> registerUser() async {
+    bool isUser = userType == "user";
     var model = UserModel(
       name: name.text,
       email: email.text,
@@ -631,12 +720,22 @@ class _SignupScreenState extends State<SignupScreen> {
       neighbourhood: neighborhood.text,
       number: number.text,
       complement: complement.text,
+      isUser: isUser,
+      bank: isUser ? null : bank.text,
+      agency: isUser ? null : agency.text,
+      account: isUser ? null : account.text,
+      brand: isUser ? null : brand.text,
+      year: isUser ? null : year.text,
+      vehicle: isUser ? null : vehicle.text,
+      amount: isUser ? null : amount.text,
+      carType: isUser ? null : carType,
+      isDualCommand: isUser ? null : isDualCommand,
     );
 
     model.licenseDocumentFile = licenseDocument;
     context.push(
         child: RegisterPassword(
-      user: model,
-    ));
+          user: model,
+        ));
   }
 }

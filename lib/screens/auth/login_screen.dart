@@ -65,8 +65,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   TextFieldWidget(
                     backColor: Colors.transparent,
+                    borderColor: Colors.white,
+                    labelColor: Colors.white,
                     label: "Email",
                     controller: emailController,
+                    textColor: Colors.white,
                   ),
                   const MarginWidget(
                     factor: 1,
@@ -74,7 +77,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextFieldWidget(
                     backColor: Colors.transparent,
                     label: "Senha",
+                    borderColor: Colors.white,
+                    labelColor: Colors.white,
                     controller: passwordController,
+                    textColor: Colors.white,
+                    secureText: true,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,

@@ -105,6 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget sairDoAppBtn() {
     return InkWell(
       onTap: () {
+        Constants.auth().signOut();
         Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (ctx) => const LoginScreen(),
