@@ -110,7 +110,7 @@ class TextFieldWidget extends StatelessWidget {
                 focusedBorder: border(),
                 hintText: hint,
                 hintStyle: AppTextStyles.sanFransiscoDisplay(
-                  fontSize: (fontSize != null) ? fontSize : 10,
+                  fontSize: (fontSize != null) ? fontSize : 14,
                   fontWeight: FontWeight.w400,
                   color: CColors.textFieldBorder,
                 ),

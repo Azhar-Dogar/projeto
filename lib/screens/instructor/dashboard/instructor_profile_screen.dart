@@ -6,6 +6,7 @@ import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:projeto/provider/data_provider.dart';
+import 'package:projeto/widgets/drop_down_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/functions.dart';
@@ -31,18 +32,6 @@ class InstructorProfileScreen extends StatefulWidget {
 
 class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
   late double width, height, padding;
-
-  TextEditingController name = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController phone = TextEditingController();
-  TextEditingController rgController = TextEditingController();
-  TextEditingController cnhController = TextEditingController();
-  String? groupValue;
-
-  TextEditingController cEPController = TextEditingController();
-  TextEditingController ruaController = TextEditingController();
-  TextEditingController bairroController = TextEditingController();
-  TextEditingController nDegController = TextEditingController();
 
   bool isDetails = false, isEdit = false;
 
@@ -162,16 +151,17 @@ class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
                 InkWell(
                   onTap: () async {
                     var file = await Functions.pickImage();
-                    if(file != null){
+                    if (file != null) {
                       Functions.showLoading(context);
-                      var link = await Functions.uploadImage(file, path: "profile/${Constants.uid()}.${file.path.split(".").last}");
+                      var link = await Functions.uploadImage(file,
+                          path:
+                              "profile/${Constants.uid()}.${file.path.split(".").last}");
 
                       Constants.users.doc(Constants.uid()).update({
-                        "image" : link,
+                        "image": link,
                       });
 
                       Navigator.of(context, rootNavigator: true).pop();
-
                     }
                   },
                   child: Container(
@@ -256,144 +246,19 @@ class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const MarginWidget(),
-              TextFieldWidget(
-                label: "Name",
-                controller: name,
-                hint: '',
-                enabled: isEdit,
-              ),
-              const MarginWidget(),
-              TextFieldWidget(
-                  label: "E-mail",
-                  controller: email,
-                  enabled: isEdit,
-                  hint: ', enabled: isEdit'),
-              const MarginWidget(),
-              TextFieldWidget(
-                  label: "Número de Contato",
-                  controller: phone,
-                  hint: '',
-                  enabled: isEdit),
-              const MarginWidget(),
-              TextFieldWidget(
-                  label: "RG/CPF",
-                  controller: rgController,
-                  hint: '',
-                  enabled: isEdit),
-              const MarginWidget(),
-              TextFieldWidget(
-                  label: "Nº CNH",
-                  controller: cnhController,
-                  hint: '',
-                  enabled: isEdit),
-              const MarginWidget(),
-              Row(
-                children: [
-                  CustomAssetImage(
-                    path: AppIcons.timer,
-                    height: 24,
-                  ),
-                  const MarginWidget(isHorizontal: true),
-                  Text(
-                    "CNH em análise",
-                    style: AppTextStyles.captionMedium(color: CColors.primary),
-                  ),
-                ],
-              ),
-              const MarginWidget(),
-              Text(
-                "Endereço",
-                style: AppTextStyles.titleMedium(),
-              ),
-              const MarginWidget(),
-              TextFieldWidget(
-                  label: "CEP",
-                  controller: cEPController,
-                  hint: '',
-                  enabled: isEdit),
-              const MarginWidget(),
-              TextFieldWidget(
-                  label: "Rua",
-                  controller: ruaController,
-                  hint: '',
-                  enabled: isEdit),
-              const MarginWidget(),
-              TextFieldWidget(
-                  label: "Bairro",
-                  controller: bairroController,
-                  hint: '',
-                  enabled: isEdit),
-              const MarginWidget(),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFieldWidget(
-                        label: "Nº",
-                        controller: nDegController,
-                        hint: '',
-                        enabled: isEdit),
-                  ),
-                  const MarginWidget(
-                    isHorizontal: true,
-                  ),
-                  Expanded(
-                    child: TextFieldWidget(
-                        label: "Complemento",
-                        controller: nDegController,
-                        hint: '',
-                        enabled: isEdit),
-                  ),
-                ],
-              ),
-              const MarginWidget(),
-              Text(
-                "Valor por aula",
-                style: AppTextStyles.titleMedium(),
-              ),
-              const MarginWidget(),
-              TextFieldWidget(
-                  label: "R\$ 50,00",
-                  controller: nDegController,
-                  hint: '',
-                  enabled: isEdit),
-              const MarginWidget(),
-              Text(
-                "Dados Bancários",
-                style: AppTextStyles.titleMedium(),
-              ),
-              const MarginWidget(),
-              TextFieldWidget(
-                  label: "Banco",
-                  controller: nDegController,
-                  hint: '',
-                  enabled: isEdit),
-              const MarginWidget(),
-              TextFieldWidget(
-                  label: "Agência",
-                  controller: nDegController,
-                  hint: '',
-                  enabled: isEdit),
-              const MarginWidget(),
-              TextFieldWidget(
-                  label: "Conta",
-                  controller: nDegController,
-                  hint: '',
-                  enabled: isEdit),
               const MarginWidget(factor: 2),
               Center(
                 child: Column(
                   children: [
-                    if (isEdit) ...[
-                      ButtonWidget(
-                          name: "Salvar Alterações",
-                          onPressed: () {
-                            setState(() {
-                              isEdit = false;
-                              isDetails = false;
-                            });
-                          }),
-                    ] else ...[
+                    ProfileForm(
+                        onSave: () {
+                          setState(() {
+                            isEdit = false;
+                            isDetails = false;
+                          });
+                        },
+                        isEdit: isEdit),
+                    if (!isEdit) ...[
                       InkWell(
                         onTap: () {
                           setState(() {
@@ -414,5 +279,241 @@ class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
         ),
       ),
     );
+  }
+}
+
+class ProfileForm extends StatefulWidget {
+  const ProfileForm({super.key, required this.onSave, required this.isEdit});
+
+  final Function() onSave;
+  final bool isEdit;
+
+  @override
+  State<ProfileForm> createState() => _ProfileFormState();
+}
+
+class _ProfileFormState extends State<ProfileForm> {
+  TextEditingController name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController rgController = TextEditingController();
+  TextEditingController drivingLicenceNumber = TextEditingController();
+  TextEditingController drivingLicenceCategory = TextEditingController();
+
+  TextEditingController zipCode = TextEditingController();
+  TextEditingController road = TextEditingController();
+  TextEditingController neighborhood = TextEditingController();
+  TextEditingController number = TextEditingController();
+  TextEditingController complement = TextEditingController();
+
+  //bank
+  TextEditingController bank = TextEditingController();
+  TextEditingController agency = TextEditingController();
+  TextEditingController account = TextEditingController();
+
+  //vehicle
+
+  TextEditingController brand = TextEditingController();
+  TextEditingController year = TextEditingController();
+  TextEditingController vehicle = TextEditingController();
+
+  //rate
+  TextEditingController amount = TextEditingController();
+
+  setData() {
+    var user = provider.userModel!;
+    name.text = user.name;
+    email.text = user.email;
+    phone.text = user.phone;
+    rgController.text = user.rgCpf;
+    drivingLicenceNumber.text = user.licenceNumber;
+    drivingLicenceCategory.text = user.licenseCategory;
+
+    zipCode.text = user.zipCode;
+    road.text = user.road;
+    neighborhood.text = user.neighbourhood;
+    number.text = user.number;
+    complement.text = user.complement;
+
+    bank.text = user.bank ?? "";
+    agency.text = user.agency ?? "";
+    account.text = user.account ?? "";
+
+    //vehicle
+
+    brand.text = user.brand ?? "";
+    year.text = user.year ?? "";
+    vehicle.text = user.vehicle ?? "";
+
+    //rate
+    amount.text = user.amount ?? "";
+  }
+
+  late DataProvider provider;
+
+  bool isSet = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<DataProvider>(builder: (context, value, child) {
+      provider = value;
+      if (!isSet) {
+        setData();
+        isSet = true;
+      }
+      return Column(
+        children: [
+          const MarginWidget(),
+          TextFieldWidget(
+            label: "Name",
+            controller: name,
+            enabled: widget.isEdit,
+          ),
+          const MarginWidget(),
+          TextFieldWidget(
+              label: "E-mail",
+              controller: email,
+              enabled: widget.isEdit,
+              hint: ''),
+          const MarginWidget(),
+          TextFieldWidget(
+              label: "Número de Contato",
+              controller: phone,
+              enabled: widget.isEdit),
+          const MarginWidget(),
+          TextFieldWidget(
+              label: "RG/CPF",
+              controller: rgController,
+              enabled: widget.isEdit),
+          const MarginWidget(),
+          TextFieldWidget(
+              label: "Nº CNH",
+              controller: drivingLicenceNumber,
+              enabled: widget.isEdit),
+          const MarginWidget(),
+          DropDownWidget(
+            dropdownItems: Constants.drivingLicenseCategoriesPortugal,
+            onSelect: (value) {
+              drivingLicenceCategory.text = value;
+            },
+            label: "Categoria da CNH",
+            selectedValue: drivingLicenceCategory.text,
+          ),
+          const MarginWidget(),
+          Row(
+            children: [
+              CustomAssetImage(
+                path: AppIcons.timer,
+                height: 24,
+              ),
+              const MarginWidget(isHorizontal: true),
+              Text(
+                "CNH em análise",
+                style: AppTextStyles.captionMedium(color: CColors.primary),
+              ),
+            ],
+          ),
+          const MarginWidget(),
+          Text(
+            "Endereço",
+            style: AppTextStyles.titleMedium(),
+          ),
+          const MarginWidget(),
+          TextFieldWidget(
+            label: "CEP",
+            controller: zipCode,
+            enabled: widget.isEdit,
+          ),
+          const MarginWidget(),
+          TextFieldWidget(
+              label: "Rua", controller: road, enabled: widget.isEdit),
+          const MarginWidget(),
+          TextFieldWidget(
+              label: "Bairro",
+              controller: neighborhood,
+              enabled: widget.isEdit),
+          const MarginWidget(),
+          Row(
+            children: [
+              Expanded(
+                child: TextFieldWidget(
+                    label: "Nº", controller: number, enabled: widget.isEdit),
+              ),
+              const MarginWidget(
+                isHorizontal: true,
+              ),
+              Expanded(
+                child: TextFieldWidget(
+                    label: "Complemento",
+                    controller: complement,
+                    enabled: widget.isEdit),
+              ),
+            ],
+          ),
+          const MarginWidget(),
+          Text(
+            "Valor por aula",
+            style: AppTextStyles.titleMedium(),
+          ),
+          const MarginWidget(),
+          TextFieldWidget(
+              label: "Valor", controller: amount, enabled: widget.isEdit),
+          const MarginWidget(),
+          Text(
+            "Dados Bancários",
+            style: AppTextStyles.titleMedium(),
+          ),
+          const MarginWidget(),
+          DropDownWidget(
+            dropdownItems: Constants.banksInPortugal,
+            onSelect: (value) {
+              bank.text = value;
+            },
+            label: "Banco",
+            selectedValue: bank.text,
+          ),
+          const MarginWidget(),
+          TextFieldWidget(
+            label: "Agência",
+            controller: agency,
+            enabled: widget.isEdit,
+          ),
+          const MarginWidget(),
+          TextFieldWidget(
+            label: "Conta",
+            controller: account,
+            enabled: widget.isEdit,
+          ),
+          const MarginWidget(),
+          if (widget.isEdit)
+            ButtonWidget(
+                name: "Salvar Alterações",
+                onPressed: () {
+                  var model = UserModel(
+                    name: name.text,
+                    email: email.text,
+                    phone: phone.text,
+                    rgCpf: rgController.text,
+                    licenceNumber: drivingLicenceNumber.text,
+                    licenseCategory: drivingLicenceCategory.text,
+                    zipCode: zipCode.text,
+                    road: road.text,
+                    neighbourhood: neighborhood.text,
+                    number: number.text,
+                    complement: complement.text,
+                    isUser: false,
+                    bank: bank.text,
+                    agency: agency.text,
+                    account: account.text,
+                    brand: brand.text,
+                    year: year.text,
+                    vehicle: vehicle.text,
+                    amount: amount.text,
+                  );
+                  widget.onSave();
+                }),
+        ],
+      );
+    });
   }
 }
