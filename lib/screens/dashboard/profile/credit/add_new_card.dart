@@ -61,7 +61,7 @@ class _AddNewCardState extends State<AddNewCard> {
                   children: [
                     const MarginWidget(),
                     Text(
-                      "Adicionar Cartão",
+                      "${widget.cardModel == null ? "Adicionar"  : "Editar"} Cartão",
                       style: AppTextStyles.titleMedium(),
                     ),
                     const MarginWidget(factor: 1.5),
@@ -102,65 +102,6 @@ class _AddNewCardState extends State<AddNewCard> {
                         });
                       },
                     ),
-                    // if (!widget.isEdit) ...[
-                    //   TextFieldWidget(
-                    //     controller: numberC,
-                    //     hint: '',
-                    //     label: 'Número do Cartão',
-                    //   ),
-                    //   const MarginWidget(),
-                    //   TextFieldWidget(
-                    //     controller: nameC,
-                    //     hint: '',
-                    //     label: 'Nome do Titular',
-                    //   ),
-                    //   const MarginWidget(),
-                    //   Row(
-                    //     children: [
-                    //       Expanded(
-                    //           child: TextFieldWidget(
-                    //         controller: validityC,
-                    //         hint: '',
-                    //         label: 'Validade',
-                    //       )),
-                    //       const MarginWidget(isHorizontal: true),
-                    //       Expanded(
-                    //           child: TextFieldWidget(
-                    //         controller: codeC,
-                    //         hint: '',
-                    //         label: 'CVV',
-                    //       )),
-                    //     ],
-                    //   ),
-                    //   const MarginWidget(),
-                    // ],
-                    // Row(
-                    //   children: [
-                    //     Switch(
-                    //       value: isEnabled,
-                    //       onChanged: (value) {
-                    //         setState(() {
-                    //           isEnabled = value;
-                    //         });
-                    //       },
-                    //     ),
-                    //     const MarginWidget(isHorizontal: true),
-                    //     Text(
-                    //       "Cartão Principal",
-                    //       style: AppTextStyles.subTitleMedium(),
-                    //     )
-                    //   ],
-                    // ),
-                    // if (widget.isEdit) ...[
-                    //   const MarginWidget(),
-                    //   Align(
-                    //     alignment: Alignment.center,
-                    //     child: Text(
-                    //       "Excluir Cartão",
-                    //       style: AppTextStyles.captionMedium(color: CColors.primary),
-                    //     ),
-                    //   ),
-                    // ],
                   ],
                 ),
               ),
@@ -211,31 +152,11 @@ class _AddNewCardState extends State<AddNewCard> {
 
                       Navigator.of(context, rootNavigator: true).pop();
                       context.pop();
-                    } on FirebaseException catch (e) {}
+                    } on FirebaseException catch (e) {
+                      print(e);
+                    }
                   }
-                  return;
-                  // if (!widget.isEdit) {
-                  //   if (numberC.text.isEmpty) {
-                  //     Functions.showSnackBar(context,
-                  //         "Por favor, insira o número do cartão primeiro");
-                  //     return;
-                  //   }
-                  //   if (nameC.text.isEmpty) {
-                  //     Functions.showSnackBar(context,
-                  //         "Por favor, insira primeiro o nome do titular do cartão");
-                  //     return;
-                  //   }
-                  //   if (validityC.text.isEmpty) {
-                  //     Functions.showSnackBar(context,
-                  //         "Por favor, insira a validade do cartão primeiro");
-                  //     return;
-                  //   }
-                  //   if (codeC.text.isEmpty) {
-                  //     Functions.showSnackBar(context, "Por favor insira o CVV");
-                  //     return;
-                  //   }
-                  // }
-                  // Functions.push(context, const SuccessMessage());
+
                 }),
             const MarginWidget(),
           ],
