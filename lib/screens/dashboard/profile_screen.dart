@@ -459,6 +459,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                   neighbourhood: neighborhood.text,
                   number: number.text,
                   complement: complement.text,
+                  isUser: true,
                 );
 
                 Constants.users.doc(Constants.uid()).update(
