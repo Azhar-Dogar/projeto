@@ -396,6 +396,7 @@ class _ProfileFormState extends State<ProfileForm> {
             onSelect: (value) {
               drivingLicenceCategory.text = value;
             },
+            isEdit: widget.isEdit,
             label: "Categoria da CNH",
             selectedValue: drivingLicenceCategory.text,
           ),
@@ -469,6 +470,7 @@ class _ProfileFormState extends State<ProfileForm> {
             onSelect: (value) {
               bank.text = value;
             },
+            isEdit: widget.isEdit,
             label: "Banco",
             selectedValue: bank.text,
           ),
@@ -509,6 +511,10 @@ class _ProfileFormState extends State<ProfileForm> {
                     year: year.text,
                     vehicle: vehicle.text,
                     amount: amount.text,
+                  );
+
+                  Constants.users.doc(Constants.uid()).update(
+                    model.toMapInstructorUpdate(),
                   );
                   widget.onSave();
                 }),

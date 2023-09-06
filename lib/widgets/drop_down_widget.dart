@@ -13,11 +13,13 @@ class DropDownWidget extends StatefulWidget {
     this.borderColor,
     this.fontSize,
     this.selectedValue,
+    this.isEdit = true,
   });
 
   final List<String> dropdownItems;
   final Function(String) onSelect;
   final String label;
+  final bool isEdit;
   final Color? labelColor;
   final Color? borderColor;
   final double? fontSize;
@@ -41,6 +43,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
       height: 55,
       child: DropdownButtonFormField<String>(
         value: selectedValue,
+
         isExpanded: true,
         padding: EdgeInsets.zero,
         icon: const Icon(Icons.keyboard_arrow_down_outlined),
@@ -52,7 +55,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
             ),
           );
         }).toList(),
-        onChanged: (String? newValue) {
+        onChanged: !widget.isEdit ? null : (String? newValue) {
           selectedValue = newValue;
           widget.onSelect(newValue!);
         },

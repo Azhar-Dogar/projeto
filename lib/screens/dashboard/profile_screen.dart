@@ -380,6 +380,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
             onSelect: (value) {
               drivingLicenceCategory.text = value;
             },
+            isEdit: widget.isEdit,
             label: "Categoria da CNH",
             selectedValue: drivingLicenceCategory.text,
           ),

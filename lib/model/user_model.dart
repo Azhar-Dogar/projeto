@@ -176,6 +176,30 @@ class UserModel {
     };
   }
 
+
+  Map<String, dynamic> toMapInstructorUpdate() {
+    return {
+      "name": name,
+      "email": email,
+      "phone": phone,
+      "rgCpf": rgCpf,
+      "licenceNumber": licenceNumber,
+      "licenseCategory": licenseCategory,
+      "zipCode": zipCode,
+      "road": road,
+      "isUser": isUser,
+      "neighbourhood": neighbourhood,
+      "number": number,
+      "complement": complement,
+      "bank": bank,
+      "agency": agency,
+      "account": account,
+      "brand": brand,
+      "year": year,
+      "vehicle": vehicle,
+      "amount": amount,
+    };
+  }
   Map<String, dynamic> toMapUserUpdate() {
     return {
       "name": name,
