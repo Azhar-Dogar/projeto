@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
+import 'package:projeto/extras/constants.dart';
+import 'package:projeto/provider/data_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/screens/dashboard/profile/credit/add_new_card.dart';
 import 'package:projeto/screens/dashboard/profile/credit/bar_code_scan.dart';
@@ -13,7 +17,9 @@ import '../../../../extras/functions.dart';
 import '../../../../widgets/divider_widget.dart';
 
 class SelectPaymentType extends StatefulWidget {
-  const SelectPaymentType({Key? key}) : super(key: key);
+  const SelectPaymentType({Key? key, required this.amount}) : super(key: key);
+
+  final double amount;
 
   @override
   State<SelectPaymentType> createState() => _SelectPaymentTypeState();
@@ -22,14 +28,55 @@ class SelectPaymentType extends StatefulWidget {
 class _SelectPaymentTypeState extends State<SelectPaymentType> {
   late double width, padding;
 
+  late DataProvider dataProvider;
+
+  String? selected;
+
   @override
   Widget build(BuildContext context) {
     width = context.width;
     padding = width * 0.04;
-    return Scaffold(
-      appBar: CustomAppBar("Inserir Crédito"),
-      body: Padding(
-        padding: EdgeInsets.only(left: padding, right: padding),
+    return Consumer<DataProvider>(builder: (ctx, value, child) {
+      dataProvider = value;
+      return Scaffold(
+        appBar: CustomAppBar("Inserir Crédito"),
+        body: Padding(
+          padding: EdgeInsets.only(left: padding, right: padding),
+          child: Column(
+            children: [
+              cardsSelection(context),
+              ButtonWidget(
+                  name: "Selecionar",
+                  onPressed: () {
+                    if (selected == null) {
+                      Functions.showSnackBar(context, "Selecione a opção de pagamento primeiro");
+                      return;
+                    }else if (selected == "pix") {
+                      context.push(child: BarCodeScan());
+                    }else{
+                      try {
+                        Constants.users.doc(Constants.uid()).update({
+                          "credits":
+                          widget.amount + dataProvider.userModel!.credits!,
+                        });
+                      } on FirebaseException catch (e) {
+                        print(e);
+                      }
+
+                      context.push(child: const SuccessMessage());
+                    }
+                  }),
+              const MarginWidget(),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget cardsSelection(BuildContext context) {
+    return Expanded(
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -39,17 +86,31 @@ class _SelectPaymentTypeState extends State<SelectPaymentType> {
               style: AppTextStyles.titleMedium(),
             ),
             const MarginWidget(factor: .5),
-            radioOption(const CardDetail(isPrinciple: true, isEdit: true)),
-            radioOption(const CardDetail(isPrinciple: true, isEdit: true)),
-            InkWell(
-              onTap: () {
-                Functions.push(context, const BarCodeScan());
-              },
-              child: radioOption(Text(
-                "PIX",
-                style: AppTextStyles.subTitleMedium(),
+            if (dataProvider.userModel!.cardsList.isEmpty) ...[
+              const MarginWidget(),
+              Center(
+                  child: Text(
+                "Nenhum cartão ainda",
+                style: AppTextStyles.titleRegular(),
               )),
-            ),
+              const MarginWidget(),
+            ] else ...[
+              for (var card in dataProvider.userModel!.cardsList) ...[
+                radioOption(
+                    CardDetail(
+                      isEdit: true,
+                      cardModel: card,
+                    ),
+                    card.number),
+              ],
+            ],
+            //   Functions.push(context, const BarCodeScan());
+            radioOption(
+                Text(
+                  "PIX",
+                  style: AppTextStyles.subTitleMedium(),
+                ),
+                "pix"),
             const MarginWidget(factor: 1.5),
             InkWell(
               onTap: () {
@@ -67,53 +128,59 @@ class _SelectPaymentTypeState extends State<SelectPaymentType> {
                 ],
               ),
             ),
-            const Expanded(child: SizedBox()),
-            ButtonWidget(
-                name: "Selecionar",
-                onPressed: () {
-
-                  context.push(child: const SuccessMessage());
-                }),
-            const MarginWidget(),
+            const MarginWidget(factor: 2),
           ],
         ),
       ),
     );
   }
 
-  Widget radioOption(Widget widget) {
-    return Column(
-      children: [
-        const MarginWidget(factor: 1.5),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: 18,
-              width: 18,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: CColors.bluePrima,
+  Widget radioOption(Widget widget, String value) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          selected = value;
+        });
+      },
+      child: Column(
+        children: [
+          const MarginWidget(factor: 1.5),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                height: 18,
+                width: 18,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: CColors.bluePrima,
+                  ),
                 ),
+                padding: EdgeInsets.all(3),
+                child: selected == value
+                    ? CircleAvatar(
+                        backgroundColor: Colors.black,
+                      )
+                    : null,
               ),
-            ),
-            const MarginWidget(isHorizontal: true, factor: 1.5),
-            Expanded(
-              child: widget,
-            ),
+              const MarginWidget(isHorizontal: true, factor: 1.5),
+              Expanded(
+                child: widget,
+              ),
+            ],
+          ),
+          if (widget is Text) ...[
+            const MarginWidget(factor: 2),
+          ] else ...[
+            const MarginWidget(),
           ],
-        ),
-        if (widget is Text) ...[
-          const MarginWidget(factor: 2),
-        ] else ...[
-          const MarginWidget(),
+          const Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: DividerWidget(),
+          ),
         ],
-        const Padding(
-          padding: EdgeInsets.only(left: 20),
-          child: DividerWidget(),
-        ),
-      ],
+      ),
     );
   }
 

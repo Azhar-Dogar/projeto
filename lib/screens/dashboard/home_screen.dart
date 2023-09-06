@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
+import 'package:projeto/provider/data_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/screens/dashboard/home/instructors_screen.dart';
@@ -23,46 +25,61 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
+
+  late DataProvider dataProvider;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const MarginWidget(
-              factor: 2,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: header(),
-            ),
-            Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Image(image: AssetImage(AppImages.autoImage)),
-                ),
-                Positioned(bottom: 1, left: 5, right: 5, child: card()),
-              ],
-            ),
-            const MarginWidget(),
-            InkWell(
-              onTap: (){
-                Functions.push(context, InstructorsScreen());
-              },
-              child: Text(
-                "Pesquisar instrutores perto de mim",
-                style: AppTextStyles.captionMedium(color: CColors.primary),
+    return Consumer<DataProvider>(builder: (context, value, child) {
+      dataProvider = value;
+
+      return Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const MarginWidget(
+                factor: 2,
               ),
-            ),
-            searchBar(),
-            InstructorWidget(name:"Annette Johnson",imagePath:AppImages.instructor,showButton: true,),
-            const MarginWidget(),
-            InstructorWidget(name:"Jacob Jones",imagePath: AppImages.instructor_1,showButton: true,)
-          ],
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: header(),
+              ),
+              Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: Image(image: AssetImage(AppImages.autoImage)),
+                  ),
+                  Positioned(bottom: 1, left: 5, right: 5, child: card()),
+                ],
+              ),
+              const MarginWidget(),
+              InkWell(
+                onTap: () {
+                  Functions.push(context, InstructorsScreen());
+                },
+                child: Text(
+                  "Pesquisar instrutores perto de mim",
+                  style: AppTextStyles.captionMedium(color: CColors.primary),
+                ),
+              ),
+              searchBar(),
+              InstructorWidget(
+                name: "Annette Johnson",
+                imagePath: AppImages.instructor,
+                showButton: true,
+              ),
+              const MarginWidget(),
+              InstructorWidget(
+                name: "Jacob Jones",
+                imagePath: AppImages.instructor_1,
+                showButton: true,
+              )
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget searchBar() {
@@ -157,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         Expanded(
             child: CustomText(
-          text: "Claudia\nsilva",
+          text: "${dataProvider.userModel!.name}",
           fontSize: 12,
           fontWeight: FontWeight.w500,
         )),
@@ -171,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontWeight: FontWeight.w500,
               ),
               CustomText(
-                text: "R\$ 800,00",
+                text: "R\$ ${dataProvider.userModel!.credits}",
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 textColor: CColors.primary,

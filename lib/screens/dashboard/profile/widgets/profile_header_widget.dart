@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/provider/data_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 
 import '../../../../extras/app_textstyles.dart';
@@ -9,21 +11,25 @@ class ProfileHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(right: context.width * 0.04),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            "Crédito",
-            style: AppTextStyles.captionMedium(),
+    return Consumer<DataProvider>(
+      builder: (ctx, value, child) {
+        return Padding(
+          padding: EdgeInsets.only(right: context.width * 0.04),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "Crédito",
+                style: AppTextStyles.captionMedium(),
+              ),
+              Text(
+                "R\$ ${value.userModel!.credits}",
+                style: AppTextStyles.subTitleMedium(color: CColors.primary),
+              ),
+            ],
           ),
-          Text(
-            "R\$ 800,00",
-            style: AppTextStyles.subTitleMedium(color: CColors.primary),
-          ),
-        ],
-      ),
+        );
+      }
     );
   }
 }

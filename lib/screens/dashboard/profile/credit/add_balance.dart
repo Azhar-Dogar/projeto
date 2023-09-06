@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:utility_extensions/utility_extensions.dart';
@@ -18,7 +20,11 @@ class AddBalance extends StatefulWidget {
 class _AddBalanceState extends State<AddBalance> {
   late double width, height, padding;
 
-  TextEditingController controller = TextEditingController();
+  TextEditingController otherC = TextEditingController();
+
+  bool other = false;
+
+  int selected = 5000;
 
   @override
   Widget build(BuildContext context) {
@@ -31,24 +37,35 @@ class _AddBalanceState extends State<AddBalance> {
       body: Padding(
         padding: EdgeInsets.only(left: padding, right: padding),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const MarginWidget(),
-            Text(
-              "Qual valor você deseja inserir?",
-              style: AppTextStyles.titleMedium(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const MarginWidget(),
+                    Text(
+                      "Qual valor você deseja inserir?",
+                      style: AppTextStyles.titleMedium(),
+                    ),
+                    const MarginWidget(),
+                    amount("R\$ 50,00",5000),
+                    amount("R\$ 100,00",10000),
+                    amount("R\$ 150,00",15000),
+                    amount("R\$ 200,00",20000),
+                    amount("R\$ 300,00",30000),
+                    amount("Outro valor",0),
+                    if(selected == 0)
+                    TextFieldWidget(
+                      textInputType: TextInputType.number,
+                      controller: otherC,
+                      hint: 'R\$ 0,00',
+                    ),
+                  ],
+                ),
+
+              ),
             ),
-            const MarginWidget(),
-            amount("R\$ 50,00"),
-            amount("R\$ 50,00"),
-            amount("R\$ 50,00"),
-            amount("R\$ 50,00"),
-            amount("Outro valor"),
-            TextFieldWidget(
-              controller: controller,
-              hint: 'R\$ 0,00',
-            ),
-            const Expanded(child: SizedBox()),
             Row(
               children: [
                 Expanded(
@@ -70,7 +87,14 @@ class _AddBalanceState extends State<AddBalance> {
             ),
             const MarginWidget(),
             ButtonWidget(name: "Inserir Crédito", onPressed: () {
-              Functions.push(context, const SelectPaymentType());
+
+              double amount = 0;
+              if (selected == 0) {
+                amount = double.parse(otherC.text.trim());
+              }  else{
+                amount = selected.toDouble();
+              }
+              Functions.push(context,  SelectPaymentType(amount: amount,));
             }),
             const MarginWidget(),
           ],
@@ -79,17 +103,19 @@ class _AddBalanceState extends State<AddBalance> {
     );
   }
 
-  Widget amount(String str) {
-    return SizedBox(
-      width: 160,
-      child: RadioMenuButton(
-        value: false,
-        groupValue: true,
-        onChanged: (value) {},
-        child: Text(
-          str,
-          style: AppTextStyles.subTitleMedium(),
-        ),
+  Widget amount(String str,int value) {
+
+    return RadioMenuButton(
+      value: value,
+      groupValue: selected,
+      onChanged: (value) {
+        setState(() {
+          selected = value!;
+        });
+      },
+      child: Text(
+        str,
+        style: AppTextStyles.subTitleMedium(),
       ),
     );
   }

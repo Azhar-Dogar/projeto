@@ -23,8 +23,9 @@ class UserModel {
   late String complement;
 
   //card
-
   List<CardModel> cardsList = [];
+  double? credits;
+
 
   //bank
   String? bank;
@@ -83,6 +84,7 @@ class UserModel {
     this.amount,
     this.carType,
     this.isDualCommand,
+    this.credits,
   });
 
   UserModel.fromMap(Map<String, dynamic> data) {
@@ -99,6 +101,9 @@ class UserModel {
     neighbourhood = data["neighbourhood"];
     number = data["number"];
     complement = data["complement"];
+
+    credits = data["credits"] ?? 0;
+
 
     isUser = data["isUser"];
 
