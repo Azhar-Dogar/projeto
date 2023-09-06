@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
@@ -10,6 +11,8 @@ import 'package:projeto/widgets/c_profile_app_bar.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/divider_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
+
+import 'add_new_card.dart';
 
 class Balance extends StatelessWidget {
   const Balance({Key? key}) : super(key: key);
@@ -26,7 +29,7 @@ class Balance extends StatelessWidget {
         color: Colors.black,
         child: Column(
           children: [
-            topWidget(),
+            topWidget(context),
             cardDetailSection(padding,context),
           ],
         ),
@@ -63,7 +66,7 @@ class Balance extends StatelessWidget {
             const MarginWidget(factor: 2),
             InkWell(
               onTap: (){
-                Functions.push(context, const AddBalance());
+                Functions.push(context, const AddNewCard());
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -86,7 +89,7 @@ class Balance extends StatelessWidget {
 
 
 
-  Widget topWidget() {
+  Widget topWidget(BuildContext context) {
     return Column(
       children: [
         const MarginWidget(factor: 2.5),
@@ -101,32 +104,37 @@ class Balance extends StatelessWidget {
               color: Colors.white, weight: FontWeight.w400),
         ),
         const MarginWidget(),
-        addCredit(),
+        addCredit(context),
         const MarginWidget(factor: 2.5),
       ],
     );
   }
 
-  Widget addCredit() {
-    return Container(
-      width: 200,
-      height: 40,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: CColors.primary, width: 2)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.add,
-            color: CColors.primary,
-          ),
-          const MarginWidget(isHorizontal: true),
-          Text(
-            "Adicionar Crédito",
-            style: AppTextStyles.captionMedium(color: CColors.primary),
-          ),
-        ],
+  Widget addCredit(BuildContext context) {
+    return InkWell(
+      onTap: (){
+        Functions.push(context, const AddBalance());
+      },
+      child: Container(
+        width: 200,
+        height: 40,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: CColors.primary, width: 2)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.add,
+              color: CColors.primary,
+            ),
+            const MarginWidget(isHorizontal: true),
+            Text(
+              "Adicionar Crédito",
+              style: AppTextStyles.captionMedium(color: CColors.primary),
+            ),
+          ],
+        ),
       ),
     );
   }

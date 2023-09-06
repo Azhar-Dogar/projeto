@@ -86,7 +86,7 @@ class TextFieldWidget extends StatelessWidget {
               maxLines: maxLines,
               obscureText: secureText ?? false,
               style: AppTextStyles.sanFransiscoDisplay(
-                fontSize: (fontSize != null) ? fontSize : 10,
+                fontSize: (fontSize != null) ? fontSize : 14,
                 fontWeight: FontWeight.normal,
                 color: textColor ?? labelColor,
               ),

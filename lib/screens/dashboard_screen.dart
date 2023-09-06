@@ -19,7 +19,7 @@ class DashBoard extends StatefulWidget {
 
 class _DashBoardState extends State<DashBoard> {
   List<Widget> pages = [
-     ProfileScreen(),
+    const ProfileScreen(),
     const ClassesScreen(),
     const HomeScreen(),
      NotificationScreen(),

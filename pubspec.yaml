@@ -67,6 +67,7 @@ dependencies:
   images_picker: ^1.2.11
   file_picker: ^5.5.0
   intl: 0.18.1
+  flutter_credit_card: ^3.0.7
 
 dev_dependencies:
   flutter_test:
