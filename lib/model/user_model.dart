@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:projeto/model/card_model.dart';
+
 class UserModel {
   late String name;
   late String email;
   late String phone;
 
   String? image;
+
   //license
   late String rgCpf;
   late String licenceNumber;
@@ -19,18 +22,19 @@ class UserModel {
   late String number;
   late String complement;
 
+  //card
+
+  List<CardModel> cardsList = [];
+
   //bank
   String? bank;
   String? agency;
   String? account;
 
-
   late bool isUser;
+
   //local data
   File? licenseDocumentFile;
-
-
-
 
   //vehicle
 
@@ -41,13 +45,11 @@ class UserModel {
   //rate
   String? amount;
 
-
   File? vehiclePhotoFile;
   File? vehicleDocumentFile;
   File? vehicleLicenseFile;
   File? vehicleInsuranceFile;
   File? leaseAgreementFile;
-
 
   String? vehiclePhoto;
   String? vehicleDocument;
@@ -58,7 +60,6 @@ class UserModel {
   String? carType;
 
   bool? isDualCommand;
-
 
   UserModel({
     required this.name,
@@ -72,27 +73,19 @@ class UserModel {
     required this.neighbourhood,
     required this.number,
     required this.complement,
-
-
     required this.isUser,
-
     this.bank,
     this.agency,
     this.account,
-
     this.brand,
     this.year,
     this.vehicle,
-
     this.amount,
-
     this.carType,
     this.isDualCommand,
-
-
   });
 
-  UserModel.fromMap(Map<String, dynamic> data){
+  UserModel.fromMap(Map<String, dynamic> data) {
     name = data["name"];
     email = data["email"];
     phone = data["phone"];
@@ -123,71 +116,74 @@ class UserModel {
     vehicleLicense = data["vehicleLicense"];
     vehicleInsurance = data["vehicleInsurance"];
     leaseAgreement = data["leaseAgreement"];
+    List cardsList = data["cardsList"] ?? [];
+    this.cardsList = cardsList.map((e) => CardModel.fromMap(e)).toList();
   }
 
-  Map<String, dynamic> toMapInstructorCreate(){
+  Map<String, dynamic> toMapInstructorCreate() {
     return {
-      "name" : name,
-      "email" : email,
-      "phone" : phone,
-      "rgCpf" : rgCpf,
-      "licenceNumber" : licenceNumber,
-      "licenseCategory" : licenseCategory,
-      "licenseDocument" : licenseDocument,
-      "zipCode" : zipCode,
-      "road" : road,
-      "isUser" : isUser,
-      "neighbourhood" : neighbourhood,
-      "number" : number,
-      "complement" : complement,
-      "bank" : bank,
-      "agency" : agency,
-      "account" : account,
-      "brand" : brand,
-      "year" : year,
-      "vehicle" : vehicle,
-      "amount" : amount,
-      "carType" : carType,
-      "isDualCommand" : isDualCommand,
-      "vehiclePhoto" : vehiclePhoto,
-      "vehicleDocument" : vehicleDocument,
-      "vehicleLicense" : vehicleLicense,
-      "vehicleInsurance" : vehicleInsurance,
-      "leaseAgreement" : leaseAgreement,
+      "name": name,
+      "email": email,
+      "phone": phone,
+      "rgCpf": rgCpf,
+      "licenceNumber": licenceNumber,
+      "licenseCategory": licenseCategory,
+      "licenseDocument": licenseDocument,
+      "zipCode": zipCode,
+      "road": road,
+      "isUser": isUser,
+      "neighbourhood": neighbourhood,
+      "number": number,
+      "complement": complement,
+      "bank": bank,
+      "agency": agency,
+      "account": account,
+      "brand": brand,
+      "year": year,
+      "vehicle": vehicle,
+      "amount": amount,
+      "carType": carType,
+      "isDualCommand": isDualCommand,
+      "vehiclePhoto": vehiclePhoto,
+      "vehicleDocument": vehicleDocument,
+      "vehicleLicense": vehicleLicense,
+      "vehicleInsurance": vehicleInsurance,
+      "leaseAgreement": leaseAgreement,
+      "cardsList": cardsList.map((e) => e.toMap()).toList(),
     };
   }
 
-
-  Map<String, dynamic> toMapUserCreate(){
+  Map<String, dynamic> toMapUserCreate() {
     return {
-      "name" : name,
-      "email" : email,
-      "phone" : phone,
-      "rgCpf" : rgCpf,
-      "licenceNumber" : licenceNumber,
-      "licenseCategory" : licenseCategory,
-      "licenseDocument" : licenseDocument,
-      "zipCode" : zipCode,
-      "road" : road,
-      "isUser" : isUser,
-      "neighbourhood" : neighbourhood,
-      "number" : number,
-      "complement" : complement,
+      "name": name,
+      "email": email,
+      "phone": phone,
+      "rgCpf": rgCpf,
+      "licenceNumber": licenceNumber,
+      "licenseCategory": licenseCategory,
+      "licenseDocument": licenseDocument,
+      "zipCode": zipCode,
+      "road": road,
+      "isUser": isUser,
+      "neighbourhood": neighbourhood,
+      "number": number,
+      "complement": complement,
     };
   }
-  Map<String, dynamic> toMapUserUpdate(){
+
+  Map<String, dynamic> toMapUserUpdate() {
     return {
-      "name" : name,
-      "email" : email,
-      "phone" : phone,
-      "rgCpf" : rgCpf,
-      "licenceNumber" : licenceNumber,
-      "licenseCategory" : licenseCategory,
-      "zipCode" : zipCode,
-      "road" : road,
-      "neighbourhood" : neighbourhood,
-      "number" : number,
-      "complement" : complement,
+      "name": name,
+      "email": email,
+      "phone": phone,
+      "rgCpf": rgCpf,
+      "licenceNumber": licenceNumber,
+      "licenseCategory": licenseCategory,
+      "zipCode": zipCode,
+      "road": road,
+      "neighbourhood": neighbourhood,
+      "number": number,
+      "complement": complement,
     };
   }
 }

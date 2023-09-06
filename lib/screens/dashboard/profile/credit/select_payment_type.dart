@@ -9,7 +9,6 @@ import 'package:projeto/screens/dashboard/profile/widgets/card_detail.dart';
 import 'package:projeto/widgets/c_profile_app_bar.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
-
 import '../../../../extras/functions.dart';
 import '../../../../widgets/divider_widget.dart';
 
@@ -72,6 +71,7 @@ class _SelectPaymentTypeState extends State<SelectPaymentType> {
             ButtonWidget(
                 name: "Selecionar",
                 onPressed: () {
+
                   context.push(child: const SuccessMessage());
                 }),
             const MarginWidget(),

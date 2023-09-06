@@ -31,11 +31,14 @@ class DataProvider with ChangeNotifier {
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? profileStream;
 
   UserModel? userModel;
+
   getProfile() {
     profileStream =
         Constants.users.doc(Constants.uid()).snapshots().listen((snapshot) {
-          userModel = UserModel.fromMap(snapshot.data()!);
-          notifyListeners();
-        });
+      userModel = UserModel.fromMap(snapshot.data()!);
+      notifyListeners();
+    });
   }
+
+
 }
