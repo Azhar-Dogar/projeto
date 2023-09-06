@@ -57,7 +57,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
           widget.onSelect(newValue!);
         },
         style: AppTextStyles.sanFransiscoDisplay(
-            fontSize: (widget.fontSize != null) ? widget.fontSize : 10,
+            fontSize: (widget.fontSize != null) ? widget.fontSize : 14,
             fontWeight: FontWeight.normal,
             color: CColors.textColor
             // color: widget.labelColor,
