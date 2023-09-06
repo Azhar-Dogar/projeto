@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
+import 'package:projeto/screens/dashboard/profile/credit/balance.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/widgets/c_profile_app_bar.dart';
 import 'package:projeto/screens/dashboard/profile_screen.dart';
@@ -30,7 +31,7 @@ class SuccessMessage extends StatelessWidget {
               ),
             ),
             ButtonWidget(name: "Volta para pagamento", onPressed: (){
-              context.pushAndRemoveUntil(child:  ProfileScreen());
+              context.pushAndRemoveUntil(child:  Balance());
             }),
             const MarginWidget(),
           ],

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_credit_card/credit_card_form.dart';
 import 'package:flutter_credit_card/credit_card_model.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
@@ -11,20 +10,17 @@ import 'package:projeto/provider/data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/functions.dart';
-import 'package:projeto/screens/dashboard/profile/credit/success_message.dart';
 import 'package:projeto/widgets/c_profile_app_bar.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/margin_widget.dart';
-import 'package:projeto/widgets/textfield_widget.dart';
-
 import '../../../../model/user_model.dart';
 import '../../../../widgets/credit_card_form_widget.dart';
 
 class AddNewCard extends StatefulWidget {
-  const AddNewCard({Key? key, this.isEdit = false}) : super(key: key);
+  const AddNewCard({Key? key, this.cardModel}) : super(key: key);
 
-  final bool isEdit;
+  final CardModel? cardModel;
 
   @override
   State<AddNewCard> createState() => _AddNewCardState();
@@ -37,12 +33,15 @@ class _AddNewCardState extends State<AddNewCard> {
 
   CreditCardModel? model;
 
-  // TextEditingController numberC = TextEditingController();
-  // TextEditingController nameC = TextEditingController();
-  // TextEditingController validityC = TextEditingController();
-  // TextEditingController codeC = TextEditingController();
+  bool isMainCard = false;
 
-  bool isEnabled = false;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.cardModel != null) {
+      isMainCard = widget.cardModel!.mainCard;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,13 +67,12 @@ class _AddNewCardState extends State<AddNewCard> {
                     const MarginWidget(factor: 1.5),
                     cardSketch(),
                     const MarginWidget(),
-
                     CreditCardFormWidget(
                       formKey: formKey,
                       // Required
                       themeColor: Colors.red,
                       obscureCvv: false,
-                      obscureNumber: true,
+                      obscureNumber: false,
                       isHolderNameVisible: true,
                       isCardNumberVisible: true,
                       isExpiryDateVisible: true,
@@ -86,10 +84,10 @@ class _AddNewCardState extends State<AddNewCard> {
                       cvvCodeDecoration: buildInputDecoration('CVV', 'XXX'),
                       cardHolderDecoration: buildInputDecoration(
                           'Nome do Titular', 'Nome do Titular'),
-                      cardNumber: '',
-                      expiryDate: '',
-                      cardHolderName: '',
-                      cvvCode: '',
+                      cardNumber: widget.cardModel?.number ?? '',
+                      expiryDate: widget.cardModel?.validity ?? '',
+                      cardHolderName: widget.cardModel?.holderName ?? '',
+                      cvvCode: widget.cardModel?.cvv ?? '',
                       onCreditCardModelChange: (model) {
                         setState(() {
                           this.model = model;
@@ -97,10 +95,10 @@ class _AddNewCardState extends State<AddNewCard> {
                       },
                     ),
                     Switch(
-                      value: isEnabled,
+                      value: isMainCard,
                       onChanged: (value) {
                         setState(() {
-                          isEnabled = value;
+                          isMainCard = value;
                         });
                       },
                     ),
@@ -168,31 +166,50 @@ class _AddNewCardState extends State<AddNewCard> {
               ),
             ),
             ButtonWidget(
-                name: widget.isEdit ? "Salvar" : "Adicionar Cartão",
+                name: widget.cardModel != null ? "Salvar" : "Adicionar Cartão",
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     try {
-                      CardModel cardModel = CardModel(
-                        number: model!.cardNumber,
-                          holderName: model!.cardHolderName,
-                          validity: model!.expiryDate,
-                          cvv: model!.cvvCode,
-                          mainCard: isEnabled);
+                      CardModel cardModel;
+                      Functions.showLoading(context);
+                      if (model == null && widget.cardModel != null) {
+                        cardModel = CardModel(
+                            number: widget.cardModel!.number,
+                            holderName: widget.cardModel!.holderName,
+                            validity: widget.cardModel!.validity,
+                            cvv: widget.cardModel!.cvv,
+                            mainCard: isMainCard);
+                      } else {
+                        cardModel = CardModel(
+                            number: model!.cardNumber,
+                            holderName: model!.cardHolderName,
+                            validity: model!.expiryDate,
+                            cvv: model!.cvvCode,
+                            mainCard: isMainCard);
+                      }
 
                       UserModel userModel =
                           context.read<DataProvider>().userModel!;
 
-                      if (isEnabled) {
+                      if (isMainCard) {
                         userModel.cardsList
                             .any((element) => element.mainCard = false);
                       }
-                      userModel.cardsList.add(cardModel);
 
-                      Functions.showLoading(context);
+                      if (widget.cardModel == null) {
+                        userModel.cardsList.add(cardModel);
+                      } else {
+                        int index =
+                            userModel.cardsList.indexOf(widget.cardModel!);
+                        userModel.cardsList[index] = cardModel;
+                      }
+
                       await Constants.users.doc(Constants.uid()).update({
-                        "cardsList": userModel.cardsList.map((e) => e.toMap()).toList(),
+                        "cardsList":
+                            userModel.cardsList.map((e) => e.toMap()).toList(),
                       });
-                      Navigator.of(context,rootNavigator: true).pop();
+
+                      Navigator.of(context, rootNavigator: true).pop();
                       context.pop();
                     } on FirebaseException catch (e) {}
                   }

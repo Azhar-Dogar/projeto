@@ -1,39 +1,50 @@
 
 import 'package:flutter/material.dart';
-import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
+import 'package:projeto/provider/data_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/screens/dashboard/profile/credit/add_balance.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/card_detail.dart';
 import 'package:projeto/widgets/c_profile_app_bar.dart';
-import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/divider_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 
 import 'add_new_card.dart';
 
-class Balance extends StatelessWidget {
+class Balance extends StatefulWidget {
   const Balance({Key? key}) : super(key: key);
 
   @override
+  State<Balance> createState() => _BalanceState();
+}
+
+class _BalanceState extends State<Balance> {
+
+  late DataProvider dataProvider;
+  @override
   Widget build(BuildContext context) {
     double padding = context.width * 0.04;
-
-    return Scaffold(
-      appBar: CustomAppBar("Pagamento"),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Colors.black,
-        child: Column(
-          children: [
-            topWidget(context),
-            cardDetailSection(padding,context),
-          ],
-        ),
-      ),
+    return Consumer<DataProvider>(
+      builder: (context, value, child) {
+        dataProvider = value;
+        return Scaffold(
+          appBar: CustomAppBar("Pagamento"),
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.black,
+            child: Column(
+              children: [
+                topWidget(context),
+                cardDetailSection(padding,context),
+              ],
+            ),
+          ),
+        );
+      }
     );
   }
 
@@ -49,52 +60,53 @@ class Balance extends StatelessWidget {
           ),
         ),
         padding: EdgeInsets.only(left: padding, right: padding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const MarginWidget(factor: 2),
-            Text(
-              "Cartões adicionados",
-              style: AppTextStyles.subTitleMedium(),
-            ),
-            const MarginWidget(factor: 2),
-            const CardDetail(isPrinciple: true),
-            const DividerWidget(),
-            const MarginWidget(),
-            const CardDetail(),
-            const DividerWidget(),
-            const MarginWidget(factor: 2),
-            InkWell(
-              onTap: (){
-                Functions.push(context, const AddNewCard());
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.add),
-                  const MarginWidget(isHorizontal: true),
-                  Text(
-                    "Adicionar Cartão",
-                    style: AppTextStyles.captionMedium(color: CColors.primary),
-                  )
-                ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const MarginWidget(factor: 2),
+              Text(
+                "Cartões adicionados",
+                style: AppTextStyles.subTitleMedium(),
               ),
-            )
-          ],
+              const MarginWidget(factor: 2),
+
+              for(var card in dataProvider.userModel!.cardsList)...[
+                 CardDetail(cardModel: card),
+                const DividerWidget(),
+                const MarginWidget(),
+              ],
+              const MarginWidget(),
+              InkWell(
+                onTap: (){
+                  Functions.push(context, const AddNewCard());
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.add),
+                    const MarginWidget(isHorizontal: true),
+                    Text(
+                      "Adicionar Cartão",
+                      style: AppTextStyles.captionMedium(color: CColors.primary),
+                    )
+                  ],
+                ),
+              ),
+              const MarginWidget(factor: 2),
+            ],
+          ),
         ),
       ),
     );
   }
-
-
-
 
   Widget topWidget(BuildContext context) {
     return Column(
       children: [
         const MarginWidget(factor: 2.5),
         Text(
-          "R\$ 800,00",
+          "R\$ ${dataProvider.userModel!.credits}",
           style: AppTextStyles.h4Medium(color: Colors.white),
         ),
         const MarginWidget(),
@@ -138,6 +150,4 @@ class Balance extends StatelessWidget {
       ),
     );
   }
-
-
 }
