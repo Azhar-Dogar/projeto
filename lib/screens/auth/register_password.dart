@@ -133,7 +133,6 @@ class _RegisterPasswordState extends State<RegisterPassword> {
                     } else {
                       Functions.showLoading(context);
                       var user = widget.user!;
-                      var car = widget.car!;
                       if (await createUser()) {
                         var imageDocumentLink = await Functions.uploadFile(
                             user.licenseDocumentFile!,
@@ -142,47 +141,57 @@ class _RegisterPasswordState extends State<RegisterPassword> {
                         user.licenseDocument = imageDocumentLink;
 
 
-                        var carDoc = Constants.cars.doc();
-                        car.vehiclePhoto = car.vehiclePhotoFile == null
-                            ? null
-                            : await Functions.uploadFile(car.vehiclePhotoFile!,
-                                path:
-                                    "vehiclePhoto/${carDoc.id}.${car.vehiclePhotoFile!.path.split(".").last}");
-                        car.vehicleDocument = car.vehicleDocumentFile == null
-                            ? null
-                            : await Functions.uploadFile(
-                                car.vehicleDocumentFile!,
-                                path:
-                                    "vehicleDocument/${carDoc.id}.${car.vehicleDocumentFile!.path.split(".").last}");
-                        car.vehicleLicense = car.vehicleLicenseFile == null
-                            ? null
-                            : await Functions.uploadFile(
-                                car.vehicleLicenseFile!,
-                                path:
-                                    "vehicleLicense/${carDoc.id}.${car.vehicleLicenseFile!.path.split(".").last}");
-                        car.vehicleInsurance = car.vehicleInsuranceFile ==
-                                null
-                            ? null
-                            : await Functions.uploadFile(
-                                car.vehicleInsuranceFile!,
-                                path:
-                                    "vehicleInsurance/${carDoc.id}.${car.vehicleInsuranceFile!.path.split(".").last}");
-                        car.leaseAgreement = car.leaseAgreementFile == null
-                            ? null
-                            : await Functions.uploadFile(
-                                car.leaseAgreementFile!,
-                                path:
-                                    "leaseAgreement/${carDoc.id}.${car.leaseAgreementFile!.path.split(".").last}");
+
 
                         user.uid = Constants.uid();
                         Constants.users.doc(Constants.uid()).set(user.isUser
                             ? user.toMapUserCreate()
                             : user.toMapInstructorCreate());
 
-                        car.id = carDoc.id;
-                        car.uid = user.uid;
 
-                        carDoc.set(car.toMap());
+
+
+                        if(widget.car != null){
+
+                          var car = widget.car!;
+                          var carDoc = Constants.cars.doc();
+                          car.vehiclePhoto = car.vehiclePhotoFile == null
+                              ? null
+                              : await Functions.uploadFile(car.vehiclePhotoFile!,
+                              path:
+                              "vehiclePhoto/${carDoc.id}.${car.vehiclePhotoFile!.path.split(".").last}");
+                          car.vehicleDocument = car.vehicleDocumentFile == null
+                              ? null
+                              : await Functions.uploadFile(
+                              car.vehicleDocumentFile!,
+                              path:
+                              "vehicleDocument/${carDoc.id}.${car.vehicleDocumentFile!.path.split(".").last}");
+                          car.vehicleLicense = car.vehicleLicenseFile == null
+                              ? null
+                              : await Functions.uploadFile(
+                              car.vehicleLicenseFile!,
+                              path:
+                              "vehicleLicense/${carDoc.id}.${car.vehicleLicenseFile!.path.split(".").last}");
+                          car.vehicleInsurance = car.vehicleInsuranceFile ==
+                              null
+                              ? null
+                              : await Functions.uploadFile(
+                              car.vehicleInsuranceFile!,
+                              path:
+                              "vehicleInsurance/${carDoc.id}.${car.vehicleInsuranceFile!.path.split(".").last}");
+                          car.leaseAgreement = car.leaseAgreementFile == null
+                              ? null
+                              : await Functions.uploadFile(
+                              car.leaseAgreementFile!,
+                              path:
+                              "leaseAgreement/${carDoc.id}.${car.leaseAgreementFile!.path.split(".").last}");
+
+                          car.id = carDoc.id;
+                          car.uid = user.uid;
+
+                          carDoc.set(car.toMap());
+                        }
+
                         context.pushAndRemoveUntil(child: CheckData());
                       } else {
                         context.pop();

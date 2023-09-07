@@ -211,12 +211,13 @@ class _InstructorHomeState extends State<InstructorHome> {
    return Padding(
      padding: const EdgeInsets.all(20.0),
      child: Column(
+     crossAxisAlignment: CrossAxisAlignment.start,
        children: [
          Text(
            "Seus Carros",
            style: AppTextStyles.subTitleMedium(),
          ),
-         MyCarsWidget(),
+         // MyCarsWidget(),
        ],
      ),
    );

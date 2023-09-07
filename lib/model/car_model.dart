@@ -37,6 +37,7 @@ class CarModel {
   });
 
   CarModel.fromMap(Map<String, dynamic> data){
+    print(data);
     id = data["id"];
     uid = data["uid"];
     brand = data["brand"];

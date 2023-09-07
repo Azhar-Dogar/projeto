@@ -60,8 +60,6 @@ class _SignupScreenState extends State<SignupScreen> {
   File? vehicleInsurance;
   File? leaseAgreement;
 
-
-
   String userType = "student";
 
   @override
@@ -535,7 +533,7 @@ class _SignupScreenState extends State<SignupScreen> {
               onChanged: (v) {
                 setState(() {
                   carType = v.toString();
-                  if(carType == "own"){
+                  if (carType == "own") {
                     leaseAgreement = null;
                   }
                 });
@@ -658,7 +656,6 @@ class _SignupScreenState extends State<SignupScreen> {
             setState(() {
               vehicleInsurance = file;
             });
-
           },
         ),
         const MarginWidget(
@@ -736,22 +733,29 @@ class _SignupScreenState extends State<SignupScreen> {
 
     model.licenseDocumentFile = licenseDocument;
 
+    CarModel? car;
 
+    if(!isUser){
+      car = CarModel(
+          brand: brand.text,
+          year: year.text,
+          vehicle: vehicle.text,
+          carType: carType,
+          isDualCommand: isDualCommand);
 
-
-
-    var car = CarModel(brand: brand.text, year: year.text, vehicle: vehicle.text, carType: carType, isDualCommand: isDualCommand);
-
-    car.vehicleDocumentFile = vehicleDocument;
-    car.vehiclePhotoFile = vehiclePhoto;
-    car.vehicleLicenseFile = vehicleLicense;
-    car.vehicleInsuranceFile = vehicleInsurance;
-    car.leaseAgreementFile = leaseAgreement;
+      car.vehicleDocumentFile = vehicleDocument;
+      car.vehiclePhotoFile = vehiclePhoto;
+      car.vehicleLicenseFile = vehicleLicense;
+      car.vehicleInsuranceFile = vehicleInsurance;
+      car.leaseAgreementFile = leaseAgreement;
+    }
 
 
     context.push(
-        child: RegisterPassword(
-      user: model,
-    ));
+      child: RegisterPassword(
+        user: model,
+        car: car,
+      ),
+    );
   }
 }

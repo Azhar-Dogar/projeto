@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/model/car_model.dart';
 
 import '../extras/app_textstyles.dart';
 import '../extras/colors.dart';
 import '../generated/assets.dart';
 
 class MyCarsWidget extends StatelessWidget {
-  const MyCarsWidget({Key? key}) : super(key: key);
+  const MyCarsWidget({Key? key, required this.car}) : super(key: key);
 
+  final CarModel car;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -28,7 +30,7 @@ class MyCarsWidget extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "Celta",
+                            car.vehicle,
                             style: AppTextStyles.titleMedium(),
                           ),
                           Container(
@@ -49,7 +51,7 @@ class MyCarsWidget extends StatelessWidget {
                         ],
                       ),
                       Text(
-                        "2018",
+                        car.year,
                         style: AppTextStyles.subTitleRegular(),
                       ),
                     ],
@@ -129,8 +131,8 @@ class MyCarsWidget extends StatelessWidget {
                       10,
                     ),
                   ),
-                  child: const Image(
-                    image: AssetImage(Assets.imagesCar),
+                  child: Image(
+                    image: NetworkImage(car.vehiclePhoto!),
                   ),
                 ),
               ],
