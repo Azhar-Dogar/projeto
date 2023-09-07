@@ -1,142 +1,166 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:projeto/generated/assets.dart';
+import 'package:projeto/model/user_model.dart';
+import 'package:projeto/provider/chat_provider.dart';
+import 'package:projeto/provider/data_provider.dart';
+import 'package:projeto/screens/dashboard/chat_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/screens/dashboard/reviews/review_instructor.dart';
 
 import '../extras/app_textstyles.dart';
 import '../extras/colors.dart';
 import '../extras/functions.dart';
+import '../screens/dashboard/chat/chat_inbox.dart';
 import '../screens/dashboard/home/scheduling.dart';
 import 'button_widget.dart';
 import 'margin_widget.dart';
 
 class InstructorWidget extends StatelessWidget {
-  InstructorWidget(
-      {super.key,
-      this.showButton,
-      required this.name,
-      required this.imagePath});
-  String name;
-  String imagePath;
-  bool? showButton;
+  const InstructorWidget({
+    super.key,
+    this.showButton,
+    required this.user,
+  });
+
+  final bool? showButton;
+  final UserModel user;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Card(
-        color: CColors.white,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              color: CColors.dashboard,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image(
-                      image: AssetImage(imagePath),
-                      width: 30,
-                    ),
-                    const MarginWidget(
-                      isHorizontal: true,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+    return Consumer<DataProvider>(
+      builder: (context, value, child) {
+        return Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Card(
+            color: CColors.white,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  color: CColors.dashboard,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image(
+                          image: user.image == null
+                              ? AssetImage(Assets.imagesPlaceHolder)
+                              : NetworkImage(user.image!) as ImageProvider,
+                          width: 30,
+                        ),
+                        const MarginWidget(
+                          isHorizontal: true,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                name,
-                                style: AppTextStyles.subTitleMedium(),
+                              Row(
+                                children: [
+                                  Text(
+                                    user.name,
+                                    style: AppTextStyles.subTitleMedium(),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.only(left: 12),
+                                    decoration: BoxDecoration(
+                                        color: CColors.primary,
+                                        shape: BoxShape.circle),
+                                    width: 15,
+                                    height: 15,
+                                  )
+                                ],
                               ),
-                              Container(
-                                margin: const EdgeInsets.only(left: 12),
-                                decoration: BoxDecoration(
-                                    color: CColors.primary,
-                                    shape: BoxShape.circle),
-                                width: 15,
-                                height: 15,
+                              RatingBar.builder(
+                                itemSize: 18,
+                                initialRating: 3,
+                                minRating: 1,
+                                direction: Axis.horizontal,
+                                allowHalfRating: true,
+                                itemCount: 5,
+                                itemPadding:
+                                    const EdgeInsets.symmetric(horizontal: 1.0),
+                                itemBuilder: (context, _) => const Icon(
+                                  Icons.star,
+                                  size: 10,
+                                  color: Colors.amber,
+                                ),
+                                onRatingUpdate: (rating) {
+                                  print(rating);
+                                },
                               )
                             ],
                           ),
-                          RatingBar.builder(
-                            itemSize: 18,
-                            initialRating: 3,
-                            minRating: 1,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            itemPadding:
-                                const EdgeInsets.symmetric(horizontal: 1.0),
-                            itemBuilder: (context, _) => const Icon(
-                              Icons.star,
-                              size: 10,
-                              color: Colors.amber,
-                            ),
-                            onRatingUpdate: (rating) {
-                              print(rating);
-                            },
-                          )
-                        ],
-                      ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            context.push(
+                              child: ChangeNotifierProvider(
+                                create: (_)=> ChatProvider(sender: value.userModel!, receiver: user),
+                                child: InboxScreen(),
+                              ),
+                            );
+                          },
+                          child: Icon(
+                            Icons.messenger_outline,
+                            color: CColors.primary,
+                          ),
+                        )
+                      ],
                     ),
-                    InkWell(
-                      onTap: (){
-                        context.push(child:  ReviewInstructor());
-                      },
-                      child: Icon(
-                        Icons.messenger_outline,
-                        color: CColors.primary,
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              ),
+                Divider(
+                  color: CColors.divider,
+                  height: 1,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      info("Carro", "Celtic, 2018"),
+                      Divider(
+                        color: CColors.divider,
+                        height: 1,
+                      ),
+                      info("Endereço", getAddress()),
+                      Divider(
+                        color: CColors.divider,
+                        height: 1,
+                      ),
+                      info("Hora / Aula", "R\$ ${user.amount}"),
+                      Divider(
+                        color: CColors.divider,
+                        height: 1,
+                      ),
+                      if (showButton == true) ...[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ButtonWidget(
+                              name: "Agendar",
+                              onPressed: () {
+                                Functions.push(context, SchedulingScreen());
+                              }),
+                        )
+                      ]
+                    ],
+                  ),
+                )
+              ],
             ),
-            Divider(
-              color: CColors.divider,
-              height: 1,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  info("Carro", "Celtic, 2018"),
-                  Divider(
-                    color: CColors.divider,
-                    height: 1,
-                  ),
-                  info("Endereço", "105 William St, Chicago, US"),
-                  Divider(
-                    color: CColors.divider,
-                    height: 1,
-                  ),
-                  info("Hora / Aula", "R\$ 80,00"),
-                  Divider(
-                    color: CColors.divider,
-                    height: 1,
-                  ),
-                  if(showButton == true)...[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: ButtonWidget(
-                        name: "Agendar",
-                        onPressed: () {
-                          Functions.push(context, SchedulingScreen());
-                        }),
-                  )]
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
+          ),
+        );
+      }
     );
+  }
+
+  String getAddress() {
+    return "${user.number},${user.neighbourhood},${user.road},${user.complement},${user.zipCode}";
   }
 
   Widget info(String name, String value) {

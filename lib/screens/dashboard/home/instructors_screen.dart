@@ -23,8 +23,8 @@ class InstructorsScreen extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             child: Text("Instrutores na sua região",style: AppTextStyles.subTitleMedium(),),
           ),
-          InstructorWidget(name: "Cameron Williamson", imagePath: AppImages.instructor_2,showButton: true,),
-          InstructorWidget(name: "Jacob Jones", imagePath: AppImages.instructor_1,showButton: true,)
+          // InstructorWidget(name: "Cameron Williamson", imagePath: AppImages.instructor_2,showButton: true,),
+            // InstructorWidget(name: "Jacob Jones", imagePath: AppImages.instructor_1,showButton: true,)
           ],),
       ),
     );

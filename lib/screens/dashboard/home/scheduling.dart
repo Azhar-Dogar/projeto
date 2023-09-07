@@ -71,10 +71,10 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                           )
                         ],
                       )),
-                  InstructorWidget(
-                    name: "Annette Johnson",
-                    imagePath: AppImages.instructor,
-                  ),
+                  // InstructorWidget(
+                  //   name: "Annette Johnson",
+                  //   imagePath: AppImages.instructor,
+                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

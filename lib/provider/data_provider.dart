@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/constants.dart';
+import 'package:projeto/extras/functions.dart';
 import 'package:projeto/model/car_model.dart';
 import 'package:projeto/model/user_model.dart';
+
+import '../model/chat_model.dart';
 
 class DataProvider with ChangeNotifier {
   DataProvider() {
@@ -15,6 +18,7 @@ class DataProvider with ChangeNotifier {
     Constants.auth().userChanges().listen((user) {
       if (user == null) {
         cancelStreams();
+        reset();
       } else {
         callFunctions();
       }
@@ -23,12 +27,34 @@ class DataProvider with ChangeNotifier {
 
   callFunctions() {
     getProfile();
-    getCars();
+
+    callOthers();
   }
 
+  callOthers(){
+    Future.delayed(Duration(seconds: 1)).then((value){
+      if(userModel == null){
+        callOthers();
+      }else{
+        getCars();
+        getUsers();
+        getMessages();
+      }
+    });
+  }
+
+  reset(){
+    userModel = null;
+    cars = [];
+    users = [];
+    chats = [];
+
+  }
   cancelStreams() {
     profileStream?.cancel();
     carsStream?.cancel();
+    usersStream?.cancel();
+    chatsStream?.cancel();
   }
 
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? profileStream;
@@ -56,6 +82,43 @@ class DataProvider with ChangeNotifier {
     carsStream = Constants.cars.where("uid", isEqualTo: Constants.uid()).snapshots().listen((snapshot) {
       var docs = snapshot.docs.where((element) => element.exists).toList();
       cars = List.generate(docs.length, (index) => CarModel.fromMap(docs[index].data()));
+      notifyListeners();
+    });
+  }
+
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? usersStream;
+
+  List<UserModel> users = [];
+
+  getUsers(){
+    usersStream = Constants.users.where("isUser", isEqualTo: !userModel!.isUser).snapshots().listen((snapshot) {
+      var docs = snapshot.docs.where((element) => element.exists).toList();
+      users = List.generate(docs.length, (index) => UserModel.fromMap(docs[index].data()));
+      notifyListeners();
+    });
+  }
+
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? chatsStream;
+
+  List<ChatModel> chats = [];
+  int messageState = 0;
+
+  getMessages() {
+    chatsStream = Constants.messages
+        .doc(Constants.uid())
+        .collection("chats")
+        .orderBy("time", descending: true)
+        .snapshots()
+        .listen((snapshots) {
+      var docs = snapshots.docs.where((element) => element.exists).toList();
+      chats = List.generate(
+          docs.length, (index) => ChatModel.fromMap(docs[index].data()));
+      messageState = 1;
+      notifyListeners();
+    });
+    chatsStream?.onError((error) {
+      messageState = 2;
+      notifyListeners();
     });
   }
 }

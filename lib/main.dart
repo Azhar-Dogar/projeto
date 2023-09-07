@@ -5,7 +5,9 @@ import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'extras/colors.dart';
+import 'extras/time_ago_text.dart';
 import 'firebase_options.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 
 Future<void> main() async {
@@ -15,6 +17,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  timeago.setLocaleMessages('pt', MyCustomMessages());
 
   runApp(const MyApp());
 }

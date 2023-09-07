@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/extras/constants.dart';
+import 'package:projeto/model/message_model.dart';
 
 import '../extras/colors.dart';
 
 class ChatBubbleWidget extends StatelessWidget {
-  final String message;
-  final bool isSender;
+  final MessageModel message;
 
-  ChatBubbleWidget({required this.message, required this.isSender});
+  ChatBubbleWidget({required this.message, super.key});
 
   @override
   Widget build(BuildContext context) {
+    bool isSender = message.senderId == Constants.uid();
     return Align(
       alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -19,7 +21,7 @@ class ChatBubbleWidget extends StatelessWidget {
           children: [
             Column(
               crossAxisAlignment:
-              isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                  isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
                 Container(
                   padding: EdgeInsets.all(15.0),
@@ -28,8 +30,9 @@ class ChatBubbleWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: Text(
-                    message,
-                    style: TextStyle(color: isSender ? Colors.white : Colors.black),
+                    message.message,
+                    style: TextStyle(
+                        color: isSender ? Colors.white : Colors.black),
                   ),
                 ),
               ],

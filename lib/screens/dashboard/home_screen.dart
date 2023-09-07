@@ -30,49 +30,57 @@ class _HomeScreenState extends State<HomeScreen> {
       dataProvider = value;
 
       return Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const MarginWidget(
-                factor: 2,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: header(),
-              ),
-              Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: Image(image: AssetImage(AppImages.autoImage)),
-                  ),
-                  Positioned(bottom: 1, left: 5, right: 5, child: card()),
-                ],
-              ),
-              const MarginWidget(),
-              InkWell(
-                onTap: () {
-                  Functions.push(context, InstructorsScreen());
-                },
+        body: CustomScrollView(
+          slivers: [
+            const MarginWidget(
+              factor: 2,
+              isSliver: true,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: header(),
+            ).toSliver,
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Image(image: AssetImage(AppImages.autoImage)),
+                ),
+                Positioned(bottom: 1, left: 5, right: 5, child: card()),
+              ],
+            ).toSliver,
+            const MarginWidget(
+              isSliver: true,
+            ),
+            InkWell(
+              onTap: () {
+                Functions.push(context, InstructorsScreen());
+              },
+              child: Align(
+                alignment: Alignment.center,
                 child: Text(
                   "Pesquisar instrutores perto de mim",
                   style: AppTextStyles.captionMedium(color: CColors.primary),
                 ),
               ),
-              searchBar(),
-              InstructorWidget(
-                name: "Annette Johnson",
-                imagePath: AppImages.instructor,
-                showButton: true,
-              ),
-              const MarginWidget(),
-              InstructorWidget(
-                name: "Jacob Jones",
-                imagePath: AppImages.instructor_1,
-                showButton: true,
-              )
-            ],
-          ),
+            ).toSliver,
+            searchBar().toSliver,
+            Builder(builder: (context) {
+              var instructors = dataProvider.users;
+
+              if(searchController.text.trim().isNotEmpty){
+                instructors = instructors.where((element) => element.name.toLowerCase().contains(searchController.text.toLowerCase())).toList();
+              }
+
+              return SliverList(
+                delegate: SliverChildBuilderDelegate((ctx, i) {
+                  return InstructorWidget(
+                    user: instructors[i],
+                  );
+                }, childCount: instructors.length),
+              );
+            }),
+          ],
         ),
       );
     });
@@ -94,6 +102,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           controller: searchController,
           borderColor: CColors.dashboard,
+          onChanged: (value) {
+            setState(() {});
+          },
         ),
       ),
     );
