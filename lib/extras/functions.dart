@@ -78,14 +78,10 @@ class Functions {
 
   static Future<String> uploadImage(File file, {required String path}) async {
     try {
-      print("object");
       final firebasestorage.FirebaseStorage _storage =
           firebasestorage.FirebaseStorage.instance;
-      print("object1");
       var reference = _storage.ref().child(path);
-      print("object2");
       var r = await reference.putFile(file, SettableMetadata());
-      print("object3");
       if (r.state == firebasestorage.TaskState.success) {
         String url = await reference.getDownloadURL();
         return url;

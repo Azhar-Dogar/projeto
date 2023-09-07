@@ -28,12 +28,18 @@ class CarModel {
   String carType = "own";
   var isDualCommand = false;
 
+  bool isPrimary = false;
   CarModel({
-    required this.brand,
+     required this.brand,
     required this.year,
     required this.vehicle,
     required this.carType,
     required this.isDualCommand,
+    this.vehiclePhoto,
+    this.vehicleDocument,
+    this.vehicleLicense,
+    this.vehicleInsurance,
+    required this.isPrimary,
   });
 
   CarModel.fromMap(Map<String, dynamic> data){
@@ -50,6 +56,7 @@ class CarModel {
     leaseAgreement = data["leaseAgreement"];
     carType = data["carType"];
     isDualCommand = data["isDualCommand"];
+    isPrimary = data["isPrimary"];
 
 
 
@@ -68,6 +75,7 @@ class CarModel {
       "brand" : brand,
       "year" : year,
       "vehicle" : vehicle,
+      "isPrimary" : isPrimary,
       "vehiclePhoto" : vehiclePhoto,
       "vehicleDocument" : vehicleDocument,
       "vehicleLicense" : vehicleLicense,

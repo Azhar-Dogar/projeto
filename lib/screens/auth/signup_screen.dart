@@ -344,13 +344,9 @@ class _SignupScreenState extends State<SignupScreen> {
   }) {
     return InkWell(
       onTap: () async {
-        FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-        if (result != null) {
-          File file = File(result.files.single.path!);
+        var file = await Functions.pickImage();
+        if (file != null) {
           onTap(file);
-        } else {
-          // User canceled the picker
         }
       },
       child: Row(
@@ -735,13 +731,15 @@ class _SignupScreenState extends State<SignupScreen> {
 
     CarModel? car;
 
-    if(!isUser){
+    if (!isUser) {
       car = CarModel(
-          brand: brand.text,
-          year: year.text,
-          vehicle: vehicle.text,
-          carType: carType,
-          isDualCommand: isDualCommand);
+        brand: brand.text,
+        year: year.text,
+        vehicle: vehicle.text,
+        carType: carType,
+        isDualCommand: isDualCommand,
+        isPrimary: true,
+      );
 
       car.vehicleDocumentFile = vehicleDocument;
       car.vehiclePhotoFile = vehiclePhoto;
@@ -749,7 +747,6 @@ class _SignupScreenState extends State<SignupScreen> {
       car.vehicleInsuranceFile = vehicleInsurance;
       car.leaseAgreementFile = leaseAgreement;
     }
-
 
     context.push(
       child: RegisterPassword(

@@ -3,9 +3,14 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/constants.dart';
+import 'package:projeto/extras/functions.dart';
+import 'package:projeto/model/car_model.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/drop_down_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
+import 'package:utility_extensions/extensions/font_utilities.dart';
+import 'package:utility_extensions/extensions/functions.dart';
+import 'package:utility_extensions/utility_extensions.dart';
 
 import '../../../extras/app_textstyles.dart';
 import '../../../extras/colors.dart';
@@ -13,7 +18,9 @@ import '../../../widgets/custom_text.dart';
 import '../../../widgets/margin_widget.dart';
 
 class AddCar extends StatefulWidget {
-  const AddCar({super.key});
+  const AddCar({super.key, this.car});
+
+  final CarModel? car;
 
   @override
   State<AddCar> createState() => _AddCarState();
@@ -31,6 +38,14 @@ class _AddCarState extends State<AddCar> {
   File? vehicleLicense;
   File? vehicleInsurance;
   File? leaseAgreement;
+
+  bool isEditing = false;
+
+  @override
+  void initState() {
+    isEditing = widget.car == null;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,16 +67,29 @@ class _AddCarState extends State<AddCar> {
                       brand.text = value;
                     },
                     label: "Marca",
+                    isEdit: isEditing,
                   ),
                   MarginWidget(),
-                  TextFieldWidget(
-                    controller: year,
-                    label: "Ano",
-                  ),
+                  Builder(builder: (context) {
+                    var currentYear = DateTime.now().year;
+                    return DropDownWidget(
+                      dropdownItems: List.generate(
+                          40, (i) => (currentYear - i).toString()),
+                      onSelect: (value) {
+                        year.text = value;
+                      },
+                      label: "Ano",
+                      isEdit: isEditing,
+                    );
+                  }),
                   MarginWidget(),
-                  TextFieldWidget(
-                    controller: vehicle,
+                  DropDownWidget(
+                    dropdownItems: Constants.portugueseVehicleBrands,
+                    onSelect: (value) {
+                      vehicle.text = value;
+                    },
                     label: "Veículo",
+                    isEdit: isEditing,
                   ),
                   MarginWidget(),
                   documentsWidget(),
@@ -71,17 +99,23 @@ class _AddCarState extends State<AddCar> {
             ButtonWidget(
               name: "Salvar Alterações",
               onPressed: () {
-                // Constants.users.get().then((value){
-                //   var docs = value.docs.where((element) => element.exists && element.data()["uid"] == null);
-                //   for(var doc in docs){
-                //     Constants.users.doc(doc.id).update({
-                //       "uid" : doc.id,
-                //     });
-                //   }
-                //
-                // });
+                if (validateFields([brand, year, vehicle])) {
+                  if (vehiclePhoto == null ||
+                      vehicleDocument == null ||
+                      vehicleLicense == null ||
+                      vehicleInsurance == null) {
+                    Functions.showSnackBar(
+                        context, "Anexe todos os documentos necessários");
+                  } else {
+                    addCar();
+                  }
+                } else {
+                  Functions.showSnackBar(context,
+                      "Por favor, preencha todos os campos obrigatórios.");
+                }
               },
             ),
+            MarginWidget(),
           ],
         ),
       ),
@@ -194,28 +228,79 @@ class _AddCarState extends State<AddCar> {
     required String text,
     required Function(File) onTap,
   }) {
-    return InkWell(
-      onTap: () async {
-        FilePickerResult? result = await FilePicker.platform.pickFiles();
-        if (result != null) {
-          File file = File(result.files.single.path!);
-          onTap(file);
-        }
-      },
-      child: Row(
-        children: [
-          Icon(image),
-          const MarginWidget(
-            isHorizontal: true,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            if (!isEditing) ...[
+              Icon(image),
+              const MarginWidget(
+                isHorizontal: true,
+              ),
+            ],
+            CustomText(
+              text: text,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              textColor: CColors.primary,
+            ),
+          ],
+        ),
+        if (isEditing)
+          InkWell(
+            onTap: () async {
+              var file = await Functions.pickImage();
+              if (file != null) {
+                onTap(file);
+              }
+            },
+            child: Text(
+              "Enviar documento",
+              style: AppTextStyles.poppins(
+                style: TextStyle(
+                  color: CColors.textColor,
+                  fontWeight: FontWeights.medium,
+                  fontSize: 12,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
           ),
-          CustomText(
-            text: text,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            textColor: CColors.primary,
-          )
-        ],
-      ),
+      ],
     );
+  }
+
+  Future<void> addCar() async {
+    Functions.showLoading(context);
+    var doc = Constants.cars.doc();
+    var model = CarModel(
+      brand: brand.text,
+      year: year.text,
+      vehicle: vehicle.text,
+      carType: "own",
+      isDualCommand: false,
+      vehiclePhoto: await Functions.uploadImage(vehiclePhoto!,
+          path: "vehiclePhoto/${doc.id}.${vehiclePhoto!.path.split(".").last}"),
+      vehicleDocument: await Functions.uploadImage(vehicleDocument!,
+          path:
+              "vehicleDocument/${doc.id}.${vehicleDocument!.path.split(".").last}"),
+      vehicleLicense: await Functions.uploadImage(vehicleLicense!,
+          path:
+              "vehicleLicense/${doc.id}.${vehicleLicense!.path.split(".").last}"),
+      vehicleInsurance: await Functions.uploadImage(vehicleInsurance!,
+          path:
+              "vehicleInsurance/${doc.id}.${vehicleInsurance!.path.split(".").last}"),
+      isPrimary: false,
+    );
+    model.id = doc.id;
+    model.uid = Constants.uid();
+
+    await doc.set(model.toMap());
+
+    Navigator.of(context, rootNavigator: true).pop();
+    context.pop();
+
+
   }
 }
