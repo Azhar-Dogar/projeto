@@ -1,66 +1,108 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:projeto/extras/functions.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 
 import '../extras/app_textstyles.dart';
 import '../extras/colors.dart';
 
-typedef Callback = void Function(int);
-
-class CalendarWidget extends StatefulWidget {
-  const CalendarWidget({
+class WeekCalendarWidget extends StatefulWidget {
+  const WeekCalendarWidget({
     super.key,
     this.isAgenda = false,
-    this.callback,
+    required this.onTap,
+    required this.selectedDate,
   });
 
-  final Callback? callback;
   final bool isAgenda;
+  final Function(DateTime) onTap;
+  final DateTime selectedDate;
 
   @override
-  State<CalendarWidget> createState() => _CalendarWidgetState();
+  State<WeekCalendarWidget> createState() => _WeekCalendarWidgetState();
 }
 
-class _CalendarWidgetState extends State<CalendarWidget> {
+class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
+  final ScrollController _controller = ScrollController();
 
-  int selectedIndex = 2;
+  DateTime dateTime = DateTime.now().subtract(Duration(days: 15));
+  List<DateTime> dateList = [];
+
+  late int scrollToIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    for (int i = 0; i < 30; i++) {
+      dateList.add(dateTime.add(Duration(days: i)));
+    }
+
+    scrollToIndex = dateList.length ~/ 2;
+
+    navigate();
+  }
+
+  navigate() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      double itemWidth = 53; // Replace with your item width
+      double offset = scrollToIndex * itemWidth;
+      _controller.animateTo(
+        offset,
+        duration: Duration(milliseconds: 500), // Adjust the duration as needed
+        curve: Curves.easeInOut,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          for (var i = 0; i < 6; i++) ...[
-            dateBox("Sáb", "07", i),
-          ]
-        ],
+      child: Container(
+        height: 84,
+        child: ListView.separated(
+          controller: _controller,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (ctx, index) {
+            return dateBox(index);
+          },
+          itemCount: dateList.length,
+          separatorBuilder: (BuildContext context, int index) {
+            return const MarginWidget(isHorizontal: true);
+          },
+        ),
       ),
     );
   }
 
-  Widget dateBox(String day, String date, int index) {
-    DateTime date = DateTime.now().add(Duration(days: index));
-    String dayName = DateFormat('EEE').format(date);
+  Widget dateBox(int index) {
+    String dayName = DateFormat('EEE').format(dateList[index]);
     return InkWell(
       onTap: () {
-        selectedIndex = index;
-        if (widget.callback != null) {
-          widget.callback!(index);
-        }
+        widget.onTap(dateList[index]);
+        setState(() {
+          scrollToIndex = index;
+        });
       },
       child: Container(
         width: 53,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-                color: widget.isAgenda && (index == selectedIndex)
+                color: widget.isAgenda &&
+                        (Functions.isSameDay(
+                            widget.selectedDate, dateList[index]))
                     ? Colors.black
-                    : !widget.isAgenda && (index == selectedIndex)
+                    : !widget.isAgenda &&
+                            (Functions.isSameDay(
+                                widget.selectedDate, dateList[index]))
                         ? CColors.primary
-                        : Colors.transparent),
-            color: CColors.paymentContainer),
+                        : Colors.transparent,
+                width: 2),
+            color: Functions.isSameDay(widget.selectedDate, dateList[index])
+                ? Colors.white
+                : CColors.paymentContainer),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
@@ -72,11 +114,11 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               ),
               const MarginWidget(factor: 0.3),
               Text(
-                date.day.toString(),
+                "${DateFormat("dd").format(dateList[index])}",
                 style: AppTextStyles.captionRegular(
                     color: CColors.textFieldBorder),
               ),
-              if (widget.isAgenda && (index == 2  || index == 4)) ...[
+              if (widget.isAgenda && (index == 2 || index == 4)) ...[
                 const MarginWidget(factor: 0.3),
                 CircleAvatar(
                   backgroundColor: CColors.primary,

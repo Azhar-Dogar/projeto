@@ -13,6 +13,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import '../widgets/loading_widget.dart';
 import 'app_textstyles.dart';
 import 'colors.dart';
+
 class Functions {
   static push(BuildContext context, Widget widget) {
     // PersistentNavBarNavigator.pushNewScreen(
@@ -125,4 +126,10 @@ class Functions {
       return File(res.first.path);
     }
   }
+
+  static bool isSameDay(DateTime date1, DateTime date2) =>
+      date1.year == date2.year &&
+      date1.month == date2.month &&
+      date1.day == date2.day;
+
 }

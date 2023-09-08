@@ -61,39 +61,41 @@ class _AddNewCardState extends State<AddNewCard> {
                   children: [
                     const MarginWidget(),
                     Text(
-                      "${widget.cardModel == null ? "Adicionar"  : "Editar"} Cartão",
+                      "${widget.cardModel == null ? "Adicionar" : "Editar"} Cartão",
                       style: AppTextStyles.titleMedium(),
                     ),
                     const MarginWidget(factor: 1.5),
                     cardSketch(),
                     const MarginWidget(),
-                    CreditCardFormWidget(
-                      formKey: formKey,
-                      // Required
-                      themeColor: Colors.red,
-                      obscureCvv: false,
-                      obscureNumber: false,
-                      isHolderNameVisible: true,
-                      isCardNumberVisible: true,
-                      isExpiryDateVisible: true,
-                      enableCvv: true,
-                      cardNumberDecoration: buildInputDecoration(
-                          'Número do Cartão', 'XXXX XXXX XXXX XXXX'),
-                      expiryDateDecoration:
-                          buildInputDecoration('Validade', 'XX/XX'),
-                      cvvCodeDecoration: buildInputDecoration('CVV', 'XXX'),
-                      cardHolderDecoration: buildInputDecoration(
-                          'Nome do Titular', 'Nome do Titular'),
-                      cardNumber: widget.cardModel?.number ?? '',
-                      expiryDate: widget.cardModel?.validity ?? '',
-                      cardHolderName: widget.cardModel?.holderName ?? '',
-                      cvvCode: widget.cardModel?.cvv ?? '',
-                      onCreditCardModelChange: (model) {
-                        setState(() {
-                          this.model = model;
-                        });
-                      },
-                    ),
+                    if (widget.cardModel == null) ...[
+                      CreditCardFormWidget(
+                        formKey: formKey,
+                        // Required
+                        themeColor: Colors.red,
+                        obscureCvv: false,
+                        obscureNumber: false,
+                        isHolderNameVisible: true,
+                        isCardNumberVisible: true,
+                        isExpiryDateVisible: true,
+                        enableCvv: true,
+                        cardNumberDecoration: buildInputDecoration(
+                            'Número do Cartão', 'XXXX XXXX XXXX XXXX'),
+                        expiryDateDecoration:
+                            buildInputDecoration('Validade', 'XX/XX'),
+                        cvvCodeDecoration: buildInputDecoration('CVV', 'XXX'),
+                        cardHolderDecoration: buildInputDecoration(
+                            'Nome do Titular', 'Nome do Titular'),
+                        cardNumber: '',
+                        expiryDate: '',
+                        cardHolderName: '',
+                        cvvCode: '',
+                        onCreditCardModelChange: (model) {
+                          setState(() {
+                            this.model = model;
+                          });
+                        },
+                      ),
+                    ],
                     Switch(
                       value: isMainCard,
                       onChanged: (value) {
@@ -102,6 +104,20 @@ class _AddNewCardState extends State<AddNewCard> {
                         });
                       },
                     ),
+                    if (widget.cardModel != null) ...[
+                      const MarginWidget(),
+                      Center(
+                        child: InkWell(
+                          onTap: () {},
+                          child: Text(
+                            "Excluir Cartão",
+                            style: AppTextStyles.captionMedium(
+                              color: CColors.primary,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                   ],
                 ),
               ),
@@ -109,54 +125,62 @@ class _AddNewCardState extends State<AddNewCard> {
             ButtonWidget(
                 name: widget.cardModel != null ? "Salvar" : "Adicionar Cartão",
                 onPressed: () async {
-                  if (formKey.currentState!.validate()) {
-                    try {
-                      CardModel cardModel;
-                      Functions.showLoading(context);
-                      if (model == null && widget.cardModel != null) {
-                        cardModel = CardModel(
-                            number: widget.cardModel!.number,
-                            holderName: widget.cardModel!.holderName,
-                            validity: widget.cardModel!.validity,
-                            cvv: widget.cardModel!.cvv,
-                            mainCard: isMainCard);
-                      } else {
-                        cardModel = CardModel(
-                            number: model!.cardNumber,
-                            holderName: model!.cardHolderName,
-                            validity: model!.expiryDate,
-                            cvv: model!.cvvCode,
-                            mainCard: isMainCard);
-                      }
+                  bool isValidate;
 
-                      UserModel userModel =
-                          context.read<DataProvider>().userModel!;
-
-                      if (isMainCard) {
-                        userModel.cardsList
-                            .any((element) => element.mainCard = false);
-                      }
-
-                      if (widget.cardModel == null) {
-                        userModel.cardsList.add(cardModel);
-                      } else {
-                        int index =
-                            userModel.cardsList.indexOf(widget.cardModel!);
-                        userModel.cardsList[index] = cardModel;
-                      }
-
-                      await Constants.users.doc(Constants.uid()).update({
-                        "cardsList":
-                            userModel.cardsList.map((e) => e.toMap()).toList(),
-                      });
-
-                      Navigator.of(context, rootNavigator: true).pop();
-                      context.pop();
-                    } on FirebaseException catch (e) {
-                      print(e);
+                  if (widget.cardModel != null) {
+                    isValidate = true;
+                  } else {
+                    isValidate = formKey.currentState!.validate();
+                    if (!isValidate) {
+                      return;
                     }
                   }
 
+                  try {
+                    CardModel cardModel;
+                    Functions.showLoading(context);
+                    if (model == null && widget.cardModel != null) {
+                      cardModel = CardModel(
+                          number: widget.cardModel!.number,
+                          holderName: widget.cardModel!.holderName,
+                          validity: widget.cardModel!.validity,
+                          cvv: widget.cardModel!.cvv,
+                          mainCard: isMainCard);
+                    } else {
+                      cardModel = CardModel(
+                          number: model!.cardNumber,
+                          holderName: model!.cardHolderName,
+                          validity: model!.expiryDate,
+                          cvv: model!.cvvCode,
+                          mainCard: isMainCard);
+                    }
+
+                    UserModel userModel =
+                        context.read<DataProvider>().userModel!;
+
+                    if (isMainCard) {
+                      userModel.cardsList
+                          .any((element) => element.mainCard = false);
+                    }
+
+                    if (widget.cardModel == null) {
+                      userModel.cardsList.add(cardModel);
+                    } else {
+                      int index =
+                          userModel.cardsList.indexOf(widget.cardModel!);
+                      userModel.cardsList[index] = cardModel;
+                    }
+
+                    await Constants.users.doc(Constants.uid()).update({
+                      "cardsList":
+                          userModel.cardsList.map((e) => e.toMap()).toList(),
+                    });
+
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.pop();
+                  } on FirebaseException catch (e) {
+                    print(e);
+                  }
                 }),
             const MarginWidget(),
           ],

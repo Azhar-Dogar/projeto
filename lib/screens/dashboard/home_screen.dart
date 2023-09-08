@@ -75,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return SliverList(
                 delegate: SliverChildBuilderDelegate((ctx, i) {
                   return InstructorWidget(
+                    toChoose: false,
                     user: instructors[i],
                   );
                 }, childCount: instructors.length),

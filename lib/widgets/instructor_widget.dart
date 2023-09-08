@@ -9,7 +9,6 @@ import 'package:projeto/screens/dashboard/chat_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/screens/dashboard/reviews/review_instructor.dart';
-
 import '../extras/app_textstyles.dart';
 import '../extras/colors.dart';
 import '../extras/functions.dart';
@@ -21,11 +20,12 @@ import 'margin_widget.dart';
 class InstructorWidget extends StatelessWidget {
   const InstructorWidget({
     super.key,
-    this.showButton,
+    this.toChoose,
     required this.user,
   });
 
-  final bool? showButton;
+  final bool? toChoose;
+
   final UserModel user;
 
   @override
@@ -138,13 +138,13 @@ class InstructorWidget extends StatelessWidget {
                         color: CColors.divider,
                         height: 1,
                       ),
-                      if (showButton == true) ...[
+                      if (toChoose !=  null) ...[
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: ButtonWidget(
-                              name: "Agendar",
+                              name: toChoose! ?  "Escolher" : "Agendar",
                               onPressed: () {
-                                Functions.push(context, SchedulingScreen());
+                                Functions.push(context, SchedulingScreen(instructor: user,));
                               }),
                         )
                       ]

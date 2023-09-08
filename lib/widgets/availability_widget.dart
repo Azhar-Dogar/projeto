@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/model/availability_model.dart';
+import 'package:projeto/widgets/ctimerpicker.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
 import 'package:utility_extensions/extensions/font_utilities.dart';
@@ -37,7 +38,7 @@ class _AvailabilityWidgetState extends State<AvailabilityWidget> {
             ),
           ),
           child: InkWell(
-            onTap: (){
+            onTap: () {
               setState(() {
                 isShowing = !isShowing;
               });
@@ -188,7 +189,14 @@ class _AvailabilityWidgetState extends State<AvailabilityWidget> {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) {
-        return _buildContainer(timerPicker(controller, duration),);
+        return _buildContainer(CTimerPicker(
+            duration: duration,
+            onTimerDurationChanged: (Duration changeTimer) {
+              var hours = changeTimer.inHours;
+              var mins = changeTimer.inMinutes % 60;
+              controller.text =
+                  '${hours < 10 ? "0$hours" : hours}:${mins < 10 ? "0$mins" : mins}';
+            }));
       },
     );
   }
@@ -196,18 +204,18 @@ class _AvailabilityWidgetState extends State<AvailabilityWidget> {
   Duration initialTimer = const Duration();
   var time;
 
-  Widget timerPicker(TextEditingController controller, Duration duration) {
-    return CupertinoTimerPicker(
-      mode: CupertinoTimerPickerMode.hm,
-      initialTimerDuration: duration,
-      onTimerDurationChanged: (Duration changeTimer) {
-        var hours = changeTimer.inHours;
-        var mins = changeTimer.inMinutes % 60;
-        controller.text =
-            '${hours < 10 ? "0$hours" : hours}:${mins < 10 ? "0$mins" : mins}';
-      },
-    );
-  }
+  // Widget timerPicker(TextEditingController controller, Duration duration) {
+  //   return CupertinoTimerPicker(
+  //     mode: CupertinoTimerPickerMode.hm,
+  //     initialTimerDuration: duration,
+  //     onTimerDurationChanged: (Duration changeTimer) {
+  //       var hours = changeTimer.inHours;
+  //       var mins = changeTimer.inMinutes % 60;
+  //       controller.text =
+  //           '${hours < 10 ? "0$hours" : hours}:${mins < 10 ? "0$mins" : mins}';
+  //     },
+  //   );
+  // }
 
   Widget _buildContainer(Widget picker) {
     return Container(

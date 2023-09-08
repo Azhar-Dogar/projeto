@@ -1,21 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
-import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:utility_extensions/utility_extensions.dart';
-import 'package:projeto/screens/dashboard/chat/chat_inbox.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/calendar_widget.dart';
-import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/custom_calendar_Widget.dart';
 import 'package:projeto/widgets/divider_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
-import 'package:table_calendar/table_calendar.dart';
-
 import '../../widgets/c_profile_app_bar.dart';
 
 class ClassesScreen extends StatefulWidget {
@@ -30,17 +23,16 @@ class _ClassesScreenState extends State<ClassesScreen> {
 
   int _selectedIndex = 0;
 
-  int selectedDate = 3;
+  DateTime selectedDate = DateTime.now();
   int yearNow = 2016;
 
   late DateTime _selectedDate;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _selectedDate = DateTime.now();
-    // _calendarController = CalendarController();
+    DateTime now = DateTime.now();
+    _selectedDate = DateTime(now.year, now.month, now.day);
   }
 
   @override
@@ -61,34 +53,38 @@ class _ClassesScreenState extends State<ClassesScreen> {
             ] else if (_selectedIndex == 1) ...[
               monthSelection(),
             ] else ...[
-              Padding(
-                padding: EdgeInsets.only(left: padding, right: padding),
-                child: Column(
-                  children: [
-                    const MarginWidget(factor: 0.5),
-                    Wrap(
-                      spacing: 30,
-                      children: [
-                        for (int i = 0; i < 8; i++) yearBox("${yearNow + i}"),
-                      ],
-                    ),
-                    const MarginWidget(),
-                    const DividerWidget(),
-                    const MarginWidget(),
-                    Wrap(
-                      spacing: 30,
-                      children: [
-                        for (var month in Constants.months) yearBox(month),
-                      ],
-                    ),
-                    const MarginWidget(),
-                    const DividerWidget(),
-                  ],
-                ),
-              )
+              yearSelection(),
             ],
           ],
         ),
+      ),
+    );
+  }
+
+  Widget yearSelection() {
+    return Padding(
+      padding: EdgeInsets.only(left: padding, right: padding),
+      child: Column(
+        children: [
+          const MarginWidget(factor: 0.5),
+          Wrap(
+            spacing: 30,
+            children: [
+              for (int i = 0; i < 8; i++) yearBox("${yearNow + i}"),
+            ],
+          ),
+          const MarginWidget(),
+          const DividerWidget(),
+          const MarginWidget(),
+          Wrap(
+            spacing: 30,
+            children: [
+              for (var month in Constants.months) yearBox(month),
+            ],
+          ),
+          const MarginWidget(),
+          const DividerWidget(),
+        ],
       ),
     );
   }
@@ -149,14 +145,16 @@ class _ClassesScreenState extends State<ClassesScreen> {
 
   Widget weekSelection() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CalendarWidget(
+        WeekCalendarWidget(
           isAgenda: true,
-          callback: (value) {
+          selectedDate: selectedDate,
+          onTap: (value){
             setState(() {
               selectedDate = value;
             });
+
+            print(value);
           },
         ),
         const MarginWidget(),
@@ -183,7 +181,6 @@ class _ClassesScreenState extends State<ClassesScreen> {
   }
 
   Widget instructorWidget() {
-    selectedDate = 2;
     return Padding(
       padding: EdgeInsets.only(left: padding, right: padding),
       child: Container(

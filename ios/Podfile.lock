@@ -628,6 +628,8 @@ PODS:
     - abseil/base/base_internal
     - abseil/base/config
     - abseil/meta/type_traits
+  - background_fetch (1.2.1):
+    - Flutter
   - BoringSSL-GRPC (0.0.24):
     - BoringSSL-GRPC/Implementation (= 0.0.24)
     - BoringSSL-GRPC/Interface (= 0.0.24)
@@ -639,6 +641,9 @@ PODS:
     - firebase_core
     - Flutter
     - nanopb (< 2.30910.0, >= 2.30908.0)
+  - CocoaLumberjack (3.7.4):
+    - CocoaLumberjack/Core (= 3.7.4)
+  - CocoaLumberjack/Core (3.7.4)
   - DKImagePickerController/Core (4.3.4):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
@@ -752,6 +757,9 @@ PODS:
     - FirebaseCoreExtension (~> 10.0)
     - GTMSessionFetcher/Core (< 4.0, >= 2.1)
   - Flutter (1.0.0)
+  - flutter_background_geolocation (4.12.3):
+    - CocoaLumberjack (~> 3.7.2)
+    - Flutter
   - flutter_native_image (0.0.1):
     - Flutter
   - fluttertoast (0.0.2):
@@ -871,6 +879,7 @@ PODS:
   - ZLPhotoBrowser/Core (4.2.5)
 
 DEPENDENCIES:
+  - background_fetch (from `.symlinks/plugins/background_fetch/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
@@ -878,6 +887,7 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
+  - flutter_background_geolocation (from `.symlinks/plugins/flutter_background_geolocation/ios`)
   - flutter_native_image (from `.symlinks/plugins/flutter_native_image/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
@@ -888,6 +898,7 @@ SPEC REPOS:
   trunk:
     - abseil
     - BoringSSL-GRPC
+    - CocoaLumberjack
     - DKImagePickerController
     - DKPhotoGallery
     - Firebase
@@ -916,6 +927,8 @@ SPEC REPOS:
     - ZLPhotoBrowser
 
 EXTERNAL SOURCES:
+  background_fetch:
+    :path: ".symlinks/plugins/background_fetch/ios"
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
   file_picker:
@@ -930,6 +943,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: Flutter
+  flutter_background_geolocation:
+    :path: ".symlinks/plugins/flutter_background_geolocation/ios"
   flutter_native_image:
     :path: ".symlinks/plugins/flutter_native_image/ios"
   fluttertoast:
@@ -943,8 +958,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   abseil: 926fb7a82dc6d2b8e1f2ed7f3a718bce691d1e46
+  background_fetch: 896944864b038d2837fc750d470e9841e1e6a363
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   cloud_firestore: 85d66b543b25130c45258412a39e851e230186e7
+  CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
@@ -964,6 +981,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: bb2c4f6422a753038fe137d90ae7c1af57251316
   FirebaseStorage: 1d7ca8c8953fc61ccacaa7c612696b5402968a0d
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_background_geolocation: bd1ea7fbdc560dc926d792cfe876201006da35d8
   flutter_native_image: 9c0b7451838484458e5b0fae007b86a4c2d4bdfe
   fluttertoast: fafc4fa4d01a6a9e4f772ecd190ffa525e9e2d9c
   google_maps_flutter_ios: abdac20d6ce8931f6ebc5f46616df241bfaa2cfd
