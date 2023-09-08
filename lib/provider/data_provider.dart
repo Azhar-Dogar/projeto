@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
+import 'package:projeto/model/availability_model.dart';
 import 'package:projeto/model/car_model.dart';
 import 'package:projeto/model/user_model.dart';
 
@@ -31,25 +32,26 @@ class DataProvider with ChangeNotifier {
     callOthers();
   }
 
-  callOthers(){
-    Future.delayed(Duration(seconds: 1)).then((value){
-      if(userModel == null){
+  callOthers() {
+    Future.delayed(Duration(seconds: 1)).then((value) {
+      if (userModel == null) {
         callOthers();
-      }else{
+      } else {
         getCars();
         getUsers();
         getMessages();
+        getAvailability();
       }
     });
   }
 
-  reset(){
+  reset() {
     userModel = null;
     cars = [];
     users = [];
     chats = [];
-
   }
+
   cancelStreams() {
     profileStream?.cancel();
     carsStream?.cancel();
@@ -78,10 +80,14 @@ class DataProvider with ChangeNotifier {
 
   List<CarModel> cars = [];
 
-  getCars(){
-    carsStream = Constants.cars.where("uid", isEqualTo: Constants.uid()).snapshots().listen((snapshot) {
+  getCars() {
+    carsStream = Constants.cars
+        .where("uid", isEqualTo: Constants.uid())
+        .snapshots()
+        .listen((snapshot) {
       var docs = snapshot.docs.where((element) => element.exists).toList();
-      cars = List.generate(docs.length, (index) => CarModel.fromMap(docs[index].data()));
+      cars = List.generate(
+          docs.length, (index) => CarModel.fromMap(docs[index].data()));
       notifyListeners();
     });
   }
@@ -90,10 +96,14 @@ class DataProvider with ChangeNotifier {
 
   List<UserModel> users = [];
 
-  getUsers(){
-    usersStream = Constants.users.where("isUser", isEqualTo: !userModel!.isUser).snapshots().listen((snapshot) {
+  getUsers() {
+    usersStream = Constants.users
+        .where("isUser", isEqualTo: !userModel!.isUser)
+        .snapshots()
+        .listen((snapshot) {
       var docs = snapshot.docs.where((element) => element.exists).toList();
-      users = List.generate(docs.length, (index) => UserModel.fromMap(docs[index].data()));
+      users = List.generate(
+          docs.length, (index) => UserModel.fromMap(docs[index].data()));
       notifyListeners();
     });
   }
@@ -120,5 +130,55 @@ class DataProvider with ChangeNotifier {
       messageState = 2;
       notifyListeners();
     });
+  }
+
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? availabilityStream;
+
+  List<AvailabilityModel> availability = [];
+
+  getAvailability() {
+    if (userModel!.isUser) return;
+    availabilityStream = Constants.users
+        .doc(Constants.uid())
+        .collection("availability")
+        .snapshots()
+        .listen((snapshots) {
+      var docs = snapshots.docs.where((element) => element.exists).toList();
+      if (docs.isEmpty) {
+        setAvailability();
+      } else {
+        availability = List.generate(docs.length,
+            (index) => AvailabilityModel.fromMap(docs[index].data()));
+        notifyListeners();
+      }
+    });
+  }
+
+  setAvailability() {
+    var days = [
+      "Segundas-feiras",
+      "Terças-feiras",
+      "Quartas-feiras",
+      "Quintas-feiras",
+      "Sextas-feiras",
+      "Sábados",
+      "Domingos",
+    ];
+
+    for (int i = 0; i < days.length; i++) {
+      Constants.users
+          .doc(Constants.uid())
+          .collection("availability")
+          .doc("${i + 1}")
+          .set(
+            AvailabilityModel(
+                    day: days[i],
+                    startTime: TextEditingController(),
+                    endTime: TextEditingController(),
+                    breakStart: TextEditingController(),
+                    breakEnd: TextEditingController())
+                .toMap(),
+          );
+    }
   }
 }

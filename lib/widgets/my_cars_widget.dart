@@ -15,8 +15,11 @@ class MyCarsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-        context.push(child: AddCar(car: car,));
+      onTap: () {
+        context.push(
+            child: AddCar(
+          car: car,
+        ));
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -75,10 +78,20 @@ class MyCarsWidget extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Icon(
-                              Icons.check,
-                              color: CColors.primary,
-                            ),
+                            car.vehicleDocumentApproved == null
+                                ? Icon(
+                                    Icons.access_time,
+                                    color: CColors.primary,
+                                  )
+                                : car.vehicleDocumentApproved!
+                                    ? Icon(
+                                        Icons.check,
+                                        color: CColors.primary,
+                                      )
+                                    : Icon(
+                                        Icons.close,
+                                        color: CColors.primary,
+                                      ),
                             const SizedBox(
                               width: 5,
                             ),
@@ -94,10 +107,20 @@ class MyCarsWidget extends StatelessWidget {
                           margin: EdgeInsets.symmetric(vertical: 10),
                           child: Row(
                             children: [
-                              Icon(
-                                Icons.check,
-                                color: CColors.primary,
-                              ),
+                              car.vehicleLicenseApproved == null
+                                  ? Icon(
+                                      Icons.access_time,
+                                      color: CColors.primary,
+                                    )
+                                  : car.vehicleLicenseApproved!
+                                      ? Icon(
+                                          Icons.check,
+                                          color: CColors.primary,
+                                        )
+                                      : Icon(
+                                          Icons.close,
+                                          color: CColors.primary,
+                                        ),
                               const SizedBox(
                                 width: 5,
                               ),
@@ -112,8 +135,18 @@ class MyCarsWidget extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            Icon(
+                            car.vehicleInsuranceApproved == null
+                                ? Icon(
+                              Icons.access_time,
+                              color: CColors.primary,
+                            )
+                                : car.vehicleInsuranceApproved!
+                                ? Icon(
                               Icons.check,
+                              color: CColors.primary,
+                            )
+                                : Icon(
+                              Icons.close,
                               color: CColors.primary,
                             ),
                             const SizedBox(
