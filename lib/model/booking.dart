@@ -1,4 +1,4 @@
-class Booking {
+class BookingModel {
   late String id;
   late String instructorID;
   late String userID;
@@ -8,7 +8,7 @@ class Booking {
   late double amount;
   late String status;
 
-  Booking({
+  BookingModel({
     required this.id,
     required this.date,
     required this.amount,
@@ -32,7 +32,7 @@ class Booking {
     };
   }
 
-  Booking.fromMap(Map<String, dynamic> data) {
+  BookingModel.fromMap(Map<String, dynamic> data) {
     id = data["id"];
     instructorID = data["instructorID"];
     userID = data["userID"];

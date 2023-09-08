@@ -200,7 +200,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                     Functions.showLoading(context);
 
                     DocumentReference doc = Constants.bookings.doc();
-                    Booking booking = Booking(
+                    BookingModel booking = BookingModel(
                       id: doc.id,
                       date: selectedDate,
                       amount: double.parse(amount.text),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/model/availability_model.dart';
+import 'package:projeto/model/booking.dart';
 import 'package:projeto/model/car_model.dart';
 import 'package:projeto/model/user_model.dart';
 
@@ -41,6 +42,7 @@ class DataProvider with ChangeNotifier {
         getUsers();
         getMessages();
         getAvailability();
+        getBookings();
       }
     });
   }
@@ -50,6 +52,7 @@ class DataProvider with ChangeNotifier {
     cars = [];
     users = [];
     chats = [];
+    bookings = [];
   }
 
   cancelStreams() {
@@ -57,6 +60,23 @@ class DataProvider with ChangeNotifier {
     carsStream?.cancel();
     usersStream?.cancel();
     chatsStream?.cancel();
+    bookingStream?.cancel();
+  }
+
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? bookingStream;
+
+  List<BookingModel> bookings = [];
+
+  getBookings() {
+    bookingStream = Constants.bookings
+        .where("uid", isEqualTo: Constants.uid())
+        .snapshots()
+        .listen((snapshot) {
+      var docs = snapshot.docs.where((element) => element.exists).toList();
+      bookings = List.generate(
+          docs.length, (index) => BookingModel.fromMap(docs[index].data()));
+      notifyListeners();
+    });
   }
 
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? profileStream;
