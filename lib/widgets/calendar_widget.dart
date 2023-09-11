@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto/extras/functions.dart';
+import 'package:projeto/model/booking.dart';
+import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/widgets/margin_widget.dart';
+import 'package:provider/provider.dart';
 
 import '../extras/app_textstyles.dart';
 import '../extras/colors.dart';
@@ -118,7 +121,7 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
                 style: AppTextStyles.captionRegular(
                     color: CColors.textFieldBorder),
               ),
-              if (widget.isAgenda && (index == 2 || index == 4)) ...[
+              if (isBookingDate(index)) ...[
                 const MarginWidget(factor: 0.3),
                 CircleAvatar(
                   backgroundColor: CColors.primary,
@@ -130,5 +133,19 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
         ),
       ),
     );
+  }
+
+  bool isBookingDate(int index) {
+    if (widget.isAgenda) {
+      List<BookingModel> bookings = context
+          .read<DataProvider>()
+          .bookings
+          .where((element) =>
+              Functions.isSameDay(element.date, dateList[index]))
+          .toList();
+      return bookings.isNotEmpty;
+    } else {
+      return false;
+    }
   }
 }

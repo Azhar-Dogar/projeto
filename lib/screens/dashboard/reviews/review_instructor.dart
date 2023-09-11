@@ -6,6 +6,7 @@ import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
+import 'package:projeto/model/booking.dart';
 import 'package:projeto/model/review_model.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:utility_extensions/utility_extensions.dart';
@@ -18,11 +19,11 @@ import '../../../widgets/c_profile_app_bar.dart';
 
 class ReviewInstructor extends StatefulWidget {
   const ReviewInstructor(
-      {Key? key, required this.instructor, required this.time})
+      {Key? key, required this.instructor, required this.bookingModel})
       : super(key: key);
 
   final UserModel instructor;
-  final String time;
+  final BookingModel bookingModel;
 
   @override
   State<ReviewInstructor> createState() => _ReviewInstructorState();
@@ -141,7 +142,7 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
                               userID: Constants.uid(),
                               instructorID: widget.instructor.uid,
                               date: DateTime.now(),
-                              time: widget.time,
+                              time: widget.bookingModel.time,
                               instructorR: instructorR,
                               vehicleR: vehicleR,
                               courseR: courseR,
@@ -149,7 +150,16 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
                               opinion: opinionC.text,
                             );
 
+                            Functions.showLoading(context);
+
+                            await Constants.bookings.doc(widget.bookingModel.id).update({
+                              "ratingDone" : true,
+                            });
+
+
                             await doc.set(model.toMap());
+
+                            context.pop(rootNavigator: true);
 
                             context.pushReplacement(
                                 child: const ReviewSuccess());

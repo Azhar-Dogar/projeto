@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 
 import 'colors.dart';
 
-class Constants{
+class Constants {
   static List<BoxShadow> shadow() {
-    return  [
+    return [
       const BoxShadow(
         color: CColors.shadowColor,
         blurRadius: 10,
@@ -29,6 +29,19 @@ class Constants{
     "Nov",
     "Dez",
   ];
+
+  static List<int> years() {
+    int year = DateTime
+        .now()
+        .year - 7;
+    List<int> list = [];
+    for (int i = 0; i < 8; i++) {
+      list.add(year + i);
+    }
+    return list;
+  }
+
+
 
 
   static List<String> drivingLicenseCategoriesPortugal = [
@@ -87,8 +100,6 @@ class Constants{
     "Seat",
     "Jeep",
   ];
-
-
 
 
   //auth

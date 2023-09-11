@@ -13,7 +13,6 @@ import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/dashboard/home/instructors_screen.dart';
 import 'package:projeto/screens/dashboard/reviews/review_instructor.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
-import 'package:projeto/widgets/instructor_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/widgets/button_widget.dart';
@@ -36,14 +35,18 @@ class _ClassesScreenState extends State<ClassesScreen> {
   int _selectedIndex = 0;
 
   DateTime selectedDate = DateTime.now();
-  int yearNow = 2016;
+  late int yearSelected;
+  late int monthSelected;
 
   late DataProvider dataProvider;
 
   @override
   void initState() {
     super.initState();
+
     DateTime now = DateTime.now();
+    yearSelected = now.year;
+    monthSelected = now.month - 1;
   }
 
   @override
@@ -66,7 +69,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
             ] else if (_selectedIndex == 1) ...[
               Expanded(child: monthSelection()),
             ] else ...[
-              yearSelection(),
+              Expanded(child: yearSelection()),
             ],
           ],
         ),
@@ -77,55 +80,85 @@ class _ClassesScreenState extends State<ClassesScreen> {
   Widget yearSelection() {
     return Padding(
       padding: EdgeInsets.only(left: padding, right: padding),
-      child: Column(
-        children: [
-          const MarginWidget(factor: 0.5),
-          Wrap(
-            spacing: 30,
-            children: [
-              for (int i = 0; i < 8; i++) yearBox("${yearNow + i}"),
-            ],
+      child: CustomScrollView(
+        slivers: [
+          const MarginWidget(
+            factor: 0.5,
+            isSliver: true,
           ),
-          const MarginWidget(),
-          const DividerWidget(),
-          const MarginWidget(),
-          Wrap(
-            spacing: 30,
-            children: [
-              for (var month in Constants.months) yearBox(month),
-            ],
+          SliverGrid.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                childAspectRatio: 1.34,
+                mainAxisSpacing: 20,
+                crossAxisSpacing: 25),
+            itemBuilder: (ctx, index) {
+              return yearBox(year: Constants.years()[index]);
+            },
+            itemCount: Constants.years().length,
           ),
-          const MarginWidget(),
-          const DividerWidget(),
+          const MarginWidget(
+            isSliver: true,
+          ),
+          SliverToBoxAdapter(child: const DividerWidget()),
+          const MarginWidget(
+            isSliver: true,
+          ),
+          SliverGrid.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                childAspectRatio: 1.34,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 25),
+            itemBuilder: (ctx, index) {
+              return yearBox(month: index);
+            },
+            itemCount: Constants.months.length,
+          ),
+          const MarginWidget(
+            isSliver: true,
+          ),
+          SliverToBoxAdapter(child: const DividerWidget()),
+          const MarginWidget(
+            isSliver: true,
+          ),
+          showBookings(isSliver: true, isYear: true),
+          const MarginWidget(
+            isSliver: true,
+          ),
         ],
       ),
     );
   }
 
-  Widget yearRow(int year) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          for (int i = 0; i < 4; i++) ...[
-            yearBox("${year + i}"),
-          ]
-        ],
-      ),
-    );
-  }
-
-  Widget yearBox(String str) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-              color: str == "2023" ? Colors.black : Colors.transparent)),
-      child: Text(
-        str,
-        style: AppTextStyles.titleRegular(),
+  Widget yearBox({int? year, int? month}) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          if (year != null) {
+            yearSelected = year;
+          } else {
+            monthSelected = month!;
+          }
+        });
+      },
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color:
+                  (year != null ? year == yearSelected : month == monthSelected)
+                      ? Colors.black
+                      : Colors.transparent,
+            ),
+          ),
+          child: Text(
+            "${year != null ? year : Constants.months[month!]}",
+            style: AppTextStyles.titleRegular(),
+          ),
+        ),
       ),
     );
   }
@@ -162,7 +195,6 @@ class _ClassesScreenState extends State<ClassesScreen> {
             setState(() {
               selectedDate = value;
             });
-
           },
         ),
         const MarginWidget(),
@@ -172,10 +204,19 @@ class _ClassesScreenState extends State<ClassesScreen> {
     );
   }
 
-  Widget showBookings({bool isSliver = false}) {
-    List<BookingModel> bookings = dataProvider.bookings
-        .where((element) => Functions.isSameDay(element.date, selectedDate))
-        .toList();
+  Widget showBookings({bool isSliver = false, bool isYear = false}) {
+    List<BookingModel> bookings;
+    if (isYear) {
+      bookings = dataProvider.bookings
+          .where((element) =>
+              monthSelected + 1 == element.date.month &&
+              yearSelected == element.date.year)
+          .toList();
+    } else {
+      bookings = dataProvider.bookings
+          .where((element) => Functions.isSameDay(element.date, selectedDate))
+          .toList();
+    }
 
     if (bookings.isEmpty) {
       return isSliver ? SliverToBoxAdapter(child: noBooking()) : noBooking();
@@ -204,9 +245,10 @@ class _ClassesScreenState extends State<ClassesScreen> {
           );
   }
 
-  Column noBooking() {
+  Widget noBooking() {
     return Column(
       children: [
+        const MarginWidget(factor: 0.5),
         Text(
           "Você não tem aula agendada para esse dia",
           style: AppTextStyles.subTitleRegular(),
@@ -224,7 +266,6 @@ class _ClassesScreenState extends State<ClassesScreen> {
   }
 
   Widget bookingWidget(BookingModel bookingModel) {
-
     UserModel? instructor = dataProvider.getUserById(bookingModel.instructorID);
     CarModel? carModel = dataProvider.getCarById(bookingModel.instructorID);
 
@@ -358,25 +399,37 @@ class _ClassesScreenState extends State<ClassesScreen> {
               ]
             ] else ...[
               const MarginWidget(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.star_border,
-                    color: CColors.primary,
-                  ),
-                  const MarginWidget(isHorizontal: true),
-                  InkWell(
-                    onTap: (){
-                      context.push(child: ReviewInstructor(instructor: instructor, time: bookingModel.time,));
-                    },
-                    child: Text(
-                      "Avalie seu instrutor",
-                      style: AppTextStyles.captionMedium(color: CColors.primary),
+              if (!bookingModel.ratingDone) ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.star_border,
+                      color: CColors.primary,
                     ),
-                  ),
-                ],
-              ),
+                    const MarginWidget(isHorizontal: true),
+                    InkWell(
+                      onTap: () {
+                        context.push(
+                            child: ReviewInstructor(
+                          instructor: instructor,
+                          bookingModel: bookingModel,
+                        ));
+                      },
+                      child: Text(
+                        "Avalie seu instrutor",
+                        style:
+                            AppTextStyles.captionMedium(color: CColors.primary),
+                      ),
+                    ),
+                  ],
+                ),
+              ] else ...[
+                Text(
+                  "Obrigado por avaliar seu instrutor.",
+                  style: AppTextStyles.captionMedium(color: CColors.primary),
+                )
+              ],
             ],
             const MarginWidget(factor: 0.5),
           ],

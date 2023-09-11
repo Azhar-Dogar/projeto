@@ -7,6 +7,7 @@ class BookingModel {
   late int totalClasses;
   late double amount;
   late String status;
+  late bool ratingDone;
 
   BookingModel({
     required this.id,
@@ -17,6 +18,7 @@ class BookingModel {
     required this.totalClasses,
     required this.userID,
     this.status = "pending",
+    this.ratingDone = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +31,7 @@ class BookingModel {
       "totalClasses": totalClasses,
       "amount": amount,
       "status": status,
+      "ratingDone": ratingDone,
     };
   }
 
@@ -41,5 +44,6 @@ class BookingModel {
     totalClasses = data["totalClasses"];
     amount = data["amount"];
     status = data["status"];
+    ratingDone = data["ratingDone"] ?? false;
   }
 }

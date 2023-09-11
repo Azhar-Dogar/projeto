@@ -65,7 +65,6 @@ class _MyProgressState extends State<MyProgress> {
   }
 
   Widget reviewWidget(ReviewModel reviewModel) {
-
     UserModel? instructor = provider.getUserById(reviewModel.instructorID);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,7 +102,7 @@ class _MyProgressState extends State<MyProgress> {
                   ),
                   const MarginWidget(factor: 0.3),
                   Text(
-                    "Horário: 10h00",
+                    "Horário: ${reviewModel.time}",
                     style: AppTextStyles.subTitleRegular(),
                   ),
                   const MarginWidget(factor: 0.3),
@@ -118,7 +117,7 @@ class _MyProgressState extends State<MyProgress> {
                     style: AppTextStyles.subTitleRegular(),
                   ),
                   const MarginWidget(factor: 0.3),
-                  rating(),
+                  rating(reviewModel.totalR),
                 ],
               ),
             ),
@@ -129,23 +128,23 @@ class _MyProgressState extends State<MyProgress> {
     );
   }
 
-  Widget rating() {
+  Widget rating(double value) {
     return RatingBar.builder(
+      ignoreGestures: true,
       itemSize: 28,
-      initialRating: 3,
+      initialRating: value,
       minRating: 1,
       direction: Axis.horizontal,
-      allowHalfRating: true,
+      allowHalfRating: false,
       itemCount: 5,
+      updateOnDrag: false,
       itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
       itemBuilder: (context, _) => const Icon(
         Icons.star,
         size: 10,
         color: Colors.amber,
       ),
-      onRatingUpdate: (rating) {
-        print(rating);
-      },
+      onRatingUpdate: (rating) {},
     );
   }
 }
