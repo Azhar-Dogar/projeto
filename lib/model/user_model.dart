@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:projeto/model/card_model.dart';
+import 'package:projeto/model/review_model.dart';
 
 class UserModel {
   late String name;
@@ -10,6 +10,7 @@ class UserModel {
   String? image;
 
   late String uid;
+
   //license
   late String rgCpf;
   late String licenceNumber;
@@ -27,7 +28,6 @@ class UserModel {
   List<CardModel> cardsList = [];
   double? credits;
 
-
   //bank
   String? bank;
   String? agency;
@@ -38,14 +38,12 @@ class UserModel {
   //local data
   File? licenseDocumentFile;
 
-
   //rate
   String? amount;
 
-
+  List<ReviewModel>? reviews;
 
   UserModel({
-
     required this.name,
     required this.email,
     required this.phone,
@@ -63,6 +61,7 @@ class UserModel {
     this.account,
     this.amount,
     this.credits,
+    this.reviews,
   });
 
   UserModel.fromMap(Map<String, dynamic> data) {
@@ -83,7 +82,6 @@ class UserModel {
 
     credits = data["credits"] ?? 0;
 
-
     isUser = data["isUser"];
 
     bank = data["bank"];
@@ -92,6 +90,9 @@ class UserModel {
     amount = data["amount"];
     List cardsList = data["cardsList"] ?? [];
     this.cardsList = cardsList.map((e) => CardModel.fromMap(e)).toList();
+
+    List reviews = data["reviews"] ?? [];
+    this.reviews = reviews.map((e) => ReviewModel.fromMap(e)).toList();
   }
 
   Map<String, dynamic> toMapInstructorCreate() {
@@ -115,6 +116,7 @@ class UserModel {
       "account": account,
       "amount": amount,
       "cardsList": cardsList.map((e) => e.toMap()).toList(),
+      "reviews": reviews?.map((e) => e.toMap()).toList(),
     };
   }
 
@@ -137,7 +139,6 @@ class UserModel {
     };
   }
 
-
   Map<String, dynamic> toMapInstructorUpdate() {
     return {
       "name": name,
@@ -156,8 +157,10 @@ class UserModel {
       "agency": agency,
       "account": account,
       "amount": amount,
+      "reviews": reviews?.map((e) => e.toMap()).toList(),
     };
   }
+
   Map<String, dynamic> toMapUserUpdate() {
     return {
       "name": name,

@@ -1,14 +1,11 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/constants.dart';
-import 'package:projeto/extras/functions.dart';
 import 'package:projeto/model/availability_model.dart';
 import 'package:projeto/model/booking.dart';
 import 'package:projeto/model/car_model.dart';
 import 'package:projeto/model/user_model.dart';
-
 import '../model/chat_model.dart';
 
 class DataProvider with ChangeNotifier {
@@ -29,7 +26,6 @@ class DataProvider with ChangeNotifier {
 
   callFunctions() {
     getProfile();
-
     callOthers();
   }
 
@@ -69,7 +65,7 @@ class DataProvider with ChangeNotifier {
 
   getBookings() {
     bookingStream = Constants.bookings
-        .where("uid", isEqualTo: Constants.uid())
+        .where("userID", isEqualTo: Constants.uid())
         .snapshots()
         .listen((snapshot) {
       var docs = snapshot.docs.where((element) => element.exists).toList();
@@ -101,10 +97,12 @@ class DataProvider with ChangeNotifier {
   List<CarModel> cars = [];
 
   getCars() {
-    carsStream = Constants.cars
-        .where("uid", isEqualTo: Constants.uid())
-        .snapshots()
-        .listen((snapshot) {
+    var query = Constants.cars.where("uid", isEqualTo: Constants.uid());
+
+    if (userModel!.isUser) {
+      query = Constants.cars;
+    }
+    carsStream = query.snapshots().listen((snapshot) {
       var docs = snapshot.docs.where((element) => element.exists).toList();
       cars = List.generate(
           docs.length, (index) => CarModel.fromMap(docs[index].data()));
@@ -126,6 +124,23 @@ class DataProvider with ChangeNotifier {
           docs.length, (index) => UserModel.fromMap(docs[index].data()));
       notifyListeners();
     });
+  }
+
+  UserModel? getUserById(String id) {
+    UserModel? userModel;
+
+    userModel = users.where((element) => element.uid == id).firstOrNull;
+
+    return userModel;
+  }
+
+  CarModel? getCarById(String id) {
+    CarModel? carModel;
+    carModel = cars
+        .where((element) => element.uid == id && element.isPrimary)
+        .firstOrNull;
+
+    return carModel;
   }
 
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? chatsStream;

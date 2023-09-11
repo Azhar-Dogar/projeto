@@ -26,6 +26,10 @@ class CColors {
   static var divider = const Color(0xffEFEFF4);
   static var paymentContainer = const Color(0xffF1F2F6);
   static var rating = const Color(0xffEBEF21);
+  static var pink = const Color(0xffF23131).withOpacity(0.2);
+  static var blueShade = const Color(0xff318AF2).withOpacity(0.2);
+
+
 
   static var bluePrima = const Color(0xff8584A16);
 

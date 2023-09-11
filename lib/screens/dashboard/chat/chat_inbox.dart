@@ -81,6 +81,7 @@ class _InboxScreenState extends State<InboxScreen> {
                 color: CColors.dashboard,
                 padding: EdgeInsets.symmetric(horizontal: padding, vertical: 10, ),
                 child: ListView.builder(
+                  controller: chat.controller,
                   reverse:  true,
                   itemBuilder: (ctx, i) {
                     var message = chat.messages[i];

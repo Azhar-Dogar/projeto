@@ -1,9 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/constants.dart';
+import 'package:projeto/extras/functions.dart';
+import 'package:projeto/generated/assets.dart';
+import 'package:projeto/model/booking.dart';
+import 'package:projeto/model/car_model.dart';
+import 'package:projeto/model/user_model.dart';
 import 'package:projeto/provider/data_provider.dart';
+import 'package:projeto/screens/dashboard/home/instructors_screen.dart';
+import 'package:projeto/screens/dashboard/reviews/review_instructor.dart';
+import 'package:projeto/widgets/custom_asset_image.dart';
+import 'package:projeto/widgets/instructor_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/widgets/button_widget.dart';
@@ -28,15 +38,12 @@ class _ClassesScreenState extends State<ClassesScreen> {
   DateTime selectedDate = DateTime.now();
   int yearNow = 2016;
 
-  late DateTime _selectedDate;
-
   late DataProvider dataProvider;
 
   @override
   void initState() {
     super.initState();
     DateTime now = DateTime.now();
-    _selectedDate = DateTime(now.year, now.month, now.day);
   }
 
   @override
@@ -44,34 +51,27 @@ class _ClassesScreenState extends State<ClassesScreen> {
     width = context.width;
     padding = width * 0.04;
 
-    return Consumer<DataProvider>(
-      builder: (context, value, child) {
+    return Consumer<DataProvider>(builder: (context, value, child) {
+      dataProvider = value;
 
-
-        return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: CustomAppBar("Agenda"),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                segmentSwitch(),
-                const MarginWidget(),
-                if (_selectedIndex == 0) ...[
-                  weekSelection(),
-                ] else if (_selectedIndex == 1) ...[
-                  monthSelection(),
-                ] else ...[
-                  yearSelection(),
-                ],
-
-
-
-              ],
-            ),
-          ),
-        );
-      }
-    );
+      return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: CustomAppBar("Agenda"),
+        body: Column(
+          children: [
+            segmentSwitch(),
+            const MarginWidget(),
+            if (_selectedIndex == 0) ...[
+              Expanded(child: weekSelection()),
+            ] else if (_selectedIndex == 1) ...[
+              Expanded(child: monthSelection()),
+            ] else ...[
+              yearSelection(),
+            ],
+          ],
+        ),
+      );
+    });
   }
 
   Widget yearSelection() {
@@ -131,27 +131,23 @@ class _ClassesScreenState extends State<ClassesScreen> {
   }
 
   Widget monthSelection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        CCalendarWidget(
-            startDate: _selectedDate,
-            onSelection: (value, date) {
-              setState(() {
-                _selectedDate = value;
-              });
-            }),
-        const DividerWidget(),
-        const MarginWidget(),
-        if (_selectedDate.day == 17) ...[
-          instructorWidget(),
-        ] else ...[
-          Text(
-            "Você não tem aula agendada para esse dia",
-            style: AppTextStyles.subTitleRegular(),
-          ),
-        ],
-        const MarginWidget(),
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: CCalendarWidget(
+              startDate: selectedDate,
+              onSelection: (value, date) {
+                setState(() {
+                  selectedDate = value;
+                });
+              }),
+        ),
+        SliverToBoxAdapter(child: const DividerWidget()),
+        const MarginWidget(
+          isSliver: true,
+        ),
+        showBookings(isSliver: true),
+        const MarginWidget(isSliver: true),
       ],
     );
   }
@@ -162,38 +158,76 @@ class _ClassesScreenState extends State<ClassesScreen> {
         WeekCalendarWidget(
           isAgenda: true,
           selectedDate: selectedDate,
-          onTap: (value){
+          onTap: (value) {
             setState(() {
               selectedDate = value;
             });
 
-            print(value);
           },
         ),
         const MarginWidget(),
         const DividerWidget(thickness: 2),
-        const MarginWidget(),
-        if (selectedDate == 2 || selectedDate == 4) ...[
-          instructorWidget(),
-        ] else ...[
-          // Text(
-          //   "Você não tem aula agendada para esse dia",
-          //   style: AppTextStyles.subTitleRegular(),
-          // ),
-          // const MarginWidget(),
-          // Padding(
-          //   padding: EdgeInsets.only(left: padding, right: padding),
-          //   child: ButtonWidget(
-          //     name: "Voltar para home e agendar",
-          //     onPressed: () {},
-          //   ),
-          // ),
-        ],
+        showBookings(),
       ],
     );
   }
 
-  Widget instructorWidget() {
+  Widget showBookings({bool isSliver = false}) {
+    List<BookingModel> bookings = dataProvider.bookings
+        .where((element) => Functions.isSameDay(element.date, selectedDate))
+        .toList();
+
+    if (bookings.isEmpty) {
+      return isSliver ? SliverToBoxAdapter(child: noBooking()) : noBooking();
+    }
+    return isSliver
+        ? SliverList.separated(
+            itemBuilder: (ctx, index) {
+              return bookingWidget(bookings[index]);
+            },
+            itemCount: bookings.length,
+            separatorBuilder: (BuildContext context, int index) {
+              return MarginWidget(factor: 0.5);
+            },
+          )
+        : Expanded(
+            child: ListView.separated(
+              padding: EdgeInsets.only(top: 15),
+              itemBuilder: (ctx, index) {
+                return bookingWidget(bookings[index]);
+              },
+              itemCount: bookings.length,
+              separatorBuilder: (BuildContext context, int index) {
+                return MarginWidget(factor: 0.5);
+              },
+            ),
+          );
+  }
+
+  Column noBooking() {
+    return Column(
+      children: [
+        Text(
+          "Você não tem aula agendada para esse dia",
+          style: AppTextStyles.subTitleRegular(),
+        ),
+        const MarginWidget(),
+        Padding(
+          padding: EdgeInsets.only(left: padding, right: padding),
+          child: ButtonWidget(
+            name: "Voltar para home e agendar",
+            onPressed: () {},
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget bookingWidget(BookingModel bookingModel) {
+
+    UserModel? instructor = dataProvider.getUserById(bookingModel.instructorID);
+    CarModel? carModel = dataProvider.getCarById(bookingModel.instructorID);
+
     return Padding(
       padding: EdgeInsets.only(left: padding, right: padding),
       child: Container(
@@ -215,7 +249,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                     children: [
                       title("Instrutor"),
                       const MarginWidget(factor: 0.2),
-                      subTitle("Annette Johnson"),
+                      subTitle("${instructor!.name}"),
                     ],
                   ),
                 ),
@@ -223,32 +257,37 @@ class _ClassesScreenState extends State<ClassesScreen> {
                   height: 35,
                   width: 35,
                   decoration: BoxDecoration(
-                      color: CColors.primary.withOpacity(0.2),
+                      color: iconColor(bookingModel.status),
                       shape: BoxShape.circle),
                   alignment: Alignment.center,
-                  child: selectedDate == 2
-                      ? const Icon(
-                          Icons.done,
-                          size: 20,
-                        )
-                      : const CupertinoActivityIndicator(),
+                  child: getBookingIcon(bookingModel.status),
                 )
               ],
             ),
-            if (selectedDate == 4) ...[
-              const MarginWidget(factor: 0.2),
+            const MarginWidget(factor: 0.2),
+            if (bookingModel.status == "pending") ...[
               Text(
                 "O instrutor ainda não confirmou sua aula",
                 style:
                     AppTextStyles.captionMedium(color: CColors.textFieldBorder),
               ),
-              const MarginWidget(factor: 0.2),
+            ] else if (bookingModel.status == "confirmed") ...[
+              Text(
+                "O instrutor confirmou sua aula!",
+                style: AppTextStyles.captionMedium(color: CColors.primary),
+              ),
+            ] else if (bookingModel.status == "denied") ...[
+              Text(
+                "O instrutor escolhido não poderá atender sua solicitação, escolha outro instrutor disponível.",
+                style: AppTextStyles.captionMedium(color: CColors.primary),
+              ),
             ] else ...[
-              const DividerWidget(),
+              DividerWidget(),
             ],
+            const MarginWidget(factor: 0.2),
             title("Carro"),
             const MarginWidget(factor: 0.2),
-            subTitle("Celta, 2018"),
+            subTitle("${carModel!.vehicle}, ${carModel.year}"),
             const DividerWidget(),
             title("Horário"),
             const MarginWidget(factor: 0.5),
@@ -272,21 +311,51 @@ class _ClassesScreenState extends State<ClassesScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 subTitle("R\$ 80,00"),
-                subTitle("R\$ 160,00"),
+                subTitle("R\$ ${bookingModel.amount}"),
               ],
             ),
             const DividerWidget(),
-            if (selectedDate == 4) ...[
+            if (bookingModel.status == "pending" ||
+                bookingModel.status == "confirmed" ||
+                bookingModel.status == "denied") ...[
               const MarginWidget(factor: 0.2),
-              ButtonWidget(name: "Alterar instrutor", onPressed: () {}),
-              const MarginWidget(),
-              Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Cancelar aula",
-                  style: AppTextStyles.captionMedium(color: CColors.primary),
+              ButtonWidget(
+                  name: "Alterar instrutor",
+                  onPressed: () {
+                    context.push(child: InstructorsScreen(callBack: (value) {
+                      try {
+                        BookingModel updated =
+                            BookingModel.fromMap(bookingModel.toMap());
+                        updated.instructorID = value.uid;
+                        updated.status = "pending";
+                        Constants.bookings
+                            .doc(updated.id)
+                            .update(updated.toMap());
+                      } on FirebaseException catch (e) {
+                        print(e);
+                      }
+                    }));
+                  }),
+              if (bookingModel.status != "denied") ...[
+                const MarginWidget(),
+                Align(
+                  alignment: Alignment.center,
+                  child: InkWell(
+                    onTap: () {
+                      try {
+                        Constants.bookings.doc(bookingModel.id).delete();
+                      } on FirebaseException catch (e) {
+                        print(e);
+                      }
+                    },
+                    child: Text(
+                      "Cancelar aula",
+                      style:
+                          AppTextStyles.captionMedium(color: CColors.primary),
+                    ),
+                  ),
                 ),
-              ),
+              ]
             ] else ...[
               const MarginWidget(),
               Row(
@@ -297,9 +366,14 @@ class _ClassesScreenState extends State<ClassesScreen> {
                     color: CColors.primary,
                   ),
                   const MarginWidget(isHorizontal: true),
-                  Text(
-                    "Avalie seu instrutor",
-                    style: AppTextStyles.captionMedium(color: CColors.primary),
+                  InkWell(
+                    onTap: (){
+                      context.push(child: ReviewInstructor(instructor: instructor, time: bookingModel.time,));
+                    },
+                    child: Text(
+                      "Avalie seu instrutor",
+                      style: AppTextStyles.captionMedium(color: CColors.primary),
+                    ),
                   ),
                 ],
               ),
@@ -309,6 +383,44 @@ class _ClassesScreenState extends State<ClassesScreen> {
         ),
       ),
     );
+  }
+
+  Color iconColor(String status) {
+    switch (status) {
+      case "pending":
+        return CColors.blueShade;
+      case "denied":
+        return CColors.pink;
+      default:
+        return CColors.primary.withOpacity(0.2);
+    }
+  }
+
+  Widget getBookingIcon(String status) {
+    switch (status) {
+      case "pending":
+        return const CupertinoActivityIndicator();
+
+      case "confirmed":
+        return Container(
+          child: Icon(
+            Icons.calendar_today_sharp,
+            size: 18,
+          ),
+        );
+      case "denied":
+        return CustomAssetImage(
+          path: Assets.iconsCancel,
+          height: 18,
+        );
+      case "completed":
+        return Icon(
+          Icons.done,
+          size: 18,
+        );
+      default:
+        return const CupertinoActivityIndicator();
+    }
   }
 
   Widget timeBox() {

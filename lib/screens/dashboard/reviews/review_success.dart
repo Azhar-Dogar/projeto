@@ -32,7 +32,7 @@ class _ReviewSuccessState extends State<ReviewSuccess> {
       appBar: CustomAppBar("Avaliação"),
       body: Center(
         child: Padding(
-          padding:  EdgeInsets.only(left: padding + 20, right: padding + 20),
+          padding: EdgeInsets.only(left: padding + 20, right: padding + 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

@@ -1,19 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
+import 'package:projeto/extras/constants.dart';
+import 'package:projeto/extras/functions.dart';
+import 'package:projeto/model/review_model.dart';
+import 'package:projeto/model/user_model.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/screens/dashboard/reviews/review_success.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
-
 import '../../../widgets/c_profile_app_bar.dart';
 
 class ReviewInstructor extends StatefulWidget {
-  const ReviewInstructor({Key? key}) : super(key: key);
+  const ReviewInstructor(
+      {Key? key, required this.instructor, required this.time})
+      : super(key: key);
+
+  final UserModel instructor;
+  final String time;
 
   @override
   State<ReviewInstructor> createState() => _ReviewInstructorState();
@@ -22,7 +31,8 @@ class ReviewInstructor extends StatefulWidget {
 class _ReviewInstructorState extends State<ReviewInstructor> {
   late double width, padding;
 
-  TextEditingController reviewC = TextEditingController();
+  double instructorR = 1, vehicleR = 1, courseR = 1;
+  TextEditingController opinionC = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +57,20 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
                     border: Border.all(color: CColors.primary, width: 4),
                   ),
                   child: ClipOval(
-                    child: CustomAssetImage(
-                      path: AppImages.demo,
-                      fit: BoxFit.cover,
-                    ),
+                    child: widget.instructor.image != null
+                        ? Image(
+                            image: NetworkImage(widget.instructor.image!),
+                            fit: BoxFit.cover,
+                          )
+                        : CustomAssetImage(
+                            path: AppImages.demo,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
                 const MarginWidget(),
                 Text(
-                  "Annette Johnson",
+                  "${widget.instructor.name}",
                   style: AppTextStyles.titleMedium(),
                 ),
               ],
@@ -73,14 +88,18 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
                       style: AppTextStyles.subTitleRegular(),
                     ),
                     const MarginWidget(),
-                    rating(),
+                    rating(instructorR, (rating) {
+                      instructorR = rating;
+                    }),
                     const MarginWidget(),
                     Text(
                       "Qual sua avaliação do veículo utilizado?",
                       style: AppTextStyles.subTitleRegular(),
                     ),
                     const MarginWidget(),
-                    rating(),
+                    rating(vehicleR, (rating) {
+                      vehicleR = rating;
+                    }),
                     const MarginWidget(),
                     Text(
                       textAlign: TextAlign.center,
@@ -88,20 +107,54 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
                       style: AppTextStyles.subTitleRegular(),
                     ),
                     const MarginWidget(),
-                    rating(),
+                    rating(courseR, (rating) {
+                      courseR = rating;
+                    }),
                     const MarginWidget(factor: 1.5),
                     Text(
                       "Conte-nos mais sobre sua opinião:",
                       style: AppTextStyles.subTitleMedium(),
                     ),
                     const MarginWidget(),
-                    TextFieldWidget(controller: reviewC, hint: '', maxLines: 5,),
+                    TextFieldWidget(
+                      controller: opinionC,
+                      hint: '',
+                      maxLines: 5,
+                    ),
                     const MarginWidget(factor: 2),
-                    ButtonWidget(name: "Enviar", onPressed: (){
-                      context.push(child: const ReviewSuccess());
-                    }),
-                    const MarginWidget(),
+                    ButtonWidget(
+                        name: "Enviar",
+                        onPressed: () async{
+                          if (opinionC.text.isEmpty) {
+                            Functions.showSnackBar(
+                                context, "Por favor insira sua opinião");
+                            return;
+                          }
 
+                          double rating =
+                              (instructorR + vehicleR + courseR) / 3.0;
+                          ReviewModel model = ReviewModel(
+                            userID: widget.instructor.uid,
+                            date: DateTime.now(),
+                            time: widget.time,
+                            rating: rating,
+                            opinion: opinionC.text,
+                          );
+
+                          UserModel updated = widget.instructor;
+                          updated.reviews!.add(model);
+
+                          try{
+                            await Constants.users.doc(updated.uid).update({
+                              "reviews" : updated.reviews!.map((e) => e.toMap()).toList()
+                            });
+                            context.pushReplacement(child: const ReviewSuccess());
+                          }on FirebaseException catch(e){
+                            print(e);
+                          }
+
+                        }),
+                    const MarginWidget(),
                   ],
                 ),
               ),
@@ -112,13 +165,13 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
     );
   }
 
-  Widget rating() {
+  Widget rating(double rating, void Function(double) onUpdate) {
     return RatingBar.builder(
       itemSize: 30,
-      initialRating: 3,
+      initialRating: rating,
       minRating: 1,
       direction: Axis.horizontal,
-      allowHalfRating: true,
+      allowHalfRating: false,
       itemCount: 5,
       itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
       itemBuilder: (context, _) => const Icon(
@@ -126,9 +179,7 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
         size: 10,
         color: Colors.amber,
       ),
-      onRatingUpdate: (rating) {
-        print(rating);
-      },
+      onRatingUpdate: onUpdate,
     );
   }
 }
