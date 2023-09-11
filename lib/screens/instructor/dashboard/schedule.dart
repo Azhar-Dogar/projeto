@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
+import 'package:projeto/screens/instructor/dashboard/schedule/instructor_classes_screen.dart';
 import 'package:utility_extensions/utility_extensions.dart';
-import 'package:projeto/screens/dashboard/classes_screen.dart';
+import 'package:projeto/screens/dashboard/user_classes_screen.dart';
 import 'package:projeto/screens/instructor/schedule/availability.dart';
-
 import '../../../extras/colors.dart';
 
 class Schedule extends StatelessWidget {
@@ -27,7 +27,7 @@ class Schedule extends StatelessWidget {
             Icons.calendar_today_sharp,
             "Minha Agenda",
             () {
-              context.push(child: ClassesScreen());
+              context.push(child: InstructorClassesScreen());
             },
           ),
           itemWidget(

@@ -5,7 +5,7 @@ import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
-import 'package:projeto/model/booking.dart';
+import 'package:projeto/model/booking_model.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:projeto/screens/dashboard/home/calendar_screen.dart';
 import 'package:projeto/widgets/ctimerpicker.dart';

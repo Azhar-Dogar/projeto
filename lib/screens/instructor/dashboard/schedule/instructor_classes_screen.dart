@@ -6,12 +6,13 @@ import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/generated/assets.dart';
-import 'package:projeto/model/booking.dart';
+import 'package:projeto/model/booking_model.dart';
 import 'package:projeto/model/car_model.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/dashboard/home/instructors_screen.dart';
 import 'package:projeto/screens/dashboard/reviews/review_instructor.dart';
+import 'package:projeto/screens/instructor/dashboard/schedule/review_student.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
@@ -20,16 +21,18 @@ import 'package:projeto/widgets/calendar_widget.dart';
 import 'package:projeto/widgets/custom_calendar_Widget.dart';
 import 'package:projeto/widgets/divider_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
-import '../../widgets/c_profile_app_bar.dart';
 
-class ClassesScreen extends StatefulWidget {
-  const ClassesScreen({super.key});
+import '../../../../widgets/c_profile_app_bar.dart';
+
+class InstructorClassesScreen extends StatefulWidget {
+  const InstructorClassesScreen({super.key});
 
   @override
-  State<ClassesScreen> createState() => _ClassesScreenState();
+  State<InstructorClassesScreen> createState() =>
+      _InstructorClassesScreenState();
 }
 
-class _ClassesScreenState extends State<ClassesScreen> {
+class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
   late double width, padding;
 
   int _selectedIndex = 0;
@@ -266,7 +269,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
   }
 
   Widget bookingWidget(BookingModel bookingModel) {
-    UserModel? instructor = dataProvider.getUserById(bookingModel.instructorID);
+    UserModel? userModel = dataProvider.getUserById(bookingModel.userID);
     CarModel? carModel = dataProvider.getCarById(bookingModel.instructorID);
 
     return Padding(
@@ -290,41 +293,14 @@ class _ClassesScreenState extends State<ClassesScreen> {
                     children: [
                       title("Instrutor"),
                       const MarginWidget(factor: 0.2),
-                      subTitle("${instructor!.name}"),
+                      subTitle("${userModel!.name}"),
                     ],
                   ),
                 ),
-                Container(
-                  height: 35,
-                  width: 35,
-                  decoration: BoxDecoration(
-                      color: iconColor(bookingModel.status),
-                      shape: BoxShape.circle),
-                  alignment: Alignment.center,
-                  child: getBookingIcon(bookingModel.status),
-                )
               ],
             ),
             const MarginWidget(factor: 0.2),
-            if (bookingModel.status == "pending") ...[
-              Text(
-                "O instrutor ainda não confirmou sua aula",
-                style:
-                    AppTextStyles.captionMedium(color: CColors.textFieldBorder),
-              ),
-            ] else if (bookingModel.status == "confirmed") ...[
-              Text(
-                "O instrutor confirmou sua aula!",
-                style: AppTextStyles.captionMedium(color: CColors.primary),
-              ),
-            ] else if (bookingModel.status == "denied") ...[
-              Text(
-                "O instrutor escolhido não poderá atender sua solicitação, escolha outro instrutor disponível.",
-                style: AppTextStyles.captionMedium(color: CColors.primary),
-              ),
-            ] else ...[
-              DividerWidget(),
-            ],
+            DividerWidget(),
             const MarginWidget(factor: 0.2),
             title("Carro"),
             const MarginWidget(factor: 0.2),
@@ -356,19 +332,15 @@ class _ClassesScreenState extends State<ClassesScreen> {
               ],
             ),
             const DividerWidget(),
-            if (bookingModel.status == "pending" ||
-                bookingModel.status == "confirmed" ||
-                bookingModel.status == "denied") ...[
-              const MarginWidget(factor: 0.2),
+            if (bookingModel.status == "confirmed") ...[
               ButtonWidget(
-                  name: "Alterar instrutor",
+                  name: "Finalizar Aula",
                   onPressed: () {
                     context.push(child: InstructorsScreen(callBack: (value) {
                       try {
                         BookingModel updated =
                             BookingModel.fromMap(bookingModel.toMap());
-                        updated.instructorID = value.uid;
-                        updated.status = "pending";
+                        updated.status = "completed";
                         Constants.bookings
                             .doc(updated.id)
                             .update(updated.toMap());
@@ -377,29 +349,15 @@ class _ClassesScreenState extends State<ClassesScreen> {
                       }
                     }));
                   }),
-              if (bookingModel.status != "denied") ...[
-                const MarginWidget(),
-                Align(
-                  alignment: Alignment.center,
-                  child: InkWell(
-                    onTap: () {
-                      try {
-                        Constants.bookings.doc(bookingModel.id).delete();
-                      } on FirebaseException catch (e) {
-                        print(e);
-                      }
-                    },
-                    child: Text(
-                      "Cancelar aula",
-                      style:
-                          AppTextStyles.captionMedium(color: CColors.primary),
-                    ),
+            ] else if (bookingModel.status == "completed") ...[
+              if (bookingModel.studentRating)
+                ...[
+                  Text(
+                    "Obrigado por avaliar seu aluno.",
+                    style: AppTextStyles.captionMedium(color: CColors.primary),
                   ),
-                ),
-              ]
-            ] else ...[
-              const MarginWidget(),
-              if (!bookingModel.ratingDone) ...[
+                ]
+              else ...[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -411,8 +369,8 @@ class _ClassesScreenState extends State<ClassesScreen> {
                     InkWell(
                       onTap: () {
                         context.push(
-                            child: ReviewInstructor(
-                          instructor: instructor,
+                            child: ReviewStudent(
+                          user: userModel,
                           bookingModel: bookingModel,
                         ));
                       },
@@ -424,11 +382,6 @@ class _ClassesScreenState extends State<ClassesScreen> {
                     ),
                   ],
                 ),
-              ] else ...[
-                Text(
-                  "Obrigado por avaliar seu instrutor.",
-                  style: AppTextStyles.captionMedium(color: CColors.primary),
-                )
               ],
             ],
             const MarginWidget(factor: 0.5),
@@ -436,44 +389,6 @@ class _ClassesScreenState extends State<ClassesScreen> {
         ),
       ),
     );
-  }
-
-  Color iconColor(String status) {
-    switch (status) {
-      case "pending":
-        return CColors.blueShade;
-      case "denied":
-        return CColors.pink;
-      default:
-        return CColors.primary.withOpacity(0.2);
-    }
-  }
-
-  Widget getBookingIcon(String status) {
-    switch (status) {
-      case "pending":
-        return const CupertinoActivityIndicator();
-
-      case "confirmed":
-        return Container(
-          child: Icon(
-            Icons.calendar_today_sharp,
-            size: 18,
-          ),
-        );
-      case "denied":
-        return CustomAssetImage(
-          path: Assets.iconsCancel,
-          height: 18,
-        );
-      case "completed":
-        return Icon(
-          Icons.done,
-          size: 18,
-        );
-      default:
-        return const CupertinoActivityIndicator();
-    }
   }
 
   Widget timeBox() {

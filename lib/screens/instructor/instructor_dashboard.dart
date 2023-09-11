@@ -3,15 +3,11 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:projeto/screens/instructor/dashboard/instructor_home.dart';
 import 'package:projeto/screens/instructor/dashboard/instructor_profile_screen.dart';
 import 'package:projeto/screens/instructor/dashboard/schedule.dart';
-
 import '../../extras/app_assets.dart';
 import '../../extras/colors.dart';
 import '../../widgets/custom_asset_image.dart';
 import '../dashboard/chat_screen.dart';
-import '../dashboard/classes_screen.dart';
-import '../dashboard/home_screen.dart';
 import '../dashboard/notification_screen.dart';
-import '../dashboard/profile_screen.dart';
 import '../dashboard_screen.dart';
 
 class InstructorDashboard extends StatefulWidget {

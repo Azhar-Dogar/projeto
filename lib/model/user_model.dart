@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:projeto/model/card_model.dart';
+import 'package:projeto/model/review_model.dart';
+import 'package:projeto/screens/instructor/dashboard/schedule/review_student.dart';
 
 class UserModel {
   late String name;
@@ -26,6 +28,9 @@ class UserModel {
   //card
   List<CardModel> cardsList = [];
   double? credits;
+
+  //reviews
+  List<ReviewModel> reviews = [];
 
   //bank
   String? bank;
@@ -84,8 +89,12 @@ class UserModel {
     agency = data["agency"];
     account = data["account"];
     amount = data["amount"];
+
     List cardsList = data["cardsList"] ?? [];
     this.cardsList = cardsList.map((e) => CardModel.fromMap(e)).toList();
+
+    List reviews = data["reviews"] ?? [];
+    this.reviews = reviews.map((e) => ReviewModel.fromMap(e)).toList();
   }
 
   Map<String, dynamic> toMapInstructorCreate() {
@@ -109,6 +118,7 @@ class UserModel {
       "account": account,
       "amount": amount,
       "cardsList": cardsList.map((e) => e.toMap()).toList(),
+      "reviews": reviews.map((e) => e.toMap()).toList(),
     };
   }
 
@@ -128,6 +138,7 @@ class UserModel {
       "neighbourhood": neighbourhood,
       "number": number,
       "complement": complement,
+      "reviews": reviews.map((e) => e.toMap()).toList(),
     };
   }
 

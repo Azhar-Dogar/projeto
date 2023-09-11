@@ -1,31 +1,30 @@
 class ReviewModel {
-  late String id;
-  late String userID;
-  late String instructorID;
+   String? id;
+  String? userID;
+  String? instructorID;
   late DateTime date;
   late String time;
-  late double instructorR;
-  late double vehicleR;
-  late double courseR;
+  double? instructorR;
+  double? vehicleR;
+  double? courseR;
   late double totalR;
   late String opinion;
 
   ReviewModel(
-      {
-        required this.id,
-        required this.userID,
+      { this.id,
+      this.userID,
       required this.date,
       required this.time,
-      required this.instructorR,
-      required this.vehicleR,
-      required this.courseR,
-        required this.totalR,
-        required this.opinion,
-      required this.instructorID});
+      this.instructorR,
+      this.vehicleR,
+      this.courseR,
+      required this.totalR,
+      required this.opinion,
+      this.instructorID});
 
   Map<String, dynamic> toMap() {
     return {
-      "id" : id,
+      "id": id,
       "userID": userID,
       "instructorID": instructorID,
       "date": date.millisecondsSinceEpoch,

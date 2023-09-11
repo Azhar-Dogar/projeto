@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/screens/dashboard/chat_screen.dart';
-import 'package:projeto/screens/dashboard/classes_screen.dart';
+import 'package:projeto/screens/dashboard/user_classes_screen.dart';
 import 'package:projeto/screens/dashboard/home_screen.dart';
 import 'package:projeto/screens/dashboard/notification_screen.dart';
 import 'package:projeto/screens/dashboard/profile_screen.dart';
@@ -20,7 +20,7 @@ class DashBoard extends StatefulWidget {
 class _DashBoardState extends State<DashBoard> {
   List<Widget> pages = [
     const ProfileScreen(),
-    const ClassesScreen(),
+    const UserClassesScreen(),
     const HomeScreen(),
      NotificationScreen(),
      ChatScreen(),

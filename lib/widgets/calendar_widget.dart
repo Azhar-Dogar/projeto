@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto/extras/functions.dart';
-import 'package:projeto/model/booking.dart';
+import 'package:projeto/model/booking_model.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:provider/provider.dart';

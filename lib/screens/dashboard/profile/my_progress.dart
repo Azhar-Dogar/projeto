@@ -65,7 +65,7 @@ class _MyProgressState extends State<MyProgress> {
   }
 
   Widget reviewWidget(ReviewModel reviewModel) {
-    UserModel? instructor = provider.getUserById(reviewModel.instructorID);
+    UserModel? instructor = provider.getUserById(reviewModel.instructorID!);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -4,35 +4,35 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
-import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/model/booking_model.dart';
-import 'package:projeto/model/review_model.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:utility_extensions/utility_extensions.dart';
-import 'package:projeto/screens/dashboard/reviews/review_success.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
-import '../../../widgets/c_profile_app_bar.dart';
+import 'package:intl/intl.dart';
 
-class ReviewInstructor extends StatefulWidget {
-  const ReviewInstructor(
-      {Key? key, required this.instructor, required this.bookingModel})
+import '../../../../extras/constants.dart';
+import '../../../../model/review_model.dart';
+import '../../../dashboard/reviews/review_success.dart';
+
+class ReviewStudent extends StatefulWidget {
+  const ReviewStudent({Key? key, required this.user, required this.bookingModel})
       : super(key: key);
 
-  final UserModel instructor;
+  final UserModel user;
   final BookingModel bookingModel;
 
   @override
-  State<ReviewInstructor> createState() => _ReviewInstructorState();
+  State<ReviewStudent> createState() => _ReviewStudentState();
 }
 
-class _ReviewInstructorState extends State<ReviewInstructor> {
+class _ReviewStudentState extends State<ReviewStudent> {
   late double width, padding;
 
-  double instructorR = 1, vehicleR = 1, courseR = 1;
+  double studentR = 1;
   TextEditingController opinionC = TextEditingController();
 
   @override
@@ -41,7 +41,12 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
     padding = width * 0.04;
 
     return Scaffold(
-      appBar: CustomAppBar("Avaliação"),
+      appBar: AppBar(
+        title: Text(
+          "Avaliação de Progresso",
+          style: AppTextStyles.subTitleMedium(),
+        ),
+      ),
       body: Column(
         children: [
           Container(
@@ -58,9 +63,9 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
                     border: Border.all(color: CColors.primary, width: 4),
                   ),
                   child: ClipOval(
-                    child: widget.instructor.image != null
+                    child: widget.user.image != null
                         ? Image(
-                            image: NetworkImage(widget.instructor.image!),
+                            image: NetworkImage(widget.user.image!),
                             fit: BoxFit.cover,
                           )
                         : CustomAssetImage(
@@ -71,8 +76,17 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
                 ),
                 const MarginWidget(),
                 Text(
-                  "${widget.instructor.name}",
+                  "${widget.user.name}",
                   style: AppTextStyles.titleMedium(),
+                ),
+                const MarginWidget(),
+                Text(
+                  "Data: ${DateFormat("dd-MM-yyyy").format(widget.bookingModel.date)}",
+                  style: AppTextStyles.captionMedium(),
+                ),
+                Text(
+                  "Horário:  ${widget.bookingModel.time}",
+                  style: AppTextStyles.captionMedium(),
                 ),
               ],
             ),
@@ -85,35 +99,16 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
                   children: [
                     const MarginWidget(),
                     Text(
-                      "Qual sua avaliação sobre o instrutor?",
+                      "Qual sua avaliação sobre a performance do aluno?",
                       style: AppTextStyles.subTitleRegular(),
                     ),
                     const MarginWidget(),
-                    rating(instructorR, (rating) {
-                      instructorR = rating;
+                    rating(studentR, (rating) {
+                      studentR = rating;
                     }),
                     const MarginWidget(),
                     Text(
-                      "Qual sua avaliação do veículo utilizado?",
-                      style: AppTextStyles.subTitleRegular(),
-                    ),
-                    const MarginWidget(),
-                    rating(vehicleR, (rating) {
-                      vehicleR = rating;
-                    }),
-                    const MarginWidget(),
-                    Text(
-                      textAlign: TextAlign.center,
-                      "Qual a sua avaliação sobre o percurso feito nas aulas?",
-                      style: AppTextStyles.subTitleRegular(),
-                    ),
-                    const MarginWidget(),
-                    rating(courseR, (rating) {
-                      courseR = rating;
-                    }),
-                    const MarginWidget(factor: 1.5),
-                    Text(
-                      "Conte-nos mais sobre sua opinião:",
+                      "Escreva sua percepção sobre a aula",
                       style: AppTextStyles.subTitleMedium(),
                     ),
                     const MarginWidget(),
@@ -133,31 +128,30 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
                           }
 
                           try {
-                            double rating =
-                                (instructorR + vehicleR + courseR) / 3.0;
-
-                            DocumentReference doc = Constants.reviews.doc();
                             ReviewModel model = ReviewModel(
-                              id: doc.id,
-                              userID: Constants.uid(),
-                              instructorID: widget.instructor.uid,
+                              instructorID: widget.user.uid,
                               date: DateTime.now(),
                               time: widget.bookingModel.time,
-                              instructorR: instructorR,
-                              vehicleR: vehicleR,
-                              courseR: courseR,
-                              totalR: rating,
+                              totalR: studentR,
                               opinion: opinionC.text,
                             );
 
+                            UserModel updated = widget.user;
+                            updated.reviews.add(model);
+
                             Functions.showLoading(context);
 
-                            await Constants.bookings.doc(widget.bookingModel.id).update({
-                              "ratingDone" : true,
+                            await Constants.users.doc(updated.uid).update({
+                              "reviews": updated.reviews
+                                  .map((e) => e.toMap())
+                                  .toList(),
                             });
 
-
-                            await doc.set(model.toMap());
+                            await Constants.bookings
+                                .doc(widget.bookingModel.id)
+                                .update({
+                              "studentRating": true,
+                            });
 
                             context.pop(rootNavigator: true);
 
