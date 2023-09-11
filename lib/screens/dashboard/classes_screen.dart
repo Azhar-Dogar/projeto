@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/constants.dart';
+import 'package:projeto/provider/data_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/calendar_widget.dart';
@@ -28,6 +30,8 @@ class _ClassesScreenState extends State<ClassesScreen> {
 
   late DateTime _selectedDate;
 
+  late DataProvider dataProvider;
+
   @override
   void initState() {
     super.initState();
@@ -40,24 +44,33 @@ class _ClassesScreenState extends State<ClassesScreen> {
     width = context.width;
     padding = width * 0.04;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: CustomAppBar("Agenda"),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            segmentSwitch(),
-            const MarginWidget(),
-            if (_selectedIndex == 0) ...[
-              weekSelection(),
-            ] else if (_selectedIndex == 1) ...[
-              monthSelection(),
-            ] else ...[
-              yearSelection(),
-            ],
-          ],
-        ),
-      ),
+    return Consumer<DataProvider>(
+      builder: (context, value, child) {
+
+
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: CustomAppBar("Agenda"),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                segmentSwitch(),
+                const MarginWidget(),
+                if (_selectedIndex == 0) ...[
+                  weekSelection(),
+                ] else if (_selectedIndex == 1) ...[
+                  monthSelection(),
+                ] else ...[
+                  yearSelection(),
+                ],
+
+
+
+              ],
+            ),
+          ),
+        );
+      }
     );
   }
 
@@ -163,18 +176,18 @@ class _ClassesScreenState extends State<ClassesScreen> {
         if (selectedDate == 2 || selectedDate == 4) ...[
           instructorWidget(),
         ] else ...[
-          Text(
-            "Você não tem aula agendada para esse dia",
-            style: AppTextStyles.subTitleRegular(),
-          ),
-          const MarginWidget(),
-          Padding(
-            padding: EdgeInsets.only(left: padding, right: padding),
-            child: ButtonWidget(
-              name: "Voltar para home e agendar",
-              onPressed: () {},
-            ),
-          ),
+          // Text(
+          //   "Você não tem aula agendada para esse dia",
+          //   style: AppTextStyles.subTitleRegular(),
+          // ),
+          // const MarginWidget(),
+          // Padding(
+          //   padding: EdgeInsets.only(left: padding, right: padding),
+          //   child: ButtonWidget(
+          //     name: "Voltar para home e agendar",
+          //     onPressed: () {},
+          //   ),
+          // ),
         ],
       ],
     );

@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             InkWell(
               onTap: () {
-                Functions.push(context, InstructorsScreen());
+                // Functions.push(context, InstructorsScreen());
               },
               child: Align(
                 alignment: Alignment.center,

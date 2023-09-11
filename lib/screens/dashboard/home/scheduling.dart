@@ -19,6 +19,7 @@ import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
 
 import '../../../extras/colors.dart';
+import 'instructors_screen.dart';
 
 class SchedulingScreen extends StatefulWidget {
   const SchedulingScreen({super.key, required this.instructor});
@@ -37,6 +38,14 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
   DateTime selectedDate = DateTime.now();
 
   String? selectedClasses;
+
+  late UserModel instructor;
+
+  @override
+  void initState() {
+    super.initState();
+    instructor = widget.instructor;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,15 +98,28 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                         ],
                       )),
                   InstructorWidget(
-                    user: widget.instructor,
+                    user: instructor,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        "Trocar Instrutor",
-                        style:
-                            AppTextStyles.captionMedium(color: CColors.primary),
+                      InkWell(
+                        onTap: () {
+                          Functions.push(
+                              context,
+                              InstructorsScreen(
+                                callBack: (instructor) {
+                                  setState(() {
+                                    this.instructor = instructor;
+                                  });
+                                },
+                              ));
+                        },
+                        child: Text(
+                          "Trocar Instrutor",
+                          style: AppTextStyles.captionMedium(
+                              color: CColors.primary),
+                        ),
                       ),
                     ],
                   ),
@@ -204,7 +226,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                       id: doc.id,
                       date: selectedDate,
                       amount: double.parse(amount.text),
-                      instructorID: widget.instructor.uid,
+                      instructorID: instructor.uid,
                       time: time.text,
                       totalClasses: int.parse(selectedClasses!),
                       userID: Constants.uid(),

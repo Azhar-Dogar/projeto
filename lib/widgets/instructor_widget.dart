@@ -18,145 +18,149 @@ import 'button_widget.dart';
 import 'margin_widget.dart';
 
 class InstructorWidget extends StatelessWidget {
-  const InstructorWidget({
-    super.key,
-    this.toChoose,
-    required this.user,
-  });
+  const InstructorWidget(
+      {super.key, this.toChoose, required this.user, this.onChoose});
 
   final bool? toChoose;
-
   final UserModel user;
+  final Function(UserModel)? onChoose;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DataProvider>(
-      builder: (context, value, child) {
-        return Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Card(
-            color: CColors.white,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  color: CColors.dashboard,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image(
-                          image: user.image == null
-                              ? AssetImage(Assets.imagesPlaceHolder)
-                              : NetworkImage(user.image!) as ImageProvider,
-                          width: 30,
-                        ),
-                        const MarginWidget(
-                          isHorizontal: true,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    user.name,
-                                    style: AppTextStyles.subTitleMedium(),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(left: 12),
-                                    decoration: BoxDecoration(
-                                        color: CColors.primary,
-                                        shape: BoxShape.circle),
-                                    width: 15,
-                                    height: 15,
-                                  )
-                                ],
-                              ),
-                              RatingBar.builder(
-                                itemSize: 18,
-                                initialRating: 3,
-                                minRating: 1,
-                                direction: Axis.horizontal,
-                                allowHalfRating: true,
-                                itemCount: 5,
-                                itemPadding:
-                                    const EdgeInsets.symmetric(horizontal: 1.0),
-                                itemBuilder: (context, _) => const Icon(
-                                  Icons.star,
-                                  size: 10,
-                                  color: Colors.amber,
-                                ),
-                                onRatingUpdate: (rating) {
-                                  print(rating);
-                                },
-                              )
-                            ],
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            context.push(
-                              child: ChangeNotifierProvider(
-                                create: (_)=> ChatProvider(sender: value.userModel!, receiver: user),
-                                child: InboxScreen(),
-                              ),
-                            );
-                          },
-                          child: Icon(
-                            Icons.messenger_outline,
-                            color: CColors.primary,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Divider(
-                  color: CColors.divider,
-                  height: 1,
-                ),
-                Padding(
+    return Consumer<DataProvider>(builder: (context, value, child) {
+      return Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Card(
+          color: CColors.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                color: CColors.dashboard,
+                child: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: Column(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      info("Carro", "Celtic, 2018"),
-                      Divider(
-                        color: CColors.divider,
-                        height: 1,
+                      Image(
+                        image: user.image == null
+                            ? AssetImage(Assets.imagesPlaceHolder)
+                            : NetworkImage(user.image!) as ImageProvider,
+                        width: 30,
                       ),
-                      info("Endereço", getAddress()),
-                      Divider(
-                        color: CColors.divider,
-                        height: 1,
+                      const MarginWidget(
+                        isHorizontal: true,
                       ),
-                      info("Hora / Aula", "R\$ ${user.amount}"),
-                      Divider(
-                        color: CColors.divider,
-                        height: 1,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  user.name,
+                                  style: AppTextStyles.subTitleMedium(),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(left: 12),
+                                  decoration: BoxDecoration(
+                                      color: CColors.primary,
+                                      shape: BoxShape.circle),
+                                  width: 15,
+                                  height: 15,
+                                )
+                              ],
+                            ),
+                            RatingBar.builder(
+                              itemSize: 18,
+                              initialRating: 3,
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemPadding:
+                                  const EdgeInsets.symmetric(horizontal: 1.0),
+                              itemBuilder: (context, _) => const Icon(
+                                Icons.star,
+                                size: 10,
+                                color: Colors.amber,
+                              ),
+                              onRatingUpdate: (rating) {
+                                print(rating);
+                              },
+                            )
+                          ],
+                        ),
                       ),
-                      if (toChoose !=  null) ...[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: ButtonWidget(
-                              name: toChoose! ?  "Escolher" : "Agendar",
-                              onPressed: () {
-                                Functions.push(context, SchedulingScreen(instructor: user,));
-                              }),
-                        )
-                      ]
+                      InkWell(
+                        onTap: () {
+                          context.push(
+                            child: ChangeNotifierProvider(
+                              create: (_) => ChatProvider(
+                                  sender: value.userModel!, receiver: user),
+                              child: InboxScreen(),
+                            ),
+                          );
+                        },
+                        child: Icon(
+                          Icons.messenger_outline,
+                          color: CColors.primary,
+                        ),
+                      )
                     ],
                   ),
-                )
-              ],
-            ),
+                ),
+              ),
+              Divider(
+                color: CColors.divider,
+                height: 1,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    info("Carro", "Celtic, 2018"),
+                    Divider(
+                      color: CColors.divider,
+                      height: 1,
+                    ),
+                    info("Endereço", getAddress()),
+                    Divider(
+                      color: CColors.divider,
+                      height: 1,
+                    ),
+                    info("Hora / Aula", "R\$ ${user.amount}"),
+                    Divider(
+                      color: CColors.divider,
+                      height: 1,
+                    ),
+                    if (toChoose != null) ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: ButtonWidget(
+                            name: toChoose! ? "Escolher" : "Agendar",
+                            onPressed: () {
+                              if (toChoose!) {
+                                onChoose!(user);
+                              } else {
+                                Functions.push(
+                                    context,
+                                    SchedulingScreen(
+                                      instructor: user,
+                                    ));
+                              }
+                            }),
+                      )
+                    ]
+                  ],
+                ),
+              )
+            ],
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 
   String getAddress() {
