@@ -1,5 +1,5 @@
 class ReviewModel {
-   String? id;
+  String? id;
   String? userID;
   String? instructorID;
   late DateTime date;
@@ -11,7 +11,7 @@ class ReviewModel {
   late String opinion;
 
   ReviewModel(
-      { this.id,
+      {this.id,
       this.userID,
       required this.date,
       required this.time,
@@ -46,7 +46,7 @@ class ReviewModel {
     instructorR = data["instructorR"];
     courseR = data["courseR"];
     vehicleR = data["vehicleR"];
-    totalR = data["totalR"];
+    totalR = data["totalR"].toDouble();
     opinion = data["opinion"];
   }
 }

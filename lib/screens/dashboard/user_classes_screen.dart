@@ -400,7 +400,7 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
               ]
             ] else ...[
               const MarginWidget(),
-              if (!bookingModel.studentRating) ...[
+              if (!bookingModel.instructorRating) ...[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

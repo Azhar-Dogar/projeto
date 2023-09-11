@@ -34,7 +34,7 @@ class _MyProgressState extends State<MyProgress> {
 
     return Consumer<DataProvider>(builder: (context, value, child) {
       provider = value;
-      print(provider.reviews.length);
+
       return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -50,12 +50,12 @@ class _MyProgressState extends State<MyProgress> {
                 child: ListView.separated(
                     padding: EdgeInsets.zero,
                     itemBuilder: (ctx, index) {
-                      return reviewWidget(value.reviews[index]);
+                      return reviewWidget(provider.userModel!.reviews[index]);
                     },
                     separatorBuilder: (ctx, index) {
                       return const DividerWidget();
                     },
-                    itemCount: provider.reviews.length),
+                    itemCount: provider.userModel!.reviews.length),
               ),
             ],
           ),
@@ -65,7 +65,9 @@ class _MyProgressState extends State<MyProgress> {
   }
 
   Widget reviewWidget(ReviewModel reviewModel) {
+
     UserModel? instructor = provider.getUserById(reviewModel.instructorID!);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

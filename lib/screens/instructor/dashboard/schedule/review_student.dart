@@ -129,7 +129,7 @@ class _ReviewStudentState extends State<ReviewStudent> {
 
                           try {
                             ReviewModel model = ReviewModel(
-                              instructorID: widget.user.uid,
+                              instructorID: Constants.uid(),
                               date: DateTime.now(),
                               time: widget.bookingModel.time,
                               totalR: studentR,

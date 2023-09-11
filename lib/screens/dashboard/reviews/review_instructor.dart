@@ -136,11 +136,8 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
                             double rating =
                                 (instructorR + vehicleR + courseR) / 3.0;
 
-                            DocumentReference doc = Constants.reviews.doc();
                             ReviewModel model = ReviewModel(
-                              id: doc.id,
                               userID: Constants.uid(),
-                              instructorID: widget.instructor.uid,
                               date: DateTime.now(),
                               time: widget.bookingModel.time,
                               instructorR: instructorR,
@@ -152,12 +149,19 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
 
                             Functions.showLoading(context);
 
-                            await Constants.bookings.doc(widget.bookingModel.id).update({
-                              "ratingDone" : true,
+                            UserModel updated = widget.instructor;
+                            updated.reviews.add(model);
+
+                            await Constants.users.doc(updated.uid).update({
+                              "reviews":
+                                  updated.reviews.map((e) => e.toMap()).toList()
                             });
 
-
-                            await doc.set(model.toMap());
+                            await Constants.bookings
+                                .doc(widget.bookingModel.id)
+                                .update({
+                              "instructorRating": true,
+                            });
 
                             context.pop(rootNavigator: true);
 
