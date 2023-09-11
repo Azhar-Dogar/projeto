@@ -1,32 +1,53 @@
 class ReviewModel {
+  late String id;
   late String userID;
+  late String instructorID;
   late DateTime date;
   late String time;
-  late double rating;
+  late double instructorR;
+  late double vehicleR;
+  late double courseR;
+  late double totalR;
   late String opinion;
 
   ReviewModel(
-      {required this.userID,
+      {
+        required this.id,
+        required this.userID,
       required this.date,
       required this.time,
-      required this.rating,
-      required this.opinion});
+      required this.instructorR,
+      required this.vehicleR,
+      required this.courseR,
+        required this.totalR,
+        required this.opinion,
+      required this.instructorID});
 
   Map<String, dynamic> toMap() {
     return {
+      "id" : id,
       "userID": userID,
+      "instructorID": instructorID,
       "date": date.millisecondsSinceEpoch,
       "time": time,
-      "rating": rating,
+      "instructorR": instructorR,
+      "vehicleR": vehicleR,
+      "courseR": courseR,
+      "totalR": totalR,
       "opinion": opinion,
     };
   }
 
   ReviewModel.fromMap(Map<String, dynamic> data) {
+    id = data["id"];
     userID = data["userID"];
+    instructorID = data["instructorID"];
     date = DateTime.fromMillisecondsSinceEpoch(data["date"]);
     time = data["time"];
-    rating = data["rating"];
+    instructorR = data["instructorR"];
+    courseR = data["courseR"];
+    vehicleR = data["vehicleR"];
+    totalR = data["totalR"];
     opinion = data["opinion"];
   }
 }

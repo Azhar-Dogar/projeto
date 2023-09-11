@@ -124,35 +124,38 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
                     const MarginWidget(factor: 2),
                     ButtonWidget(
                         name: "Enviar",
-                        onPressed: () async{
+                        onPressed: () async {
                           if (opinionC.text.isEmpty) {
                             Functions.showSnackBar(
                                 context, "Por favor insira sua opinião");
                             return;
                           }
 
-                          double rating =
-                              (instructorR + vehicleR + courseR) / 3.0;
-                          ReviewModel model = ReviewModel(
-                            userID: widget.instructor.uid,
-                            date: DateTime.now(),
-                            time: widget.time,
-                            rating: rating,
-                            opinion: opinionC.text,
-                          );
+                          try {
+                            double rating =
+                                (instructorR + vehicleR + courseR) / 3.0;
 
-                          UserModel updated = widget.instructor;
-                          updated.reviews!.add(model);
+                            DocumentReference doc = Constants.reviews.doc();
+                            ReviewModel model = ReviewModel(
+                              id: doc.id,
+                              userID: Constants.uid(),
+                              instructorID: widget.instructor.uid,
+                              date: DateTime.now(),
+                              time: widget.time,
+                              instructorR: instructorR,
+                              vehicleR: vehicleR,
+                              courseR: courseR,
+                              totalR: rating,
+                              opinion: opinionC.text,
+                            );
 
-                          try{
-                            await Constants.users.doc(updated.uid).update({
-                              "reviews" : updated.reviews!.map((e) => e.toMap()).toList()
-                            });
-                            context.pushReplacement(child: const ReviewSuccess());
-                          }on FirebaseException catch(e){
+                            await doc.set(model.toMap());
+
+                            context.pushReplacement(
+                                child: const ReviewSuccess());
+                          } on FirebaseException catch (e) {
                             print(e);
                           }
-
                         }),
                     const MarginWidget(),
                   ],

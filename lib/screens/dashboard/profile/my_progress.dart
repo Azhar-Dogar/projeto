@@ -3,21 +3,24 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
+import 'package:projeto/model/review_model.dart';
+import 'package:projeto/model/user_model.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/divider_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
+import 'package:intl/intl.dart';
 
-class MeuProgresso extends StatefulWidget {
-  const MeuProgresso({Key? key}) : super(key: key);
+class MyProgress extends StatefulWidget {
+  const MyProgress({Key? key}) : super(key: key);
 
   @override
-  State<MeuProgresso> createState() => _MeuProgressoState();
+  State<MyProgress> createState() => _MyProgressState();
 }
 
-class _MeuProgressoState extends State<MeuProgresso> {
+class _MyProgressState extends State<MyProgress> {
   late double width, padding;
 
   TextEditingController reviewC = TextEditingController();
@@ -31,6 +34,7 @@ class _MeuProgressoState extends State<MeuProgresso> {
 
     return Consumer<DataProvider>(builder: (context, value, child) {
       provider = value;
+      print(provider.reviews.length);
       return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -40,24 +44,29 @@ class _MeuProgressoState extends State<MeuProgresso> {
         ),
         body: Padding(
           padding: EdgeInsets.only(left: padding + 20, right: padding + 20),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                reviewWidget(),
-                const DividerWidget(),
-                reviewWidget(),
-                const DividerWidget(),
-                reviewWidget(),
-                const DividerWidget(),
-              ],
-            ),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.separated(
+                    padding: EdgeInsets.zero,
+                    itemBuilder: (ctx, index) {
+                      return reviewWidget(value.reviews[index]);
+                    },
+                    separatorBuilder: (ctx, index) {
+                      return const DividerWidget();
+                    },
+                    itemCount: provider.reviews.length),
+              ),
+            ],
           ),
         ),
       );
     });
   }
 
-  Widget reviewWidget() {
+  Widget reviewWidget(ReviewModel reviewModel) {
+
+    UserModel? instructor = provider.getUserById(reviewModel.instructorID);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -84,12 +93,12 @@ class _MeuProgressoState extends State<MeuProgresso> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Annette Johnson",
+                    "${instructor!.name}",
                     style: AppTextStyles.subTitleMedium(),
                   ),
                   const MarginWidget(factor: 0.3),
                   Text(
-                    "Data da aula: 15-06-2023",
+                    "Data da aula: ${DateFormat("dd-MM-yyyy").format(reviewModel.date)}",
                     style: AppTextStyles.subTitleRegular(),
                   ),
                   const MarginWidget(factor: 0.3),
@@ -99,7 +108,7 @@ class _MeuProgressoState extends State<MeuProgresso> {
                   ),
                   const MarginWidget(factor: 0.3),
                   Text(
-                    "Hoje tivemos uma grande evolução na aula.",
+                    "${reviewModel.opinion}",
                     style: AppTextStyles.subTitleRegular(
                         color: CColors.textFieldBorder),
                   ),

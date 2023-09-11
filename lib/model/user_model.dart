@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:projeto/model/card_model.dart';
-import 'package:projeto/model/review_model.dart';
 
 class UserModel {
   late String name;
@@ -41,8 +40,6 @@ class UserModel {
   //rate
   String? amount;
 
-  List<ReviewModel>? reviews;
-
   UserModel({
     required this.name,
     required this.email,
@@ -61,7 +58,6 @@ class UserModel {
     this.account,
     this.amount,
     this.credits,
-    this.reviews,
   });
 
   UserModel.fromMap(Map<String, dynamic> data) {
@@ -90,9 +86,6 @@ class UserModel {
     amount = data["amount"];
     List cardsList = data["cardsList"] ?? [];
     this.cardsList = cardsList.map((e) => CardModel.fromMap(e)).toList();
-
-    List reviews = data["reviews"] ?? [];
-    this.reviews = reviews.map((e) => ReviewModel.fromMap(e)).toList();
   }
 
   Map<String, dynamic> toMapInstructorCreate() {
@@ -116,7 +109,6 @@ class UserModel {
       "account": account,
       "amount": amount,
       "cardsList": cardsList.map((e) => e.toMap()).toList(),
-      "reviews": reviews?.map((e) => e.toMap()).toList(),
     };
   }
 
@@ -157,7 +149,6 @@ class UserModel {
       "agency": agency,
       "account": account,
       "amount": amount,
-      "reviews": reviews?.map((e) => e.toMap()).toList(),
     };
   }
 

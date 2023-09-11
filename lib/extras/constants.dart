@@ -108,6 +108,7 @@ class Constants{
   //coleections
   static var firestore = FirebaseFirestore.instance;
   static var users = firestore.collection("users");
+  static var reviews = firestore.collection("ratings");
   static var messages = firestore.collection("messages");
   static var cars = firestore.collection("cars");
   static var bookings = firestore.collection("bookings");
