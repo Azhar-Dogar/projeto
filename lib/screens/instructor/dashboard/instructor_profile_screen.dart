@@ -7,12 +7,13 @@ import 'package:projeto/extras/constants.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/instructor/dashboard/my_cars.dart';
+import 'package:projeto/screens/instructor/dashboard/profile/instructor_progress.dart';
 import 'package:projeto/widgets/drop_down_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/screens/dashboard/profile/credit/balance.dart';
-import 'package:projeto/screens/dashboard/profile/my_progress.dart';
+import 'package:projeto/screens/dashboard/profile/student_progress.dart';
 import 'package:projeto/screens/dashboard/profile/terms_condition.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/profile_header_widget.dart';
 import 'package:projeto/widgets/button_widget.dart';
@@ -83,7 +84,7 @@ class _InstructorProfileScreenState extends State<InstructorProfileScreen> {
             ),
             InkWell(
               onTap: () {
-                context.push(child: const MyProgress());
+                context.push(child:  const InstructorProgress());
               },
               child: listTile("Minhas Avaliações", AppIcons.star),
             ),

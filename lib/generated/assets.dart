@@ -29,7 +29,7 @@ class Assets {
   static const String imagesAutoImage = 'assets/images/auto_image.png';
   static const String imagesCar = 'assets/images/car.png';
   static const String imagesClock = 'assets/images/Clock.png';
-  static const String imagesDemo = 'assets/images/demo.jpeg';
+  static const String imagesDemo = 'assets/images/demo.jpg';
   static const String imagesInstructor = 'assets/images/instructor.png';
   static const String imagesInstructor1 = 'assets/images/instructor_1.png';
   static const String imagesInstructor2 = 'assets/images/instructor_2.png';

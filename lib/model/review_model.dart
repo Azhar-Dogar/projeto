@@ -49,4 +49,5 @@ class ReviewModel {
     totalR = data["totalR"].toDouble();
     opinion = data["opinion"];
   }
+
 }

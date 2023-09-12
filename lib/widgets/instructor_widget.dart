@@ -5,10 +5,9 @@ import 'package:projeto/generated/assets.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:projeto/provider/chat_provider.dart';
 import 'package:projeto/provider/data_provider.dart';
-import 'package:projeto/screens/dashboard/chat_screen.dart';
+import 'package:projeto/widgets/c_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
-import 'package:projeto/screens/dashboard/reviews/review_instructor.dart';
 import '../extras/app_textstyles.dart';
 import '../extras/colors.dart';
 import '../extras/functions.dart';
@@ -71,6 +70,9 @@ class InstructorWidget extends StatelessWidget {
                                 )
                               ],
                             ),
+                            // CRatingBar(rating: 3,itemSize: 18, onUpdate: (rating) {
+                            //   print(rating);
+                            // },),
                             RatingBar.builder(
                               itemSize: 18,
                               initialRating: 3,
@@ -88,7 +90,7 @@ class InstructorWidget extends StatelessWidget {
                               onRatingUpdate: (rating) {
                                 print(rating);
                               },
-                            )
+                            ),
                           ],
                         ),
                       ),

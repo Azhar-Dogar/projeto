@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/screens/dashboard/profile/credit/balance.dart';
-import 'package:projeto/screens/dashboard/profile/my_progress.dart';
+import 'package:projeto/screens/dashboard/profile/student_progress.dart';
 import 'package:projeto/screens/dashboard/profile/terms_condition.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/profile_header_widget.dart';
 import 'package:projeto/widgets/button_widget.dart';
@@ -78,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }),
             InkWell(
               onTap: () {
-                context.push(child: const MyProgress());
+                context.push(child: const StudentProgress());
               },
               child: listTile("Meu Progresso", AppIcons.trending),
             ),

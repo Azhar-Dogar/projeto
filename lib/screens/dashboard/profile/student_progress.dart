@@ -13,14 +13,14 @@ import 'package:projeto/widgets/divider_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:intl/intl.dart';
 
-class MyProgress extends StatefulWidget {
-  const MyProgress({Key? key}) : super(key: key);
+class StudentProgress extends StatefulWidget {
+  const StudentProgress({Key? key}) : super(key: key);
 
   @override
-  State<MyProgress> createState() => _MyProgressState();
+  State<StudentProgress> createState() => _StudentProgressState();
 }
 
-class _MyProgressState extends State<MyProgress> {
+class _StudentProgressState extends State<StudentProgress> {
   late double width, padding;
 
   TextEditingController reviewC = TextEditingController();
