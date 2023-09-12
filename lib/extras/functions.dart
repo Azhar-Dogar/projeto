@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:images_picker/images_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:projeto/extras/constants.dart';
+import 'package:projeto/model/notification_model.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebasestorage;
 import 'package:firebase_storage/firebase_storage.dart';
@@ -133,9 +134,10 @@ class Functions {
       date1.month == date2.month &&
       date1.day == date2.day;
 
-  static String formatDate(DateTime dateTime) {
-    var newFormat = new DateFormat.yMMMMd('pt_BR');
 
-    return newFormat.format(dateTime);
+  static void sendNotification(NotificationModel notification, String receiver){
+    var doc = Constants.users.doc(receiver).collection("notifications").doc();
+    notification.id = doc.id;
+    doc.set(notification.toMap());
   }
 }

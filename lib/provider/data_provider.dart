@@ -220,12 +220,12 @@ class DataProvider with ChangeNotifier {
           .doc("${i + 1}")
           .set(
             AvailabilityModel(
-                    day: days[i],
-                    startTime: TextEditingController(),
-                    endTime: TextEditingController(),
-                    breakStart: TextEditingController(),
-                    breakEnd: TextEditingController())
-                .toMap(),
+              day: days[i],
+              startTime: TextEditingController(),
+              endTime: TextEditingController(),
+              breakStart: TextEditingController(),
+              breakEnd: TextEditingController(),
+            ).toMap(),
           );
     }
   }
