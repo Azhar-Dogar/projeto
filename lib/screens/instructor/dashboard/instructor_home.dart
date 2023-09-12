@@ -196,7 +196,7 @@ class _InstructorHomeState extends State<InstructorHome> {
                       factor: 0.3,
                     ),
                     CustomText(
-                      text: "${bookingModel.time}",
+                      text: "${DateFormat("hh:mm a").format(bookingModel.date)}",
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),

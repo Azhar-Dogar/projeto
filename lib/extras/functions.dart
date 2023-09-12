@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:images_picker/images_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:projeto/extras/constants.dart';
@@ -155,5 +156,17 @@ class Functions {
     }
 
     return futureBooking;
+  }
+
+  static String formatTime(DateTime time) {
+    final hourFormat = DateFormat('hh');
+    final minuteFormat = DateFormat('mm');
+    final amPmFormat = DateFormat('a');
+
+    final String hour = hourFormat.format(time);
+    final String minute = minuteFormat.format(time);
+    final String amPm = amPmFormat.format(time);
+
+    return '${hour}h$minute';
   }
 }

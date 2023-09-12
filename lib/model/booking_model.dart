@@ -3,7 +3,6 @@ class BookingModel {
   late String instructorID;
   late String userID;
   late DateTime date;
-  late String time;
   late int totalClasses;
   late double amount;
   late String status;
@@ -15,13 +14,11 @@ class BookingModel {
     required this.date,
     required this.amount,
     required this.instructorID,
-    required this.time,
     required this.totalClasses,
     required this.userID,
     this.status = "pending",
     this.studentRating = false,
     this.instructorRating = false,
-
   });
 
   Map<String, dynamic> toMap() {
@@ -30,13 +27,11 @@ class BookingModel {
       "instructorID": instructorID,
       "userID": userID,
       "date": date.millisecondsSinceEpoch,
-      "time": time,
       "totalClasses": totalClasses,
       "amount": amount,
       "status": status,
       "studentRating": studentRating,
       "instructorRating": instructorRating,
-
     };
   }
 
@@ -45,12 +40,10 @@ class BookingModel {
     instructorID = data["instructorID"];
     userID = data["userID"];
     date = DateTime.fromMillisecondsSinceEpoch(data["date"]);
-    time = data["time"];
     totalClasses = data["totalClasses"];
     amount = data["amount"];
     status = data["status"];
     studentRating = data["studentRating"] ?? false;
     instructorRating = data["instructorRating"] ?? false;
-
   }
 }

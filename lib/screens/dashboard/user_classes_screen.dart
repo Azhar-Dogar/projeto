@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/constants.dart';
@@ -333,11 +334,14 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
             const DividerWidget(),
             title("Horário"),
             const MarginWidget(factor: 0.5),
-            Row(
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
               children: [
-                timeBox(),
-                const MarginWidget(isHorizontal: true, factor: 0.8),
-                timeBox(),
+
+                for(int i=0; i< bookingModel.totalClasses; i++)...[
+                  timeBox(Functions.formatTime(bookingModel.date.add(Duration(hours: i)))),
+                ],
               ],
             ),
             const DividerWidget(),
@@ -477,14 +481,14 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
     }
   }
 
-  Widget timeBox() {
+  Widget timeBox(String time) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: CColors.textFieldBorder)),
       padding: const EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8),
       child: Text(
-        "10h00",
+        time,
         style: AppTextStyles.subTitleRegular(),
       ),
     );
