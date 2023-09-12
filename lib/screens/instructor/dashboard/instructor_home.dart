@@ -1,21 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:intl/date_symbol_data_file.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto/model/car_model.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/instructor/dashboard/profile/instructor_progress.dart';
+import 'package:projeto/screens/instructor/dashboard/schedule/instructor_classes_screen.dart';
 import 'package:projeto/widgets/my_cars_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
-import 'package:projeto/generated/assets.dart';
 import 'package:utility_extensions/extensions/font_utilities.dart';
-
 import '../../../extras/app_assets.dart';
 import '../../../extras/app_textstyles.dart';
 import '../../../extras/colors.dart';
-import '../../../extras/functions.dart';
+import '../../../generated/assets.dart';
 import '../../../model/booking_model.dart';
 import '../../../widgets/custom_text.dart';
 import '../../../widgets/margin_widget.dart';
@@ -30,6 +29,12 @@ class InstructorHome extends StatefulWidget {
 
 class _InstructorHomeState extends State<InstructorHome> {
   late DataProvider dataProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting("pt", null);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +155,8 @@ class _InstructorHomeState extends State<InstructorHome> {
   }
 
   Widget card(BookingModel bookingModel) {
+    final dateFormat = DateFormat.yMMMMd('pt');
+
     return SizedBox(
       width: context.width,
       // margin: const EdgeInsets.only(right: 5),
@@ -182,9 +189,7 @@ class _InstructorHomeState extends State<InstructorHome> {
                       factor: 0.3,
                     ),
                     CustomText(
-                      text:
-                          "${DateFormat("dd MMM yyyy").format(bookingModel.date)}",
-                      // text: "30 de junho 2023",
+                      text: "${dateFormat.format(bookingModel.date)}",
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                     ),
@@ -199,10 +204,15 @@ class _InstructorHomeState extends State<InstructorHome> {
                   ],
                 ),
               ),
-              Text(
-                "Ver aulas",
-                style:
-                    AppTextStyles.captionMedium(color: CColors.textFieldBorder),
+              InkWell(
+                onTap: () {
+                  context.push(child: InstructorClassesScreen());
+                },
+                child: Text(
+                  "Ver aulas",
+                  style: AppTextStyles.captionMedium(
+                      color: CColors.textFieldBorder),
+                ),
               )
             ],
           ),
@@ -212,17 +222,27 @@ class _InstructorHomeState extends State<InstructorHome> {
   }
 
   Widget header() {
+    if (dataProvider.userModel == null) {
+      return CircularProgressIndicator();
+    }
+
+    ImageProvider<Object>? avatarImage;
+
+    if (dataProvider.userModel!.image != null) {
+      avatarImage = NetworkImage(dataProvider.userModel!.image!);
+    } else {
+      avatarImage = AssetImage(AppImages.profile);
+    }
+
     return Row(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        CircleAvatar(
-            radius: 20, backgroundImage: AssetImage(AppImages.profile)),
+        CircleAvatar(radius: 20, backgroundImage: avatarImage),
         const MarginWidget(
           isHorizontal: true,
         ),
         Expanded(
             child: CustomText(
-          text: "Claudia\nsilva",
+          text: "${dataProvider.userModel!.name}",
           fontSize: 12,
           fontWeight: FontWeight.w500,
         )),
