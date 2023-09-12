@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:projeto/extras/functions.dart';
+import 'package:projeto/model/notification_model.dart';
 
 import '../extras/constants.dart';
 import '../model/chat_model.dart';
@@ -80,6 +82,9 @@ class ChatProvider with ChangeNotifier {
       forReceiverChat.toMap(),
     );
 
+
+    var notification = NotificationModel(text: "${sender.name} enviou uma mensagem.", type: "text", time: DateTime.now().millisecondsSinceEpoch);
+    Functions.sendNotification(notification, receiver.uid);
     await senderMessageDoc.set(message.toMap());
     await receiverMessageDoc.set(message.toMap());
 

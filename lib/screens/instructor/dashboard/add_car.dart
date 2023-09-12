@@ -1,13 +1,16 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/model/car_model.dart';
+import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/drop_down_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:utility_extensions/extensions/font_utilities.dart';
 import 'package:utility_extensions/extensions/functions.dart';
 import 'package:utility_extensions/utility_extensions.dart';
@@ -40,10 +43,19 @@ class _AddCarState extends State<AddCar> {
   File? leaseAgreement;
 
   bool isEditing = false;
+  bool isPrimary = false;
 
   @override
   void initState() {
     isEditing = widget.car == null;
+    if (widget.car != null) {
+      var car = widget.car!;
+      isPrimary = car.isPrimary;
+      brand.text = car.brand;
+      year.text = car.year;
+      vehicle.text = car.vehicle;
+    }
+
     super.initState();
   }
 
@@ -66,6 +78,7 @@ class _AddCarState extends State<AddCar> {
                     onSelect: (value) {
                       brand.text = value;
                     },
+                    selectedValue: brand.text,
                     label: "Marca",
                     isEdit: isEditing,
                   ),
@@ -78,6 +91,7 @@ class _AddCarState extends State<AddCar> {
                       onSelect: (value) {
                         year.text = value;
                       },
+                      selectedValue: year.text,
                       label: "Ano",
                       isEdit: isEditing,
                     );
@@ -88,6 +102,7 @@ class _AddCarState extends State<AddCar> {
                     onSelect: (value) {
                       vehicle.text = value;
                     },
+                    selectedValue: vehicle.text,
                     label: "Veículo",
                     isEdit: isEditing,
                   ),
@@ -96,25 +111,48 @@ class _AddCarState extends State<AddCar> {
                 ],
               ),
             ),
-            ButtonWidget(
-              name: "Salvar Alterações",
-              onPressed: () {
-                if (validateFields([brand, year, vehicle])) {
-                  if (vehiclePhoto == null ||
-                      vehicleDocument == null ||
-                      vehicleLicense == null ||
-                      vehicleInsurance == null) {
-                    Functions.showSnackBar(
-                        context, "Anexe todos os documentos necessários");
-                  } else {
-                    addCar();
+            if (widget.car == null || isEditing)
+              ButtonWidget(
+                name: "Salvar Alterações",
+                onPressed: () {
+                  if(widget.car == null){
+                    if (validateFields([brand, year, vehicle])) {
+                      if (vehiclePhoto == null ||
+                          vehicleDocument == null ||
+                          vehicleLicense == null ||
+                          vehicleInsurance == null) {
+                        Functions.showSnackBar(
+                            context, "Anexe todos os documentos necessários");
+                      } else {
+                        addCar();
+                      }
+                    } else {
+                      Functions.showSnackBar(context,
+                          "Por favor, preencha todos os campos obrigatórios.");
+                    }
+                  }else{
+                    updateCar();
+                    if(isPrimary){
+                      setOthers();
+                    }
                   }
-                } else {
-                  Functions.showSnackBar(context,
-                      "Por favor, preencha todos os campos obrigatórios.");
-                }
-              },
-            ),
+
+                },
+              )
+            else
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    isEditing = true;
+                  });
+                },
+                child: Text(
+                  "Editar veículo",
+                  style: AppTextStyles.captionMedium(
+                    color: CColors.primary,
+                  ),
+                ),
+              ),
             MarginWidget(),
           ],
         ),
@@ -148,22 +186,25 @@ class _AddCarState extends State<AddCar> {
         const MarginWidget(
           factor: 0.7,
         ),
-        documentWidget(
-          image: vehicleDocument == null
-              ? Icons.file_upload_outlined
-              : Icons.access_time_outlined,
-          text: vehicleDocument == null
-              ? "Documento do Veículo"
-              : "Documento enviado para aprovação",
-          onTap: (file) {
-            setState(() {
-              vehicleDocument = file;
-            });
-          },
-        ),
-        const MarginWidget(
-          factor: 0.7,
-        ),
+
+        if (widget.car == null || !isEditing) ...[
+          documentWidget(
+            image: vehicleDocument == null
+                ? Icons.file_upload_outlined
+                : Icons.access_time_outlined,
+            text: vehicleDocument == null
+                ? "Documento do Veículo"
+                : "Documento enviado para aprovação",
+            onTap: (file) {
+              setState(() {
+                vehicleDocument = file;
+              });
+            },
+          ),
+          const MarginWidget(
+            factor: 0.7,
+          ),
+        ],
         documentWidget(
           image: vehicleLicense == null
               ? Icons.file_upload_outlined
@@ -196,6 +237,34 @@ class _AddCarState extends State<AddCar> {
         const MarginWidget(
           factor: 0.7,
         ),
+
+        if (widget.car != null && isEditing)
+          Row(
+            children: [
+              CupertinoSwitch(
+                value: isPrimary,
+                onChanged: (value) {
+                  if (!widget.car!.isPrimary) {
+                    setState(() {
+                      isPrimary = value;
+                    });
+                  } else {
+                    Functions.showSnackBar(
+                        context, "Deve haver pelo menos um carro principal.");
+                  }
+                },
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Text(
+                  "Escolher como veículo principal",
+                  style: AppTextStyles.captionMedium(),
+                ),
+              ),
+            ],
+          ),
         // if (carType != "own")
         //   documentWidget(
         //     image: leaseAgreement == null
@@ -256,7 +325,7 @@ class _AddCarState extends State<AddCar> {
               }
             },
             child: Text(
-              "Enviar documento",
+              widget.car == null ? "Enviar documento" : "Alterar documento",
               style: AppTextStyles.poppins(
                 style: TextStyle(
                   color: CColors.textColor,
@@ -271,6 +340,17 @@ class _AddCarState extends State<AddCar> {
     );
   }
 
+
+  setOthers() async {
+    var provider = Provider.of<DataProvider>(context, listen: false);
+    var cars = provider.cars.where((element) => element.id != widget.car!.id).toList();
+
+    for(var car in cars){
+      await Constants.cars.doc(car.id).update(
+        (car..isPrimary = false).toMap()
+      );
+    }
+  }
   Future<void> addCar() async {
     Functions.showLoading(context);
     var doc = Constants.cars.doc();
@@ -300,7 +380,36 @@ class _AddCarState extends State<AddCar> {
 
     Navigator.of(context, rootNavigator: true).pop();
     context.pop();
+  }
 
+  Future<void> updateCar() async {
+    Functions.showLoading(context);
+    var doc = Constants.cars.doc(widget.car!.id);
+    var model = CarModel(
+      brand: brand.text,
+      year: year.text,
+      vehicle: vehicle.text,
+      carType: "own",
+      isDualCommand: false,
+      vehiclePhoto: vehiclePhoto != null ? await Functions.uploadImage(vehiclePhoto!,
+          path: "vehiclePhoto/${doc.id}.${vehiclePhoto!.path.split(".").last}")  : widget.car!.vehiclePhoto,
+      vehicleDocument: vehicleDocument ==null ? widget.car!.vehicleDocument : await Functions.uploadImage(vehicleDocument!,
+          path:
+              "vehicleDocument/${doc.id}.${vehicleDocument!.path.split(".").last}"),
+      vehicleLicense: vehicleLicense == null ? widget.car!.vehicleLicense: await Functions.uploadImage(vehicleLicense!,
+          path:
+              "vehicleLicense/${doc.id}.${vehicleLicense!.path.split(".").last}"),
+      vehicleInsurance: vehicleInsurance == null ? widget.car!.vehicleInsurance : await Functions.uploadImage(vehicleInsurance!,
+          path:
+              "vehicleInsurance/${doc.id}.${vehicleInsurance!.path.split(".").last}"),
+      isPrimary: isPrimary,
+    );
+    model.id = doc.id;
+    model.uid = Constants.uid();
 
+    await doc.update(model.toMap());
+
+    Navigator.of(context, rootNavigator: true).pop();
+    context.pop();
   }
 }
