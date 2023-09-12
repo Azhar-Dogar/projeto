@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/intl.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
@@ -139,7 +140,7 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
                             ReviewModel model = ReviewModel(
                               userID: Constants.uid(),
                               date: DateTime.now(),
-                              time: widget.bookingModel.time,
+                              time: DateFormat("hh:mm a").format(widget.bookingModel.date),
                               instructorR: instructorR,
                               vehicleR: vehicleR,
                               courseR: courseR,

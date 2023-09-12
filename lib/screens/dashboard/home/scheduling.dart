@@ -105,15 +105,13 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                     children: [
                       InkWell(
                         onTap: () {
-                          Functions.push(
-                              context,
-                              InstructorsScreen(
-                                callBack: (instructor) {
-                                  setState(() {
-                                    this.instructor = instructor;
-                                  });
-                                },
-                              ));
+                          Functions.push(context, InstructorsScreen(
+                            callBack: (instructor) {
+                              setState(() {
+                                this.instructor = instructor;
+                              });
+                            },
+                          ));
                         },
                         child: Text(
                           "Trocar Instrutor",
@@ -194,6 +192,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                 label: "Quantidade de Aulas"),
             const MarginWidget(),
             TextFieldWidget(
+              enabled: false,
               controller: amount,
               borderColor: CColors.textFieldBorder,
               label: "Valor Total",
@@ -222,13 +221,14 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                     Functions.showLoading(context);
 
                     DocumentReference doc = Constants.bookings.doc();
+
+                    int totalCl = int.parse(selectedClasses!);
                     BookingModel booking = BookingModel(
                       id: doc.id,
                       date: selectedDate,
-                      amount: double.parse(amount.text),
+                      amount: double.parse(amount.text) * totalCl,
                       instructorID: instructor.uid,
-                      time: time.text,
-                      totalClasses: int.parse(selectedClasses!),
+                      totalClasses: totalCl,
                       userID: Constants.uid(),
                     );
 
@@ -272,6 +272,8 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                       onTimerDurationChanged: (changeTimer) {
                         var hours = changeTimer.inHours;
                         var mins = changeTimer.inMinutes % 60;
+                        selectedDate = DateTime(selectedDate.year,
+                            selectedDate.month, selectedDate.day, hours, mins);
                         time.text =
                             '${hours < 10 ? "0$hours" : hours}:${mins < 10 ? "0$mins" : mins}';
                       }),
@@ -280,7 +282,6 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
             });
       },
       child: TextFieldWidget(
-        enabled: false,
         controller: time,
         borderColor: CColors.textFieldBorder,
         label: "Horário",

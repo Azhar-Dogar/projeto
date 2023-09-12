@@ -308,11 +308,14 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
             const DividerWidget(),
             title("Horário"),
             const MarginWidget(factor: 0.5),
-            Row(
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
               children: [
-                timeBox(),
-                const MarginWidget(isHorizontal: true, factor: 0.8),
-                timeBox(),
+                for (int i = 0; i < bookingModel.totalClasses; i++) ...[
+                  timeBox(Functions.formatTime(
+                      bookingModel.date.add(Duration(hours: i)))),
+                ],
               ],
             ),
             const DividerWidget(),
@@ -350,14 +353,12 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                     }));
                   }),
             ] else if (bookingModel.status == "completed") ...[
-              if (bookingModel.studentRating)
-                ...[
-                  Text(
-                    "Obrigado por avaliar seu aluno.",
-                    style: AppTextStyles.captionMedium(color: CColors.primary),
-                  ),
-                ]
-              else ...[
+              if (bookingModel.studentRating) ...[
+                Text(
+                  "Obrigado por avaliar seu aluno.",
+                  style: AppTextStyles.captionMedium(color: CColors.primary),
+                ),
+              ] else ...[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -391,14 +392,14 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
     );
   }
 
-  Widget timeBox() {
+  Widget timeBox(String time) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: CColors.textFieldBorder)),
       padding: const EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8),
       child: Text(
-        "10h00",
+        time,
         style: AppTextStyles.subTitleRegular(),
       ),
     );

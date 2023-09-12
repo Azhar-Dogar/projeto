@@ -85,7 +85,7 @@ class _ReviewStudentState extends State<ReviewStudent> {
                   style: AppTextStyles.captionMedium(),
                 ),
                 Text(
-                  "Horário:  ${widget.bookingModel.time}",
+                  "Horário:  ${DateFormat("hh:mm a").format(widget.bookingModel.date)}",
                   style: AppTextStyles.captionMedium(),
                 ),
               ],
@@ -131,7 +131,7 @@ class _ReviewStudentState extends State<ReviewStudent> {
                             ReviewModel model = ReviewModel(
                               instructorID: Constants.uid(),
                               date: DateTime.now(),
-                              time: widget.bookingModel.time,
+                              time: DateFormat("hh:mm a").format(widget.bookingModel.date),
                               totalR: studentR,
                               opinion: opinionC.text,
                             );

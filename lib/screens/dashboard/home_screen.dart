@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/provider/data_provider.dart';
+import 'package:projeto/screens/dashboard/user_classes_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/functions.dart';
@@ -11,6 +14,7 @@ import 'package:projeto/widgets/instructor_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
 import '../../extras/colors.dart';
+import '../../model/booking_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,6 +27,12 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
 
   late DataProvider dataProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting("pt", null);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: Image(image: AssetImage(AppImages.autoImage)),
                 ),
-                Positioned(bottom: 1, left: 5, right: 5, child: card()),
+                upcomingBooking(),
               ],
             ).toSliver,
             const MarginWidget(
@@ -68,8 +78,12 @@ class _HomeScreenState extends State<HomeScreen> {
             Builder(builder: (context) {
               var instructors = dataProvider.users;
 
-              if(searchController.text.trim().isNotEmpty){
-                instructors = instructors.where((element) => element.name.toLowerCase().contains(searchController.text.toLowerCase())).toList();
+              if (searchController.text.trim().isNotEmpty) {
+                instructors = instructors
+                    .where((element) => element.name
+                        .toLowerCase()
+                        .contains(searchController.text.toLowerCase()))
+                    .toList();
               }
 
               return SliverList(
@@ -85,6 +99,17 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
     });
+  }
+
+  Widget upcomingBooking() {
+
+    BookingModel? bookingModel =
+        Functions.findFutureBooking(dataProvider.bookings);
+    if (bookingModel == null) {
+      return SizedBox();
+    }
+
+    return Positioned(bottom: 1, left: 5, right: 5, child: card(bookingModel));
   }
 
   Widget searchBar() {
@@ -111,7 +136,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget card() {
+  Widget card(BookingModel bookingModel) {
+    final dateFormat = DateFormat.yMMMMd('pt');
     return SizedBox(
       width: context.width,
       // margin: const EdgeInsets.only(right: 5),
@@ -144,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       factor: 0.3,
                     ),
                     CustomText(
-                      text: "June 30, 2023",
+                      text: "${dateFormat.format(bookingModel.date)}",
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                     ),
@@ -152,17 +178,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       factor: 0.3,
                     ),
                     CustomText(
-                      text: "10:20",
+                      text: "${DateFormat("hh:mm a").format(bookingModel.date)}",
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
                   ],
                 ),
               ),
-              Text(
-                "Ver aulas",
-                style:
-                    AppTextStyles.captionMedium(color: CColors.textFieldBorder),
+              InkWell(
+                onTap: () {
+                  context.push(child: UserClassesScreen());
+                },
+                child: Text(
+                  "Ver aulas",
+                  style: AppTextStyles.captionMedium(
+                      color: CColors.textFieldBorder),
+                ),
               )
             ],
           ),
@@ -172,11 +203,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget header() {
+    if (dataProvider.userModel == null) {
+      return CircularProgressIndicator();
+    }
+
+    ImageProvider<Object>? avatarImage;
+
+    if (dataProvider.userModel!.image != null) {
+      avatarImage = NetworkImage(dataProvider.userModel!.image!);
+    } else {
+      avatarImage = AssetImage(AppImages.profile);
+    }
+
     return Row(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        CircleAvatar(
-            radius: 20, backgroundImage: AssetImage(AppImages.profile)),
+        CircleAvatar(radius: 20, backgroundImage: avatarImage),
         const MarginWidget(
           isHorizontal: true,
         ),

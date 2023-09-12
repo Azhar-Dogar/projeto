@@ -19,72 +19,72 @@ class ChatWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DataProvider>(
-      builder: (context, value, child) {
-        var instructor = value.users.where((element) => element.uid == chat.to);
-        return InkWell(
-          onTap: () {
-            context.push(
-              child: ChangeNotifierProvider(
-                create: (_)=> ChatProvider(sender: value.userModel!, receiver: instructor.first),
-                child: InboxScreen(),
-              ),
-            );
-          },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const MarginWidget(),
-              Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 60,
-                      width: 60,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                      ),
-                      child: ClipOval(
-                        child: Image(
-                          image: chat.image == null
-                              ? AssetImage(Assets.imagesPlaceHolder)
-                              : NetworkImage(chat.image!) as ImageProvider,
-                        ),
+    return Consumer<DataProvider>(builder: (context, value, child) {
+      var instructor = value.users.where((element) => element.uid == chat.to);
+      return InkWell(
+        onTap: () {
+          context.push(
+            child: ChangeNotifierProvider(
+              create: (_) => ChatProvider(
+                  sender: value.userModel!, receiver: instructor.first),
+              child: InboxScreen(),
+            ),
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const MarginWidget(),
+            Padding(
+              padding: const EdgeInsets.only(left: 8, right: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 60,
+                    width: 60,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: ClipOval(
+                      child: Image(
+                        fit: BoxFit.cover,
+                        image: chat.image == null
+                            ? AssetImage(Assets.imagesPlaceHolder)
+                            : NetworkImage(chat.image!) as ImageProvider,
                       ),
                     ),
-                    const MarginWidget(isHorizontal: true),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          chat.name,
-                          style: AppTextStyles.subTitleMedium(),
-                        ),
-                        const MarginWidget(factor: 0.3),
-                        Timeago(
-                          builder: (_, value) {
-                            return Text(
-                              value,
-                              style: AppTextStyles.subTitleRegular(
-                                  color: CColors.textFieldBorder),
-                            );
-                          },
-                          date: DateTime.fromMillisecondsSinceEpoch(chat.time),
-                          locale: "pt",
-                          allowFromNow: true,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                  ),
+                  const MarginWidget(isHorizontal: true),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        chat.name,
+                        style: AppTextStyles.subTitleMedium(),
+                      ),
+                      const MarginWidget(factor: 0.3),
+                      Timeago(
+                        builder: (_, value) {
+                          return Text(
+                            value,
+                            style: AppTextStyles.subTitleRegular(
+                                color: CColors.textFieldBorder),
+                          );
+                        },
+                        date: DateTime.fromMillisecondsSinceEpoch(chat.time),
+                        locale: "pt",
+                        allowFromNow: true,
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              const MarginWidget(),
-            ],
-          ),
-        );
-      }
-    );
+            ),
+            const MarginWidget(),
+          ],
+        ),
+      );
+    });
   }
 }
