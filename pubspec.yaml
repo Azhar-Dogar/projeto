@@ -53,6 +53,7 @@ dependencies:
   timeago_flutter: ^3.5.0
   flutter_background_geolocation: ^4.12.3
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

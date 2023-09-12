@@ -1,7 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/date_symbol_data_file.dart';
+import 'package:intl/intl.dart';
+import 'package:projeto/model/car_model.dart';
+import 'package:projeto/provider/data_provider.dart';
+import 'package:projeto/screens/instructor/dashboard/profile/instructor_progress.dart';
 import 'package:projeto/widgets/my_cars_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/generated/assets.dart';
 import 'package:utility_extensions/extensions/font_utilities.dart';
@@ -10,8 +16,10 @@ import '../../../extras/app_assets.dart';
 import '../../../extras/app_textstyles.dart';
 import '../../../extras/colors.dart';
 import '../../../extras/functions.dart';
+import '../../../model/booking_model.dart';
 import '../../../widgets/custom_text.dart';
 import '../../../widgets/margin_widget.dart';
+import 'my_cars.dart';
 
 class InstructorHome extends StatefulWidget {
   const InstructorHome({super.key});
@@ -21,48 +29,64 @@ class InstructorHome extends StatefulWidget {
 }
 
 class _InstructorHomeState extends State<InstructorHome> {
+  late DataProvider dataProvider;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: CColors.dashboard,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const MarginWidget(
-              factor: 2,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: header(),
-            ),
-            Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Image(image: AssetImage(AppImages.autoImage)),
-                ),
-                Positioned(bottom: 1, left: 5, right: 5, child: card()),
-              ],
-            ),
-            const MarginWidget(),
-            ratingWidget(),
-            carsWidget(),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                "Gerenciar carros",
-                style: AppTextStyles.poppins(
-                    style: TextStyle(
-                  color: CColors.primary,
-                  fontSize: 12,
-                  fontWeight: FontWeights.medium,
-                )),
+    return Consumer<DataProvider>(builder: (context, value, child) {
+      dataProvider = value;
+      return Scaffold(
+        backgroundColor: CColors.dashboard,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const MarginWidget(
+                factor: 2,
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: header(),
+              ),
+              Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: Image(image: AssetImage(AppImages.autoImage)),
+                  ),
+                  upcomingBooking(),
+                ],
+              ),
+              const MarginWidget(),
+              ratingWidget(),
+              carsWidget(),
+              TextButton(
+                onPressed: () {
+                  context.push(child: MyCars());
+                },
+                child: Text(
+                  "Gerenciar carros",
+                  style: AppTextStyles.poppins(
+                      style: TextStyle(
+                    color: CColors.primary,
+                    fontSize: 12,
+                    fontWeight: FontWeights.medium,
+                  )),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
+  }
+
+  Widget upcomingBooking() {
+    BookingModel? bookingModel = findFutureBooking();
+    if (bookingModel == null) {
+      return SizedBox();
+    }
+
+    return Positioned(bottom: 1, left: 5, right: 5, child: card(bookingModel));
   }
 
   Widget ratingWidget() {
@@ -93,7 +117,7 @@ class _InstructorHomeState extends State<InstructorHome> {
             ),
             MarginWidget(),
             RatingBarIndicator(
-              rating: 2.75,
+              rating: dataProvider.totalRating,
               itemBuilder: (context, index) => Icon(
                 Icons.star,
                 color: CColors.rating,
@@ -106,7 +130,9 @@ class _InstructorHomeState extends State<InstructorHome> {
               factor: 0.5,
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                context.push(child: InstructorProgress());
+              },
               child: Text(
                 "Ver todas as avaliações",
                 style: AppTextStyles.poppins(
@@ -123,7 +149,7 @@ class _InstructorHomeState extends State<InstructorHome> {
     );
   }
 
-  Widget card() {
+  Widget card(BookingModel bookingModel) {
     return SizedBox(
       width: context.width,
       // margin: const EdgeInsets.only(right: 5),
@@ -156,7 +182,9 @@ class _InstructorHomeState extends State<InstructorHome> {
                       factor: 0.3,
                     ),
                     CustomText(
-                      text: "30 de junho 2023",
+                      text:
+                          "${DateFormat("dd MMM yyyy").format(bookingModel.date)}",
+                      // text: "30 de junho 2023",
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                     ),
@@ -164,7 +192,7 @@ class _InstructorHomeState extends State<InstructorHome> {
                       factor: 0.3,
                     ),
                     CustomText(
-                      text: "10:20",
+                      text: "${bookingModel.time}",
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
@@ -208,18 +236,42 @@ class _InstructorHomeState extends State<InstructorHome> {
   }
 
   Widget carsWidget() {
-   return Padding(
-     padding: const EdgeInsets.all(20.0),
-     child: Column(
-     crossAxisAlignment: CrossAxisAlignment.start,
-       children: [
-         Text(
-           "Seus Carros",
-           style: AppTextStyles.subTitleMedium(),
-         ),
-         // MyCarsWidget(),
-       ],
-     ),
-   );
+    CarModel? carModel =
+        dataProvider.cars.where((element) => element.isPrimary).firstOrNull;
+
+    if (carModel == null) {
+      return SizedBox();
+    }
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Seus Carros",
+            style: AppTextStyles.subTitleMedium(),
+          ),
+          MyCarsWidget(
+            car: carModel!,
+          ),
+        ],
+      ),
+    );
+  }
+
+  BookingModel? findFutureBooking() {
+    DateTime now = DateTime.now();
+    BookingModel? futureBooking;
+
+    for (BookingModel booking in dataProvider.bookings) {
+      if (booking.date.isAfter(now)) {
+        if (futureBooking == null ||
+            booking.date.isBefore(futureBooking.date)) {
+          futureBooking = booking;
+        }
+      }
+    }
+
+    return futureBooking;
   }
 }
