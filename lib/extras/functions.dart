@@ -147,7 +147,7 @@ class Functions {
     DateTime now = DateTime.now();
     BookingModel? futureBooking;
     for (BookingModel booking in bookings) {
-      if (booking.date.isAfter(now)) {
+      if (booking.date.isAfter(now) && booking.status != "denied") {
         if (futureBooking == null ||
             booking.date.isBefore(futureBooking.date)) {
           futureBooking = booking;
