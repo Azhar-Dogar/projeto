@@ -4,7 +4,6 @@ import 'package:projeto/provider/chat_provider.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
-import 'package:timeago/timeago.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
 
 import '../extras/app_textstyles.dart';

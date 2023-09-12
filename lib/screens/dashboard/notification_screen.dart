@@ -3,6 +3,7 @@ import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/provider/data_provider.dart';
+import 'package:projeto/widgets/notification_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/widgets/button_widget.dart';
@@ -24,58 +25,54 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   late double width, padding;
 
-  late DataProvider dataProvider;
-
   @override
   Widget build(BuildContext context) {
     width = context.width;
     padding = width * 0.04;
 
-    return Consumer<DataProvider>(builder: (context, value, child) {
-      dataProvider = value;
-
+    return Consumer<DataProvider>(builder: (context, data, child) {
       return Scaffold(
         appBar: CustomAppBar("Notificações", isInstructor: widget.isInstructor),
         body: Padding(
           padding: EdgeInsets.only(left: padding, right: padding),
-          child: Column(
-            children: [
-              displayNotifications(),
-              // notificationRow(AppIcons.message),
-              // const DividerWidget(),
-              // notificationRow(AppIcons.message),
-              // const DividerWidget(),
-              // notificationRow(AppIcons.message),
-              // const DividerWidget(),
-              // notificationRow(AppIcons.setting),
-              // const DividerWidget(),
-              // notificationRow(AppIcons.approval),
-              // const DividerWidget(),
-              // InkWell(
-              //   onTap: () {
-              //     showDialog(
-              //         context: context,
-              //         builder: (BuildContext context) {
-              //           return requestsLessonDialogue(context);
-              //         });
-              //   },
-              //   child: notificationRow(AppIcons.calendar),
-              // ),
-              // const DividerWidget(),
-            ],
+          child: ListView.separated(
+            itemBuilder: (ctx, i) {
+              return NotificationWidget(notification: data.notifications[i]);
+            },
+            separatorBuilder: (ctx, i) {
+              return const DividerWidget();
+            },
+            itemCount: data.notifications.length,
           ),
+
+          // SingleChildScrollView(
+          //   child: Column(
+          //     children: [
+          //       notificationRow(AppIcons.message),
+          //       const DividerWidget(),
+          //       notificationRow(AppIcons.message),
+          //       const DividerWidget(),
+          //       notificationRow(AppIcons.message),
+          //       const DividerWidget(),
+          //       notificationRow(AppIcons.setting),
+          //       const DividerWidget(),
+          //       notificationRow(AppIcons.approval),
+          //       const DividerWidget(),
+          //       InkWell(
+          //         onTap: (){
+          //           showDialog(context: context, builder: (BuildContext context){
+          //             return requestsLessonDialogue(context);
+          //           });
+          //         },
+          //         child: notificationRow(AppIcons.calendar),
+          //       ),
+          //       const DividerWidget(),
+          //     ],
+          //   ),
+          // ),
         ),
       );
     });
-  }
-
-  Widget displayNotifications() {
-
-    return Expanded(
-      child: ListView.builder(itemBuilder: (ctx, index) {
-        return notificationRow(AppIcons.message);
-      }),
-    );
   }
 
   Widget notificationRow(String path) {

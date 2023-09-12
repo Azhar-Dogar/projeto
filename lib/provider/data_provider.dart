@@ -5,6 +5,7 @@ import 'package:projeto/extras/constants.dart';
 import 'package:projeto/model/availability_model.dart';
 import 'package:projeto/model/booking_model.dart';
 import 'package:projeto/model/car_model.dart';
+import 'package:projeto/model/notification_model.dart';
 import 'package:projeto/model/review_model.dart';
 import 'package:projeto/model/user_model.dart';
 import '../model/chat_model.dart';
@@ -39,6 +40,7 @@ class DataProvider with ChangeNotifier {
         getUsers();
         getMessages();
         getAvailability();
+        getNotifications();
         getBookings();
       }
     });
@@ -50,6 +52,7 @@ class DataProvider with ChangeNotifier {
     users = [];
     chats = [];
     bookings = [];
+    notifications = [];
   }
 
   cancelStreams() {
@@ -58,6 +61,7 @@ class DataProvider with ChangeNotifier {
     usersStream?.cancel();
     chatsStream?.cancel();
     bookingStream?.cancel();
+    notificationStream?.cancel();
   }
 
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? bookingStream;
@@ -228,5 +232,21 @@ class DataProvider with ChangeNotifier {
             ).toMap(),
           );
     }
+  }
+
+
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? notificationStream;
+
+  List<NotificationModel> notifications = [];
+
+  getNotifications() {
+    notificationStream  = Constants.users.doc(Constants.uid()).collection("notifications")
+        .snapshots()
+        .listen((snapshots) {
+      var docs = snapshots.docs.where((element) => element.exists).toList();
+      notifications = List.generate(docs.length,
+              (index) => NotificationModel.fromMap(docs[index].data()));
+      notifyListeners();
+    });
   }
 }
