@@ -143,7 +143,9 @@ class _InstructorProgressState extends State<InstructorProgress> {
       color: CColors.dashboard,
       alignment: Alignment.center,
       padding: EdgeInsets.symmetric(vertical: 44),
-      child: CRatingBar(
+      child:
+
+      CRatingBar(
         ignoreGesture: true,
         rating: dataProvider.totalRating,
         itemSize: 26,
