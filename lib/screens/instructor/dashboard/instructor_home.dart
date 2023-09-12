@@ -14,6 +14,7 @@ import 'package:utility_extensions/extensions/font_utilities.dart';
 import '../../../extras/app_assets.dart';
 import '../../../extras/app_textstyles.dart';
 import '../../../extras/colors.dart';
+import '../../../extras/functions.dart';
 import '../../../generated/assets.dart';
 import '../../../model/booking_model.dart';
 import '../../../widgets/custom_text.dart';
@@ -86,11 +87,10 @@ class _InstructorHomeState extends State<InstructorHome> {
   }
 
   Widget upcomingBooking() {
-    BookingModel? bookingModel = findFutureBooking();
+    BookingModel? bookingModel = Functions.findFutureBooking(dataProvider.bookings);
     if (bookingModel == null) {
       return SizedBox();
     }
-
     return Positioned(bottom: 1, left: 5, right: 5, child: card(bookingModel));
   }
 
@@ -156,7 +156,6 @@ class _InstructorHomeState extends State<InstructorHome> {
 
   Widget card(BookingModel bookingModel) {
     final dateFormat = DateFormat.yMMMMd('pt');
-
     return SizedBox(
       width: context.width,
       // margin: const EdgeInsets.only(right: 5),
@@ -279,19 +278,5 @@ class _InstructorHomeState extends State<InstructorHome> {
     );
   }
 
-  BookingModel? findFutureBooking() {
-    DateTime now = DateTime.now();
-    BookingModel? futureBooking;
 
-    for (BookingModel booking in dataProvider.bookings) {
-      if (booking.date.isAfter(now)) {
-        if (futureBooking == null ||
-            booking.date.isBefore(futureBooking.date)) {
-          futureBooking = booking;
-        }
-      }
-    }
-
-    return futureBooking;
-  }
 }

@@ -12,6 +12,7 @@ import 'package:projeto/model/notification_model.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebasestorage;
 import 'package:firebase_storage/firebase_storage.dart';
+import '../model/booking_model.dart';
 import '../widgets/loading_widget.dart';
 import 'app_textstyles.dart';
 import 'colors.dart';
@@ -139,5 +140,20 @@ class Functions {
     var doc = Constants.users.doc(receiver).collection("notifications").doc();
     notification.id = doc.id;
     doc.set(notification.toMap());
+  }
+
+  static BookingModel? findFutureBooking(List<BookingModel> bookings) {
+    DateTime now = DateTime.now();
+    BookingModel? futureBooking;
+    for (BookingModel booking in bookings) {
+      if (booking.date.isAfter(now)) {
+        if (futureBooking == null ||
+            booking.date.isBefore(futureBooking.date)) {
+          futureBooking = booking;
+        }
+      }
+    }
+
+    return futureBooking;
   }
 }

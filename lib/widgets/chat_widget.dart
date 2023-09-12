@@ -49,6 +49,7 @@ class ChatWidget extends StatelessWidget {
                       ),
                       child: ClipOval(
                         child: Image(
+                          fit: BoxFit.cover,
                           image: chat.image == null
                               ? AssetImage(Assets.imagesPlaceHolder)
                               : NetworkImage(chat.image!) as ImageProvider,
