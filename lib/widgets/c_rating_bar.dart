@@ -21,7 +21,7 @@ class CRatingBar extends StatelessWidget {
     return RatingBar.builder(
       ignoreGestures: ignoreGesture,
       itemSize: itemSize,
-      initialRating: 3,
+      initialRating: rating,
       minRating: 1,
       direction: Axis.horizontal,
       allowHalfRating: true,

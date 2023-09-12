@@ -82,11 +82,19 @@ class DataProvider with ChangeNotifier {
 
   UserModel? userModel;
 
+  double totalRating = 0;
+
   getProfile() {
     profileStream = Constants.users.doc(Constants.uid()).snapshots().listen(
       (snapshot) {
         if (snapshot.exists) {
           userModel = UserModel.fromMap(snapshot.data()!);
+          double totalRating = 0;
+          for (var r in userModel!.reviews) {
+            totalRating += r.totalR;
+          }
+          totalRating = (totalRating / userModel!.reviews.length);
+          this.totalRating = totalRating;
         } else {
           userModel = null;
         }
@@ -129,10 +137,7 @@ class DataProvider with ChangeNotifier {
     });
   }
 
-
   List<ReviewModel> reviews = [];
-
-
 
   UserModel? getUserById(String id) {
     UserModel? userModel;
