@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/provider/data_provider.dart';
+import 'package:projeto/screens/dashboard/home/search_instructor.dart';
 import 'package:projeto/screens/dashboard/user_classes_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
@@ -120,18 +121,24 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(12), color: CColors.dashboard),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
-        child: TextFieldWidget(
-          fontSize: 12,
-          hint: "Digitar o nome de um instrutor",
-          prefixWidget: Icon(
-            Icons.search,
-            color: CColors.textFieldBorder,
-          ),
-          controller: searchController,
-          borderColor: CColors.dashboard,
-          onChanged: (value) {
-            setState(() {});
+        child: InkWell(
+          onTap: (){
+            context.push(child: SearchInstructor());
           },
+          child: TextFieldWidget(
+            fontSize: 12,
+            hint: "Digitar o nome de um instrutor",
+            prefixWidget: Icon(
+              Icons.search,
+              color: CColors.textFieldBorder,
+            ),
+            enabled: false,
+            controller: searchController,
+            borderColor: CColors.dashboard,
+            onChanged: (value) {
+              setState(() {});
+            },
+          ),
         ),
       ),
     );

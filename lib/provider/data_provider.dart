@@ -280,6 +280,7 @@ class DataProvider with ChangeNotifier {
   List<UserModel> nearbyInstructors = [];
   List<Map<String, dynamic>> instructorsLocation = [];
 
+
   getLocations() {
     Constants.databaseReference.child("location").onValue.listen((event) {
       var children = event.snapshot.children.where((element) => element.exists);
@@ -301,6 +302,7 @@ class DataProvider with ChangeNotifier {
           }
         }
       }
+      notifyListeners();
     });
   }
 }
