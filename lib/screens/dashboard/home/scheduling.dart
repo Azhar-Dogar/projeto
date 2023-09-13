@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
@@ -14,16 +13,14 @@ import 'package:projeto/widgets/ctimerpicker.dart';
 import 'package:projeto/widgets/drop_down_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
-import 'package:projeto/screens/dashboard/home/search_instructor.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/calendar_widget.dart';
 import 'package:projeto/widgets/instructor_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
-
 import '../../../extras/colors.dart';
 import 'instructors_screen.dart';
-
+import 'package:geocoding/geocoding.dart';
 class SchedulingScreen extends StatefulWidget {
   const SchedulingScreen({super.key, required this.instructor});
 
@@ -224,6 +221,8 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
 
                     DocumentReference doc = Constants.bookings.doc();
 
+                    String location = await getAddressFromLatLng();
+
                     int totalCl = int.parse(selectedClasses!);
                     BookingModel booking = BookingModel(
                       id: doc.id,
@@ -232,6 +231,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                       instructorID: instructor.uid,
                       totalClasses: totalCl,
                       userID: Constants.uid(),
+                      location: location
                     );
 
                     await doc.set(booking.toMap());
@@ -339,5 +339,31 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
         )
       ],
     );
+  }
+
+  Future<String> getAddressFromLatLng() async {
+
+    DataProvider dataProvider = context.read<DataProvider>();
+    String location = "";
+
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(dataProvider.latitude!, dataProvider.longitude!);
+
+      if (placemarks != null && placemarks.isNotEmpty) {
+        Placemark placemark = placemarks[0];
+        String? city = placemark.locality;
+        String? country = placemark.country;
+
+        location = "${city}, ${country}";
+        print('City: $city');
+        print('Country: $country');
+      } else {
+        print('No placemarks found.');
+      }
+    } catch (e) {
+      print('Error getting location: $e');
+    }
+
+    return location;
   }
 }
