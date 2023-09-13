@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:projeto/extras/constants.dart';
@@ -60,6 +61,7 @@ class DataProvider with ChangeNotifier {
         getAvailability();
         getNotifications();
         getBookings();
+        getLocations();
       }
     });
   }
@@ -71,9 +73,13 @@ class DataProvider with ChangeNotifier {
     chats = [];
     bookings = [];
     notifications = [];
+
+    nearbyInstructors = [];
+    instructorsLocation = [];
   }
 
   cancelStreams() {
+    locationStream?.cancel();
     profileStream?.cancel();
     carsStream?.cancel();
     usersStream?.cancel();
@@ -280,15 +286,17 @@ class DataProvider with ChangeNotifier {
   List<UserModel> nearbyInstructors = [];
   List<Map<String, dynamic>> instructorsLocation = [];
 
+  StreamSubscription<DatabaseEvent>? locationStream;
 
+  bool markersUpdate = false;
   getLocations() {
-    Constants.databaseReference.child("location").onValue.listen((event) {
+    locationStream = Constants.databaseReference.child("location").onValue.listen((event) {
       var children = event.snapshot.children.where((element) => element.exists);
       instructorsLocation = [];
       for (var child in children) {
-        var c = child.value as Map<String, dynamic>;
+        var c = child.value as Map<Object?, Object?>;
         var distance = Geolocator.distanceBetween(
-            _latitude!, _longitude!, c["latitude"], c["longitude"]);
+            _latitude!, _longitude!, c["latitude"] as double, c["longitude"] as double);
 
         if(distance < 10000){
           var user = users.where((element) => element.uid == child.key);
@@ -302,6 +310,7 @@ class DataProvider with ChangeNotifier {
           }
         }
       }
+      markersUpdate = true;
       notifyListeners();
     });
   }

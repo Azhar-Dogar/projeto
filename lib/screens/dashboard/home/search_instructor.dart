@@ -8,6 +8,8 @@ import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:projeto/extras/app_assets.dart';
+import 'package:projeto/provider/data_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
@@ -31,64 +33,128 @@ class _SearchInstructorState extends State<SearchInstructor> {
     "10 km",
   ];
   bool showInstructor = false;
-  final Set<Marker> _markers = {};
-  void _addCustomMarker() async {
+  Set<Marker> _markers = {};
+
+
+  String? user;
+  Future<Marker> _addCustomMarker(double latitude, double longitude, String userId) async {
     final Uint8List markIcons = await getImages('assets/icons/car.png', 100);
-    const LatLng markerLocation =
-        LatLng(31.4749, 74.3734); // Replace with your marker's coordinates
-    _markers.add(Marker(
+    LatLng markerLocation =
+        LatLng(latitude, longitude); // Replace with your marker's coordinates
+    return Marker(
       onTap: () {
         setState(() {
+          user = userId;
           showInstructor = !showInstructor;
         });
       },
-      markerId: const MarkerId('customMarker'),
+      markerId: MarkerId(userId),
       position: markerLocation,
       icon: BitmapDescriptor.fromBytes(markIcons),
-      infoWindow: const InfoWindow(title: 'Custom Marker'),
-    ));
 
-    setState(() {});
-    print("markers");
+    );
+  }
+
+  late DataProvider dataProvider;
+
+  addMarkers() async {
+    _markers = {};
+    print(dataProvider.instructorsLocation);
+    for(var location in dataProvider.instructorsLocation){
+      print(location);
+      _markers.add(await _addCustomMarker(location["latitude"], location["longitude"], location["user"]));
+    }
     print(_markers.length);
+    setState(() {});
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _addCustomMarker();
-  }
 
+  bool isFirst = true;
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: CustomAppBar("Pesquisa"),
-      body: Column(
-        children: [
-          Expanded(
-              child: Stack(children: [
-            googleMap(),
-            Positioned(top: 15, left: 15, right: 15, child: currentLocation()),
-            Positioned(bottom: 0, left: 0, right: 0, child: distanceBox())
-          ]))
-        ],
-      ),
+    return Consumer<DataProvider>(builder: (context, data, child) {
+      dataProvider = data;
+
+      if(isFirst){
+        dataProvider.markersUpdate = true;
+        isFirst = false;
+      }
+      if(dataProvider.markersUpdate){
+
+        print("object");
+        addMarkers();
+        dataProvider.markersUpdate = false;
+      }
+      return Scaffold(
+        appBar: CustomAppBar("Pesquisa"),
+        body: Column(
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  googleMap(),
+                  Positioned(
+                    right: 0,
+                    bottom: 60,
+                    child: zoomControlls(),
+                  ),
+                  Positioned(
+                    top: 15,
+                    left: 15,
+                    right: 15,
+                    child: currentLocation(),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: distanceBox(),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget zoomControlls() {
+    return Column(
+      children: [
+        IconButton(
+          onPressed: () {
+            if(controller != null){
+              controller!.animateCamera(CameraUpdate.zoomIn());
+            }
+          },
+          icon: Icon(Icons.add),
+        ),
+        IconButton(
+          onPressed: () {
+            if(controller != null){
+              controller!.animateCamera(CameraUpdate.zoomOut());
+            }
+          },
+          icon: Icon(Icons.horizontal_rule),
+        ),
+      ],
     );
   }
 
+
+  GoogleMapController? controller;
   Widget googleMap() {
     return GoogleMap(
-      initialCameraPosition: const CameraPosition(
-        zoom: 25,
-        target: LatLng(31.4749, 74.3734),
+      initialCameraPosition: CameraPosition(
+        zoom: 14,
+        target: LatLng(dataProvider.latitude!, dataProvider.longitude!),
       ),
+      myLocationButtonEnabled: false,
       onMapCreated: (GoogleMapController controller) {
-        print('changes');
-        // _controller = controller;
-        // _setMyLocation();
+        this.controller = controller;
       },
       // myLocationEnabled: true,
       markers: _markers,
@@ -168,12 +234,17 @@ class _SearchInstructorState extends State<SearchInstructor> {
               ],
             ),
             const MarginWidget(),
-            ButtonWidget(name: "Agendar", onPressed: () {
-              setState(() {
-                showInstructor = false;
-              });
-              showDialog(context: context, builder: (BuildContext context)=>noInstructorAlert(context));
-            })
+            ButtonWidget(
+                name: "Agendar",
+                onPressed: () {
+                  setState(() {
+                    showInstructor = false;
+                  });
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          noInstructorAlert(context));
+                })
           ],
         ),
       ),
@@ -215,25 +286,46 @@ class _SearchInstructorState extends State<SearchInstructor> {
         .buffer
         .asUint8List();
   }
-  Widget noInstructorAlert(BuildContext context){
+
+  Widget noInstructorAlert(BuildContext context) {
     return AlertDialog(
-      content:Column(
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-           Align(
+          Align(
               alignment: Alignment.topRight,
-              child: IconButton(icon: const Icon(Icons.close),onPressed: (){
-                context.pop();
-              },)),
-          const MarginWidget(factor: 0.5,),
-          Text("Por enquanto, não há instrutores por perto",style: AppTextStyles.subTitleMedium(),textAlign: TextAlign.center,),
-        const MarginWidget(),
-        Text("O instrutor mais próximo entrará em contato para agendamento",style: AppTextStyles.subTitleRegular(),textAlign: TextAlign.center,),
-         const  MarginWidget(),
-          Text("Procurar instrutor por nome",style: AppTextStyles.captionMedium(size: 12,color: CColors.primary),textAlign: TextAlign.center,)
-      ],),
+              child: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  context.pop();
+                },
+              )),
+          const MarginWidget(
+            factor: 0.5,
+          ),
+          Text(
+            "Por enquanto, não há instrutores por perto",
+            style: AppTextStyles.subTitleMedium(),
+            textAlign: TextAlign.center,
+          ),
+          const MarginWidget(),
+          Text(
+            "O instrutor mais próximo entrará em contato para agendamento",
+            style: AppTextStyles.subTitleRegular(),
+            textAlign: TextAlign.center,
+          ),
+          const MarginWidget(),
+          Text(
+            "Procurar instrutor por nome",
+            style:
+                AppTextStyles.captionMedium(size: 12, color: CColors.primary),
+            textAlign: TextAlign.center,
+          )
+        ],
+      ),
     );
   }
+
   Widget distanceBox() {
     return Column(
       children: [
