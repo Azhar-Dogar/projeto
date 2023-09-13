@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/provider/data_provider.dart';
@@ -61,8 +62,22 @@ class _SearchInstructorState extends State<SearchInstructor> {
     _markers = {};
     print(dataProvider.instructorsLocation);
     for(var location in dataProvider.instructorsLocation){
-      print(location);
-      _markers.add(await _addCustomMarker(location["latitude"], location["longitude"], location["user"]));
+
+
+      var distance = Geolocator.distanceBetween(
+          dataProvider.latitude!, dataProvider.longitude!, location["latitude"], location["longitude"]);
+
+      if(this.distance == "2 km"){
+        if(distance <= 2000){
+          _markers.add(await _addCustomMarker(location["latitude"], location["longitude"], location["user"]));
+        }
+      }else if(this.distance == "5 km"){
+        if(distance <= 5000){
+          _markers.add(await _addCustomMarker(location["latitude"], location["longitude"], location["user"]));
+        }
+      }else{
+        _markers.add(await _addCustomMarker(location["latitude"], location["longitude"], location["user"]));
+      }
     }
     print(_markers.length);
     setState(() {});
