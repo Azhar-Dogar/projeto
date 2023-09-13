@@ -26,6 +26,25 @@ class DataProvider with ChangeNotifier {
     });
   }
 
+
+  double? _latitude;
+  double? _longitude;
+
+
+  double? get latitude => _latitude;
+
+  set latitude(double? value) {
+    _latitude = value;
+    notifyListeners();
+  }
+
+  double? get longitude => _longitude;
+
+  set longitude(double? value) {
+    _longitude = value;
+    notifyListeners();
+  }
+
   callFunctions() {
     getProfile();
     callOthers();
@@ -33,7 +52,7 @@ class DataProvider with ChangeNotifier {
 
   callOthers() {
     Future.delayed(Duration(seconds: 1)).then((value) {
-      if (userModel == null) {
+      if (userModel == null || _latitude == null) {
         callOthers();
       } else {
         getCars();
@@ -258,4 +277,6 @@ class DataProvider with ChangeNotifier {
       notifyListeners();
     });
   }
+
+
 }

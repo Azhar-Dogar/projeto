@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/dashboard_screen.dart';
 import 'package:projeto/screens/instructor/instructor_dashboard.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
-
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+    as bg;
+import 'package:utility_extensions/utility_extensions.dart';
 
 class CheckData extends StatefulWidget {
   const CheckData({super.key});
@@ -27,13 +29,13 @@ class _CheckDataState extends State<CheckData> {
       saveData(location);
     });
     bg.BackgroundGeolocation.ready(bg.Config(
-        desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
-        distanceFilter: 10.0,
-        stopOnTerminate: false,
-        startOnBoot: true,
-        debug: true,
-        logLevel: bg.Config.LOG_LEVEL_VERBOSE
-    )).then((bg.State state) {
+            desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+            distanceFilter: 10.0,
+            stopOnTerminate: false,
+            startOnBoot: true,
+            debug: true,
+            logLevel: bg.Config.LOG_LEVEL_VERBOSE))
+        .then((bg.State state) {
       if (!state.enabled) {
         bg.BackgroundGeolocation.start();
       }
@@ -41,42 +43,93 @@ class _CheckDataState extends State<CheckData> {
   }
 
   saveData(bg.Location location) async {
-    if(Constants.user() != null){
-      FirebaseDatabase _database =
-      FirebaseDatabase(app: null,databaseURL: "https://mazzi-b3641-default-rtdb.europe-west1.firebasedatabase.app/");
-      final databaseReference = _database.reference();
-      await databaseReference.child("location")
-          .child(Constants.uid()).set({
+    if (Constants.user() != null) {
+      await Constants.databaseReference
+          .child("location")
+          .child(Constants.uid())
+          .set({
         "latitude": location.coords.latitude,
         "longitude": location.coords.longitude,
       });
-
     }
   }
 
   late DataProvider provider;
+
   @override
   Widget build(BuildContext context) {
-
     // Constants.auth().signOut();
-    return Consumer<DataProvider>(
-      builder: (context, data, child) {
-        provider = data;
-        if(data.userModel != null){
-          if(data.userModel!.isUser){
-            return DashBoard();
-          }else{
-            listenLocation();
-            return InstructorDashboard();
+    return Consumer<DataProvider>(builder: (context, data, child) {
+      provider = data;
+      if (data.userModel != null) {
+        if (data.userModel!.isUser) {
+          if (provider.latitude == null) {
+            determinePosition();
+            return loading();
           }
+          return DashBoard();
+        } else {
+          listenLocation();
+          return InstructorDashboard();
         }
-
-        return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
       }
+
+      return loading();
+    });
+  }
+
+  Widget loading() {
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
+  }
+
+  void determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      showError('Location services are disabled.');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        if (permission == LocationPermission.deniedForever) {
+          showError('Location permissions are denied');
+        }
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      showError('Location permissions are permanently denied, we cannot request permissions. Turn these on from settings');
+    }
+
+    var position = await Geolocator.getCurrentPosition();
+    provider.longitude = position.longitude;
+    provider.latitude = position.latitude;
+  }
+
+  showError(String message) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            content: Text(
+              message,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  context.pop(rootNavigator: true);
+                  determinePosition();
+                },
+                child: Text("Retry"),
+              ),
+            ],
+          );
+        });
   }
 }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
@@ -119,6 +120,10 @@ class Constants {
     return auth().currentUser!.uid;
   }
 
+
+  static FirebaseDatabase database =
+  FirebaseDatabase(app: null,databaseURL: "https://mazzi-b3641-default-rtdb.europe-west1.firebasedatabase.app/");
+  static var databaseReference = database.reference();
   //coleections
   static var firestore = FirebaseFirestore.instance;
   static var users = firestore.collection("users");
