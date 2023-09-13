@@ -8,7 +8,6 @@ import 'package:projeto/screens/dashboard/user_classes_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/functions.dart';
-import 'package:projeto/screens/dashboard/home/instructors_screen.dart';
 import 'package:projeto/widgets/custom_text.dart';
 import 'package:projeto/widgets/instructor_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';

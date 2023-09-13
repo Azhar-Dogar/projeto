@@ -6,10 +6,13 @@ import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
 import 'package:projeto/model/booking_model.dart';
+import 'package:projeto/model/notification_model.dart';
 import 'package:projeto/model/user_model.dart';
+import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/dashboard/home/calendar_screen.dart';
 import 'package:projeto/widgets/ctimerpicker.dart';
 import 'package:projeto/widgets/drop_down_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/screens/dashboard/home/search_instructor.dart';
 import 'package:projeto/widgets/button_widget.dart';
@@ -192,7 +195,6 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                 label: "Quantidade de Aulas"),
             const MarginWidget(),
             TextFieldWidget(
-              enabled: false,
               controller: amount,
               borderColor: CColors.textFieldBorder,
               label: "Valor Total",
@@ -233,6 +235,16 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                     );
 
                     await doc.set(booking.toMap());
+
+                    UserModel user = context.read<DataProvider>().userModel!;
+
+                    Functions.sendNotification(
+                        NotificationModel(
+                            metaData: booking.toMap(),
+                            text: "${user.name} solicita aulas",
+                            type: "booking",
+                            time: DateTime.now().millisecondsSinceEpoch),
+                        instructor.uid);
 
                     context.pop(rootNavigator: true);
 
@@ -282,6 +294,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
             });
       },
       child: TextFieldWidget(
+        enabled: false,
         controller: time,
         borderColor: CColors.textFieldBorder,
         label: "Horário",

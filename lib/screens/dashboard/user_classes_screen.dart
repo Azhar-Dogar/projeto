@@ -102,7 +102,7 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
           const MarginWidget(
             isSliver: true,
           ),
-          SliverToBoxAdapter(child: const DividerWidget()),
+          const DividerWidget().toSliver,
           const MarginWidget(
             isSliver: true,
           ),
@@ -120,7 +120,7 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
           const MarginWidget(
             isSliver: true,
           ),
-          SliverToBoxAdapter(child: const DividerWidget()),
+          const DividerWidget().toSliver,
           const MarginWidget(
             isSliver: true,
           ),
@@ -168,16 +168,14 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
   Widget monthSelection() {
     return CustomScrollView(
       slivers: [
-        SliverToBoxAdapter(
-          child: CCalendarWidget(
-              startDate: selectedDate,
-              onSelection: (value, date) {
-                setState(() {
-                  selectedDate = value;
-                });
-              }),
-        ),
-        SliverToBoxAdapter(child: const DividerWidget()),
+        CCalendarWidget(
+            startDate: selectedDate,
+            onSelection: (value, date) {
+              setState(() {
+                selectedDate = value;
+              });
+            }).toSliver,
+        const DividerWidget().toSliver,
         const MarginWidget(
           isSliver: true,
         ),
@@ -221,7 +219,7 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
     }
 
     if (bookings.isEmpty) {
-      return isSliver ? SliverToBoxAdapter(child: noBooking()) : noBooking();
+      return isSliver ? noBooking().toSliver : noBooking();
     }
     return isSliver
         ? SliverList.separated(

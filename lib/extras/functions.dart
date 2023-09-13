@@ -136,8 +136,8 @@ class Functions {
       date1.month == date2.month &&
       date1.day == date2.day;
 
-
-  static void sendNotification(NotificationModel notification, String receiver){
+  static void sendNotification(
+      NotificationModel notification, String receiver) {
     var doc = Constants.users.doc(receiver).collection("notifications").doc();
     notification.id = doc.id;
     doc.set(notification.toMap());
@@ -147,7 +147,7 @@ class Functions {
     DateTime now = DateTime.now();
     BookingModel? futureBooking;
     for (BookingModel booking in bookings) {
-      if (booking.date.isAfter(now)) {
+      if (booking.date.isAfter(now) && booking.status != "denied") {
         if (futureBooking == null ||
             booking.date.isBefore(futureBooking.date)) {
           futureBooking = booking;
