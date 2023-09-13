@@ -223,8 +223,10 @@ class _HomeScreenState extends State<HomeScreen> {
           onTap: () async {
             print("object");
 
-            FirebaseDatabase _database =
-            FirebaseDatabase(app: null,databaseURL: "https://mazzi-b3641-default-rtdb.europe-west1.firebasedatabase.app/");
+            FirebaseDatabase _database = FirebaseDatabase(
+                app: null,
+                databaseURL:
+                    "https://mazzi-b3641-default-rtdb.europe-west1.firebasedatabase.app/");
 
             final databaseReference = _database.reference();
             if (FirebaseAuth.instance.currentUser != null) {
@@ -232,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
               await databaseReference
                   .child('online-status')
                   .child(FirebaseAuth.instance.currentUser!.uid)
-                  .set({"ok" : false});
+                  .set({"ok": false});
             }
             // try{
             //   await FirebaseDatabase.instance.ref().child("location").set("hhda");
@@ -240,7 +242,6 @@ class _HomeScreenState extends State<HomeScreen> {
             // }catch(e){
             //   print(e);
             // }
-
           },
           child: CircleAvatar(radius: 20, backgroundImage: avatarImage),
         ),

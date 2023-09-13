@@ -151,6 +151,14 @@ class DataProvider with ChangeNotifier {
     return userModel;
   }
 
+  BookingModel? getbookingById(String id) {
+    BookingModel? bookingModel;
+
+    bookingModel = bookings.where((element) => element.id == id).firstOrNull;
+
+    return bookingModel;
+  }
+
   CarModel? getCarById(String id) {
     CarModel? carModel;
     carModel = cars
@@ -234,18 +242,19 @@ class DataProvider with ChangeNotifier {
     }
   }
 
-
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? notificationStream;
 
   List<NotificationModel> notifications = [];
 
   getNotifications() {
-    notificationStream  = Constants.users.doc(Constants.uid()).collection("notifications")
+    notificationStream = Constants.users
+        .doc(Constants.uid())
+        .collection("notifications")
         .snapshots()
         .listen((snapshots) {
       var docs = snapshots.docs.where((element) => element.exists).toList();
       notifications = List.generate(docs.length,
-              (index) => NotificationModel.fromMap(docs[index].data()));
+          (index) => NotificationModel.fromMap(docs[index].data()));
       notifyListeners();
     });
   }

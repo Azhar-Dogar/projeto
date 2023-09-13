@@ -9,9 +9,7 @@ import 'extras/time_ago_text.dart';
 import 'firebase_options.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-
 Future<void> main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
@@ -23,7 +21,6 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -31,23 +28,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_)=> DataProvider()),
+        ChangeNotifierProvider(create: (_) => DataProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
         locale: const Locale("pt"),
-
         theme: ThemeData(
           appBarTheme: AppBarTheme(
-            backgroundColor: CColors.white,
-            elevation: 0,
-            titleTextStyle: AppTextStyles.subTitleMedium(),
-            iconTheme: IconThemeData(
-              color: CColors.black,
-            )
-          ),
-
-          colorScheme: ColorScheme.fromSeed(seedColor: CColors.getMaterialColor()),
+              backgroundColor: CColors.white,
+              elevation: 0,
+              titleTextStyle: AppTextStyles.subTitleMedium(),
+              iconTheme: IconThemeData(
+                color: CColors.black,
+              )),
+          colorScheme:
+              ColorScheme.fromSeed(seedColor: CColors.getMaterialColor()),
           useMaterial3: false,
         ),
         home: const SplashScreen(),
