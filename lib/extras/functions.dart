@@ -136,8 +136,8 @@ class Functions {
       date1.month == date2.month &&
       date1.day == date2.day;
 
-
-  static void sendNotification(NotificationModel notification, String receiver){
+  static void sendNotification(
+      NotificationModel notification, String receiver) {
     var doc = Constants.users.doc(receiver).collection("notifications").doc();
     notification.id = doc.id;
     doc.set(notification.toMap());
