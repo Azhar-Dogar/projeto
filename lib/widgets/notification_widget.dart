@@ -46,11 +46,17 @@ class NotificationWidget extends StatelessWidget {
     return InkWell(
       onTap: isBooking
           ? () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return requestsLessonDialogue(context);
-                  });
+              BookingModel bookingModel =
+                  BookingModel.fromMap(notification.metaData!);
+              BookingModel? updatedBooking =
+                  context.read<DataProvider>().getbookingById(bookingModel.id);
+              if (updatedBooking!.status == "pending") {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return requestsLessonDialogue(context);
+                    });
+              }
             }
           : null,
       child: Column(
