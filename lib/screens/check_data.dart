@@ -19,33 +19,13 @@ class CheckData extends StatefulWidget {
 class _CheckDataState extends State<CheckData> {
   @override
   void initState() {
-
-    listenLocation();
     super.initState();
   }
 
   listenLocation() async {
-
-    // await bg.BackgroundGeolocation.stopBackgroundTask(0);
-    ////
-    // 1.  Listen to events (See docs for all 12 available events).
-    //
-
-    // Fired whenever a location is recorded
     bg.BackgroundGeolocation.onLocation((bg.Location location) {
-      print("object1");
       saveData(location);
     });
-
-    // Fired whenever the plugin changes motion-state (stationary->moving and vice-versa)
-
-
-    ////
-    // 2.  Configure the plugin
-    //
-
-    // bg.BackgroundGeolocation.stop();
-
     bg.BackgroundGeolocation.ready(bg.Config(
         desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
         distanceFilter: 10.0,
@@ -55,44 +35,38 @@ class _CheckDataState extends State<CheckData> {
         logLevel: bg.Config.LOG_LEVEL_VERBOSE
     )).then((bg.State state) {
       if (!state.enabled) {
-        ////
-        // 3.  Start the plugin.
-        //
         bg.BackgroundGeolocation.start();
       }
     });
   }
 
-  saveData(bg.Location location){
+  saveData(bg.Location location) async {
     if(Constants.user() != null){
-      print("object1111");
-
-      FirebaseFirestore.instance.collection("location").doc(Constants.uid()).set({
+      FirebaseDatabase _database =
+      FirebaseDatabase(app: null,databaseURL: "https://mazzi-b3641-default-rtdb.europe-west1.firebasedatabase.app/");
+      final databaseReference = _database.reference();
+      await databaseReference.child("location")
+          .child(Constants.uid()).set({
         "latitude": location.coords.latitude,
         "longitude": location.coords.longitude,
       });
-      // FirebaseDatabase.instance.ref("location").child(Constants.uid()).set({
-      //   "latitude": location.coords.latitude,
-      //   "longitude": location.coords.longitude,
-      // }).then((value){
-      //   print("hogya");
-      // }).catchError((error){
-      //   print("11111");
-      //   print(error);
-      // });
+
     }
   }
+
+  late DataProvider provider;
   @override
   Widget build(BuildContext context) {
 
     // Constants.auth().signOut();
     return Consumer<DataProvider>(
       builder: (context, data, child) {
-
+        provider = data;
         if(data.userModel != null){
           if(data.userModel!.isUser){
             return DashBoard();
           }else{
+            listenLocation();
             return InstructorDashboard();
           }
         }
