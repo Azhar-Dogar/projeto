@@ -219,31 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Row(
       children: [
-        InkWell(
-          onTap: () async {
-            print("object");
-
-            FirebaseDatabase _database =
-            FirebaseDatabase(app: null,databaseURL: "https://mazzi-b3641-default-rtdb.europe-west1.firebasedatabase.app/");
-
-            final databaseReference = _database.reference();
-            if (FirebaseAuth.instance.currentUser != null) {
-              print("here");
-              await databaseReference
-                  .child('online-status')
-                  .child(FirebaseAuth.instance.currentUser!.uid)
-                  .set({"ok" : false});
-            }
-            // try{
-            //   await FirebaseDatabase.instance.ref().child("location").set("hhda");
-            //   print("object");
-            // }catch(e){
-            //   print(e);
-            // }
-
-          },
-          child: CircleAvatar(radius: 20, backgroundImage: avatarImage),
-        ),
+        CircleAvatar(radius: 20, backgroundImage: avatarImage),
         const MarginWidget(
           isHorizontal: true,
         ),
