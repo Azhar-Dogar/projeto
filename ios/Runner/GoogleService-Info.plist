@@ -30,5 +30,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:783700198550:ios:2ee7a9300c96249a2daeb7</string>
+	<key>DATABASE_URL</key>
+	<string>https://mazzi-b3641-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>
 </plist>
