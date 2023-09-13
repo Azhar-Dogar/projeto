@@ -8,6 +8,7 @@ class BookingModel {
   late String status;
   late bool studentRating;
   late bool instructorRating;
+  late String location;
 
   BookingModel({
     required this.id,
@@ -19,6 +20,7 @@ class BookingModel {
     this.status = "pending",
     this.studentRating = false,
     this.instructorRating = false,
+    required this.location,
   });
 
   Map<String, dynamic> toMap() {
@@ -32,6 +34,7 @@ class BookingModel {
       "status": status,
       "studentRating": studentRating,
       "instructorRating": instructorRating,
+      "location" : location,
     };
   }
 
@@ -45,5 +48,6 @@ class BookingModel {
     status = data["status"];
     studentRating = data["studentRating"] ?? false;
     instructorRating = data["instructorRating"] ?? false;
+    location = data["location"] ?? "";
   }
 }

@@ -133,7 +133,7 @@ class NotificationWidget extends StatelessWidget {
           ),
           const MarginWidget(),
           Text(
-            "Localização: Lorem Ipsum",
+            "Localização: ${bookingModel.location}",
             style: AppTextStyles.subTitleRegular(),
           ),
           Text(
