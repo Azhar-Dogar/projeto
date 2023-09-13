@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -101,7 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget upcomingBooking() {
-
     BookingModel? bookingModel =
         Functions.findFutureBooking(dataProvider.bookings);
     if (bookingModel == null) {
@@ -177,7 +177,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       factor: 0.3,
                     ),
                     CustomText(
-                      text: "${DateFormat("hh:mm a").format(bookingModel.date)}",
+                      text:
+                          "${DateFormat("hh:mm a").format(bookingModel.date)}",
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
@@ -216,7 +217,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Row(
       children: [
-        CircleAvatar(radius: 20, backgroundImage: avatarImage),
+        InkWell(
+          onTap: () async {
+
+            try{
+              await FirebaseDatabase.instance.ref().child("location").set("hhda");
+              print("object");
+            }catch(e){
+              print(e);
+            }
+
+          },
+          child: CircleAvatar(radius: 20, backgroundImage: avatarImage),
+        ),
         const MarginWidget(
           isHorizontal: true,
         ),

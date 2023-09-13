@@ -86,17 +86,6 @@ class _DashBoardState extends State<DashBoard> {
         handleAndroidBackButtonPress: true,
         resizeToAvoidBottomInset: true,
         hideNavigationBarWhenKeyboardShows: true,
-        // decoration: NavBarDecoration(
-        //   colorBehindNavBar: CColors.primary,
-        //   borderRadius: BorderRadius.circular(16.0),
-        // ),
-        // popAllScreensOnTapOfSelectedTab: true,
-        // popActionScreens: PopActionScreensType.all,
-        // itemAnimationProperties: const ItemAnimationProperties(
-        //   duration: Duration(milliseconds: 200),
-        //   curve: Curves.easeInOut,
-        // ),
-
         onWillPop: (context) async {
           return true;
         },

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/provider/data_provider.dart';
@@ -22,30 +24,28 @@ class _CheckDataState extends State<CheckData> {
     super.initState();
   }
 
-  listenLocation(){
+  listenLocation() async {
+
+    // await bg.BackgroundGeolocation.stopBackgroundTask(0);
     ////
     // 1.  Listen to events (See docs for all 12 available events).
     //
 
     // Fired whenever a location is recorded
     bg.BackgroundGeolocation.onLocation((bg.Location location) {
-      print('[location] - $location');
-
+      print("object1");
+      saveData(location);
     });
 
     // Fired whenever the plugin changes motion-state (stationary->moving and vice-versa)
-    bg.BackgroundGeolocation.onMotionChange((bg.Location location) {
-      print('[motionchange] - $location');
-    });
 
-    // Fired whenever the state of location-services changes.  Always fired at boot
-    bg.BackgroundGeolocation.onProviderChange((bg.ProviderChangeEvent event) {
-      print('[providerchange] - $event');
-    });
 
     ////
     // 2.  Configure the plugin
     //
+
+    // bg.BackgroundGeolocation.stop();
+
     bg.BackgroundGeolocation.ready(bg.Config(
         desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
         distanceFilter: 10.0,
@@ -61,6 +61,26 @@ class _CheckDataState extends State<CheckData> {
         bg.BackgroundGeolocation.start();
       }
     });
+  }
+
+  saveData(bg.Location location){
+    if(Constants.user() != null){
+      print("object1111");
+
+      FirebaseFirestore.instance.collection("location").doc(Constants.uid()).set({
+        "latitude": location.coords.latitude,
+        "longitude": location.coords.longitude,
+      });
+      // FirebaseDatabase.instance.ref("location").child(Constants.uid()).set({
+      //   "latitude": location.coords.latitude,
+      //   "longitude": location.coords.longitude,
+      // }).then((value){
+      //   print("hogya");
+      // }).catchError((error){
+      //   print("11111");
+      //   print(error);
+      // });
+    }
   }
   @override
   Widget build(BuildContext context) {
