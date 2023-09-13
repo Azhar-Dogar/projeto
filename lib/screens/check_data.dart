@@ -4,10 +4,64 @@ import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/dashboard_screen.dart';
 import 'package:projeto/screens/instructor/instructor_dashboard.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 
-class CheckData extends StatelessWidget {
+
+class CheckData extends StatefulWidget {
   const CheckData({super.key});
 
+  @override
+  State<CheckData> createState() => _CheckDataState();
+}
+
+class _CheckDataState extends State<CheckData> {
+  @override
+  void initState() {
+
+    listenLocation();
+    super.initState();
+  }
+
+  listenLocation(){
+    ////
+    // 1.  Listen to events (See docs for all 12 available events).
+    //
+
+    // Fired whenever a location is recorded
+    bg.BackgroundGeolocation.onLocation((bg.Location location) {
+      print('[location] - $location');
+
+    });
+
+    // Fired whenever the plugin changes motion-state (stationary->moving and vice-versa)
+    bg.BackgroundGeolocation.onMotionChange((bg.Location location) {
+      print('[motionchange] - $location');
+    });
+
+    // Fired whenever the state of location-services changes.  Always fired at boot
+    bg.BackgroundGeolocation.onProviderChange((bg.ProviderChangeEvent event) {
+      print('[providerchange] - $event');
+    });
+
+    ////
+    // 2.  Configure the plugin
+    //
+    bg.BackgroundGeolocation.ready(bg.Config(
+        desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+        distanceFilter: 10.0,
+        stopOnTerminate: false,
+        startOnBoot: true,
+        debug: true,
+        logLevel: bg.Config.LOG_LEVEL_VERBOSE
+    )).then((bg.State state) {
+      if (!state.enabled) {
+        ////
+        // 3.  Start the plugin.
+        //
+        bg.BackgroundGeolocation.start();
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
 

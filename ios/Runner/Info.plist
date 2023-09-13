@@ -34,6 +34,12 @@
 	<string>Example usage description</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+    <key>NSMotionUsageDescription</key>
+    <string>Motion usage description</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>When in use description</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Always/When in use description</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
