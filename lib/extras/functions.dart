@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
@@ -179,5 +180,29 @@ class Functions {
     totalRating = (totalRating / userModel.reviews.length);
 
     return totalRating;
+  }
+
+  static Future<String> getAddressFromLatLng(double lat, double long) async {
+    String location = "";
+
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
+
+      if (placemarks != null && placemarks.isNotEmpty) {
+        Placemark placemark = placemarks[0];
+        String? city = placemark.locality;
+        String? country = placemark.country;
+
+        location = "${city}, ${country}";
+        print('City: $city');
+        print('Country: $country');
+      } else {
+        print('No placemarks found.');
+      }
+    } catch (e) {
+      print('Error getting location: $e');
+    }
+
+    return location;
   }
 }

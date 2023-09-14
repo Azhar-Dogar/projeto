@@ -45,6 +45,8 @@ class _SearchInstructorState extends State<SearchInstructor> {
 
   String? user;
 
+  String locationName = "Localização atual";
+
   Future<Marker> _addCustomMarker(
       double latitude, double longitude, String userId) async {
     final Uint8List markIcons = await getImages('assets/icons/car.png', 100);
@@ -89,12 +91,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
     }
 
     setState(() {});
-    // print(_markers.length);
-    // Future.delayed(Duration(milliseconds: 10),(){
-    //   setState(() {
-    //
-    //   });
-    // });
+
   }
 
   bool isFirst = true;
@@ -183,6 +180,14 @@ class _SearchInstructorState extends State<SearchInstructor> {
       myLocationButtonEnabled: false,
       onMapCreated: (GoogleMapController controller) {
         this.controller = controller;
+      },
+      onCameraMove: (position) async {
+        double latitude = position.target.latitude;
+        double longitude = position.target.longitude;
+        locationName = await Functions.getAddressFromLatLng(latitude, longitude);
+        setState(() {
+
+        });
       },
       // myLocationEnabled: true,
       markers: _markers,
@@ -303,7 +308,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
               ),
             ),
             Text(
-              "Localização atual",
+              locationName,
               style: AppTextStyles.captionRegular(),
             )
           ],

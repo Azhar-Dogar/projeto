@@ -21,6 +21,7 @@ import 'package:projeto/widgets/textfield_widget.dart';
 import '../../../extras/colors.dart';
 import 'instructors_screen.dart';
 import 'package:geocoding/geocoding.dart';
+
 class SchedulingScreen extends StatefulWidget {
   const SchedulingScreen({super.key, required this.instructor});
 
@@ -221,18 +222,17 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
 
                     DocumentReference doc = Constants.bookings.doc();
 
-                    String location = await getAddressFromLatLng();
+                    String location = await getCity();
 
                     int totalCl = int.parse(selectedClasses!);
                     BookingModel booking = BookingModel(
-                      id: doc.id,
-                      date: selectedDate,
-                      amount: double.parse(amount.text) * totalCl,
-                      instructorID: instructor.uid,
-                      totalClasses: totalCl,
-                      userID: Constants.uid(),
-                      location: location
-                    );
+                        id: doc.id,
+                        date: selectedDate,
+                        amount: double.parse(amount.text) * totalCl,
+                        instructorID: instructor.uid,
+                        totalClasses: totalCl,
+                        userID: Constants.uid(),
+                        location: location);
 
                     await doc.set(booking.toMap());
 
@@ -341,25 +341,13 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
     );
   }
 
-  Future<String> getAddressFromLatLng() async {
-
+  Future<String> getCity() async {
     DataProvider dataProvider = context.read<DataProvider>();
     String location = "";
 
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(dataProvider.latitude!, dataProvider.longitude!);
-
-      if (placemarks != null && placemarks.isNotEmpty) {
-        Placemark placemark = placemarks[0];
-        String? city = placemark.locality;
-        String? country = placemark.country;
-
-        location = "${city}, ${country}";
-        print('City: $city');
-        print('Country: $country');
-      } else {
-        print('No placemarks found.');
-      }
+      location = await Functions.getAddressFromLatLng(
+          dataProvider.latitude!, dataProvider.longitude!);
     } catch (e) {
       print('Error getting location: $e');
     }
