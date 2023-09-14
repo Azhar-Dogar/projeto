@@ -359,79 +359,87 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
               ],
             ),
             const DividerWidget(),
-            if (bookingModel.status == "pending" ||
-                bookingModel.status == "confirmed" ||
-                bookingModel.status == "denied") ...[
-              const MarginWidget(factor: 0.2),
-              ButtonWidget(
-                  name: "Alterar instrutor",
-                  onPressed: () {
-                    context.push(child: InstructorsScreen(callBack: (value) {
-                      try {
-                        BookingModel updated =
-                            BookingModel.fromMap(bookingModel.toMap());
-                        updated.instructorID = value.uid;
-                        updated.status = "pending";
-                        Constants.bookings
-                            .doc(updated.id)
-                            .update(updated.toMap());
-                      } on FirebaseException catch (e) {
-                        print(e);
-                      }
-                    }));
-                  }),
-              if (bookingModel.status != "denied") ...[
-                const MarginWidget(),
-                Align(
-                  alignment: Alignment.center,
-                  child: InkWell(
-                    onTap: () {
-                      try {
-                        Constants.bookings.doc(bookingModel.id).delete();
-                      } on FirebaseException catch (e) {
-                        print(e);
-                      }
-                    },
-                    child: Text(
-                      "Cancelar aula",
-                      style:
-                          AppTextStyles.captionMedium(color: CColors.primary),
-                    ),
-                  ),
-                ),
-              ]
-            ] else ...[
-              const MarginWidget(),
-              if (!bookingModel.instructorRating) ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.star_border,
-                      color: CColors.primary,
-                    ),
-                    const MarginWidget(isHorizontal: true),
-                    InkWell(
+
+            if(bookingModel.status == "started")...[
+              Text(
+                "As aulas são iniciadas",
+                style: AppTextStyles.captionMedium(color: CColors.primary),
+              )
+            ]else...[
+              if (bookingModel.status == "pending" ||
+                  bookingModel.status == "confirmed" ||
+                  bookingModel.status == "denied") ...[
+                const MarginWidget(factor: 0.2),
+                ButtonWidget(
+                    name: "Alterar instrutor",
+                    onPressed: () {
+                      context.push(child: InstructorsScreen(callBack: (value) {
+                        try {
+                          BookingModel updated =
+                          BookingModel.fromMap(bookingModel.toMap());
+                          updated.instructorID = value.uid;
+                          updated.status = "pending";
+                          Constants.bookings
+                              .doc(updated.id)
+                              .update(updated.toMap());
+                        } on FirebaseException catch (e) {
+                          print(e);
+                        }
+                      }));
+                    }),
+                if (bookingModel.status != "denied") ...[
+                  const MarginWidget(),
+                  Align(
+                    alignment: Alignment.center,
+                    child: InkWell(
                       onTap: () {
-                        context.push(
-                            child: ReviewInstructor(
-                          instructor: instructor,
-                          bookingModel: bookingModel,
-                        ));
+                        try {
+                          Constants.bookings.doc(bookingModel.id).delete();
+                        } on FirebaseException catch (e) {
+                          print(e);
+                        }
                       },
                       child: Text(
-                        "Avalie seu instrutor",
+                        "Cancelar aula",
                         style:
-                            AppTextStyles.captionMedium(color: CColors.primary),
+                        AppTextStyles.captionMedium(color: CColors.primary),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ]
               ] else ...[
-                Text(
-                  "Obrigado por avaliar seu instrutor.",
-                  style: AppTextStyles.captionMedium(color: CColors.primary),
-                )
+                const MarginWidget(),
+                if (!bookingModel.instructorRating) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.star_border,
+                        color: CColors.primary,
+                      ),
+                      const MarginWidget(isHorizontal: true),
+                      InkWell(
+                        onTap: () {
+                          context.push(
+                              child: ReviewInstructor(
+                                instructor: instructor,
+                                bookingModel: bookingModel,
+                              ));
+                        },
+                        child: Text(
+                          "Avalie seu instrutor",
+                          style:
+                          AppTextStyles.captionMedium(color: CColors.primary),
+                        ),
+                      ),
+                    ],
+                  ),
+                ] else ...[
+                  Text(
+                    "Obrigado por avaliar seu instrutor.",
+                    style: AppTextStyles.captionMedium(color: CColors.primary),
+                  )
+                ],
               ],
             ],
             const MarginWidget(factor: 0.5),
@@ -470,6 +478,11 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
           height: 18,
         );
       case "completed":
+        return Icon(
+          Icons.done,
+          size: 18,
+        );
+      case "started":
         return Icon(
           Icons.done,
           size: 18,

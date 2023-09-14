@@ -14,6 +14,7 @@ import 'package:utility_extensions/utility_extensions.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebasestorage;
 import 'package:firebase_storage/firebase_storage.dart';
 import '../model/booking_model.dart';
+import '../model/user_model.dart';
 import '../widgets/loading_widget.dart';
 import 'app_textstyles.dart';
 import 'colors.dart';
@@ -168,5 +169,15 @@ class Functions {
     final String amPm = amPmFormat.format(time);
 
     return '${hour}h$minute';
+  }
+
+  static double getRating(UserModel userModel) {
+    double totalRating = 0;
+    for (var r in userModel.reviews) {
+      totalRating += r.totalR;
+    }
+    totalRating = (totalRating / userModel.reviews.length);
+
+    return totalRating;
   }
 }

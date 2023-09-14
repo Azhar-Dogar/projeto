@@ -6,9 +6,10 @@ import '../extras/app_textstyles.dart';
 import '../extras/colors.dart';
 
 class ButtonWidget extends StatelessWidget {
-  ButtonWidget({super.key,required this.name,required this.onPressed});
+  ButtonWidget({super.key,required this.name,required this.onPressed, this.enable = true });
 String name;
 void Function()? onPressed;
+bool enable;
   @override
   Widget build(BuildContext context) {
    double width = MediaQuery.of(context).size.width;
@@ -20,7 +21,7 @@ void Function()? onPressed;
           style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
-              backgroundColor: CColors.primary),
+              backgroundColor:  enable ? CColors.primary : CColors.disable),
           onPressed: onPressed,
           child: Text(
             name,

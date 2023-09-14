@@ -93,6 +93,7 @@ class DataProvider with ChangeNotifier {
   List<BookingModel> bookings = [];
 
   getBookings() {
+    print("objadsfcdsfect");
     var query = Constants.bookings.where("userID", isEqualTo: Constants.uid());
     if (!userModel!.isUser) {
       query =
@@ -100,6 +101,7 @@ class DataProvider with ChangeNotifier {
     }
     bookingStream = query.snapshots().listen((snapshot) {
       var docs = snapshot.docs.where((element) => element.exists).toList();
+      print(docs.length);
       bookings = List.generate(
           docs.length, (index) => BookingModel.fromMap(docs[index].data()));
       notifyListeners();
@@ -298,7 +300,7 @@ class DataProvider with ChangeNotifier {
         var distance = Geolocator.distanceBetween(
             _latitude!, _longitude!, c["latitude"] as double, c["longitude"] as double);
 
-        if(distance < 10000){
+        if(distance < 10000 || true){
           var user = users.where((element) => element.uid == child.key);
           if(user.isNotEmpty){
             nearbyInstructors.add(user.first);

@@ -206,6 +206,7 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
   }
 
   Widget showBookings({bool isSliver = false, bool isYear = false}) {
+    print(dataProvider.bookings.length);
     List<BookingModel> bookings;
     if (isYear) {
       bookings = dataProvider.bookings
@@ -333,23 +334,43 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
               ],
             ),
             const DividerWidget(),
-            if (bookingModel.status == "confirmed") ...[
+            if (bookingModel.status == "confirmed" ||
+                bookingModel.status == "started") ...[
+              ButtonWidget(
+                  enable: bookingModel.status == "confirmed" ? true : false,
+                  name: "Iniciar aula",
+                  onPressed: bookingModel.status == "confirmed"
+                      ? () {
+                          try {
+                            BookingModel updated =
+                                BookingModel.fromMap(bookingModel.toMap());
+                            updated.status = "completed";
+                            Constants.bookings
+                                .doc(updated.id)
+                                .update(updated.toMap());
+                          } on FirebaseException catch (e) {
+                            print(e);
+                          }
+                        }
+                      : null),
+              const MarginWidget(),
               ButtonWidget(
                   name: "Finalizar Aula",
-                  onPressed: () {
-                    context.push(child: InstructorsScreen(callBack: (value) {
-                      try {
-                        BookingModel updated =
-                            BookingModel.fromMap(bookingModel.toMap());
-                        updated.status = "completed";
-                        Constants.bookings
-                            .doc(updated.id)
-                            .update(updated.toMap());
-                      } on FirebaseException catch (e) {
-                        print(e);
-                      }
-                    }));
-                  }),
+                  enable: bookingModel.status == "started" ? true : false,
+                  onPressed: bookingModel.status == "started"
+                      ? () {
+                          try {
+                            BookingModel updated =
+                                BookingModel.fromMap(bookingModel.toMap());
+                            updated.status = "completed";
+                            Constants.bookings
+                                .doc(updated.id)
+                                .update(updated.toMap());
+                          } on FirebaseException catch (e) {
+                            print(e);
+                          }
+                        }
+                      : null),
             ] else if (bookingModel.status == "completed") ...[
               if (bookingModel.studentRating) ...[
                 Text(

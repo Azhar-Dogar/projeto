@@ -9,14 +9,21 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:projeto/extras/app_assets.dart';
+import 'package:projeto/model/car_model.dart';
+import 'package:projeto/model/user_model.dart';
 import 'package:projeto/provider/data_provider.dart';
+import 'package:projeto/screens/dashboard/home/scheduling.dart';
+import 'package:projeto/widgets/c_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import '../../../extras/app_textstyles.dart';
 import '../../../extras/colors.dart';
+import '../../../extras/functions.dart';
+import '../../../provider/chat_provider.dart';
 import '../../../widgets/c_profile_app_bar.dart';
+import '../chat/chat_inbox.dart';
 
 class SearchInstructor extends StatefulWidget {
   const SearchInstructor({super.key});
@@ -36,9 +43,10 @@ class _SearchInstructorState extends State<SearchInstructor> {
   bool showInstructor = false;
   Set<Marker> _markers = {};
 
-
   String? user;
-  Future<Marker> _addCustomMarker(double latitude, double longitude, String userId) async {
+
+  Future<Marker> _addCustomMarker(
+      double latitude, double longitude, String userId) async {
     final Uint8List markIcons = await getImages('assets/icons/car.png', 100);
     LatLng markerLocation =
         LatLng(latitude, longitude); // Replace with your marker's coordinates
@@ -52,7 +60,6 @@ class _SearchInstructorState extends State<SearchInstructor> {
       markerId: MarkerId(userId),
       position: markerLocation,
       icon: BitmapDescriptor.fromBytes(markIcons),
-
     );
   }
 
@@ -61,30 +68,37 @@ class _SearchInstructorState extends State<SearchInstructor> {
   addMarkers() async {
     _markers = {};
     print(dataProvider.instructorsLocation);
-    for(var location in dataProvider.instructorsLocation){
+    for (var location in dataProvider.instructorsLocation) {
+      var distance = Geolocator.distanceBetween(dataProvider.latitude!,
+          dataProvider.longitude!, location["latitude"], location["longitude"]);
 
-
-      var distance = Geolocator.distanceBetween(
-          dataProvider.latitude!, dataProvider.longitude!, location["latitude"], location["longitude"]);
-
-      if(this.distance == "2 km"){
-        if(distance <= 2000){
-          _markers.add(await _addCustomMarker(location["latitude"], location["longitude"], location["user"]));
+      if (this.distance == "2 km") {
+        if (distance <= 2000) {
+          _markers.add(await _addCustomMarker(
+              location["latitude"], location["longitude"], location["user"]));
         }
-      }else if(this.distance == "5 km"){
-        if(distance <= 5000){
-          _markers.add(await _addCustomMarker(location["latitude"], location["longitude"], location["user"]));
+      } else if (this.distance == "5 km") {
+        if (distance <= 5000) {
+          _markers.add(await _addCustomMarker(
+              location["latitude"], location["longitude"], location["user"]));
         }
-      }else{
-        _markers.add(await _addCustomMarker(location["latitude"], location["longitude"], location["user"]));
+      } else {
+        _markers.add(await _addCustomMarker(
+            location["latitude"], location["longitude"], location["user"]));
       }
     }
-    print(_markers.length);
+
     setState(() {});
+    // print(_markers.length);
+    // Future.delayed(Duration(milliseconds: 10),(){
+    //   setState(() {
+    //
+    //   });
+    // });
   }
 
-
   bool isFirst = true;
+
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -92,12 +106,11 @@ class _SearchInstructorState extends State<SearchInstructor> {
     return Consumer<DataProvider>(builder: (context, data, child) {
       dataProvider = data;
 
-      if(isFirst){
+      if (isFirst) {
         dataProvider.markersUpdate = true;
         isFirst = false;
       }
-      if(dataProvider.markersUpdate){
-
+      if (dataProvider.markersUpdate) {
         print("object");
         addMarkers();
         dataProvider.markersUpdate = false;
@@ -141,7 +154,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
       children: [
         IconButton(
           onPressed: () {
-            if(controller != null){
+            if (controller != null) {
               controller!.animateCamera(CameraUpdate.zoomIn());
             }
           },
@@ -149,7 +162,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
         ),
         IconButton(
           onPressed: () {
-            if(controller != null){
+            if (controller != null) {
               controller!.animateCamera(CameraUpdate.zoomOut());
             }
           },
@@ -159,8 +172,8 @@ class _SearchInstructorState extends State<SearchInstructor> {
     );
   }
 
-
   GoogleMapController? controller;
+
   Widget googleMap() {
     return GoogleMap(
       initialCameraPosition: CameraPosition(
@@ -177,6 +190,20 @@ class _SearchInstructorState extends State<SearchInstructor> {
   }
 
   Widget instructorInfo() {
+    UserModel? instructor = dataProvider.getUserById(user!);
+
+    CarModel? carModel = dataProvider.cars
+        .where((element) => element.isPrimary && element.uid == instructor!.uid)
+        .firstOrNull;
+
+    ImageProvider<Object>? avatarImage;
+
+    if (dataProvider.userModel!.image != null) {
+      avatarImage = NetworkImage(instructor!.image!);
+    } else {
+      avatarImage = AssetImage(AppImages.profile);
+    }
+
     return Container(
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
@@ -194,29 +221,16 @@ class _SearchInstructorState extends State<SearchInstructor> {
                 Column(
                   children: [
                     CircleAvatar(
-                      backgroundImage: AssetImage(AppImages.instructor_1),
+                      backgroundImage: avatarImage,
                       radius: 25,
                     ),
                     const MarginWidget(
                       factor: 0.5,
                     ),
-                    RatingBar.builder(
+                    CRatingBar(
+                      rating: Functions.getRating(instructor!),
                       itemSize: 10,
-                      initialRating: 3,
-                      minRating: 1,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
-                      itemBuilder: (context, _) => const Icon(
-                        Icons.star,
-                        size: 7,
-                        color: Colors.amber,
-                      ),
-                      onRatingUpdate: (rating) {
-                        print(rating);
-                      },
-                    )
+                    ),
                   ],
                 ),
                 const MarginWidget(
@@ -228,23 +242,35 @@ class _SearchInstructorState extends State<SearchInstructor> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Jacob Jones",
+                        "${instructor.name}",
                         style: AppTextStyles.subTitleMedium(),
                       ),
                       Text(
-                        "Celta, 2018",
+                        "${carModel!.vehicle}, ${carModel.year}",
                         style: AppTextStyles.subTitleRegular(),
                       ),
                       Text(
-                        "R\$ 80,00 Hora / Aula",
+                        "R\$ ${instructor.amount}",
                         style: AppTextStyles.subTitleRegular(),
                       )
                     ],
                   ),
                 ),
-                Icon(
-                  Icons.messenger_outline,
-                  color: CColors.primary,
+                InkWell(
+                  onTap: () {
+                    context.push(
+                      child: ChangeNotifierProvider(
+                        create: (_) => ChatProvider(
+                            sender: dataProvider.userModel!,
+                            receiver: instructor),
+                        child: InboxScreen(),
+                      ),
+                    );
+                  },
+                  child: Icon(
+                    Icons.messenger_outline,
+                    color: CColors.primary,
+                  ),
                 )
               ],
             ),
@@ -252,13 +278,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
             ButtonWidget(
                 name: "Agendar",
                 onPressed: () {
-                  setState(() {
-                    showInstructor = false;
-                  });
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) =>
-                          noInstructorAlert(context));
+                  context.push(child: SchedulingScreen(instructor: instructor));
                 })
           ],
         ),
@@ -359,6 +379,14 @@ class _SearchInstructorState extends State<SearchInstructor> {
                                   distance = e;
                                 });
                                 Navigator.pop(context);
+                                // Future.delayed(Duration(milliseconds: 20),(){
+                                //   if (_markers.isEmpty) {
+                                //     showDialog(
+                                //         context: context,
+                                //         builder: (BuildContext context) =>
+                                //             noInstructorAlert(context));
+                                //   }
+                                // });
                               },
                               child: Padding(
                                 padding:

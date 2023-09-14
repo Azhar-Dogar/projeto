@@ -75,7 +75,7 @@ class InstructorWidget extends StatelessWidget {
                             // },),
                             RatingBar.builder(
                               itemSize: 18,
-                              initialRating: 3,
+                              initialRating: Functions.getRating(user),
                               minRating: 1,
                               direction: Axis.horizontal,
                               allowHalfRating: true,

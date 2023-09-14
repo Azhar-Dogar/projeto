@@ -28,6 +28,8 @@ class CColors {
   static var rating = const Color(0xffEBEF21);
   static var pink = const Color(0xffF23131).withOpacity(0.2);
   static var blueShade = const Color(0xff318AF2).withOpacity(0.2);
+  static Color disable = const Color(0xffA9A9A9);
+
 
 
 
