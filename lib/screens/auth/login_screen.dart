@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
+import 'package:projeto/screens/auth/forgot_password.dart';
 import 'package:projeto/screens/auth/signup_screen.dart';
 import 'package:projeto/screens/check_data.dart';
 import 'package:utility_extensions/utility_extensions.dart';
@@ -86,13 +87,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        "Esqueceu a senha?",
-                        style: AppTextStyles.poppins(
-                            style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white)),
+                      InkWell(
+                        onTap : (){
+                          context.push(child: ForgotPassword());
+                        },
+                        child: Text(
+                          "Esqueceu a senha?",
+                          style: AppTextStyles.poppins(
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white)),
+                        ),
                       ),
                     ],
                   ),

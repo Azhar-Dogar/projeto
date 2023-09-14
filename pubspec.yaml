@@ -57,6 +57,9 @@ dependencies:
   background_fetch: ^1.2.1
   geocoding: ^2.1.0
 
+  email_validator: ^2.1.17
+
+
 
 dev_dependencies:
   flutter_test:
