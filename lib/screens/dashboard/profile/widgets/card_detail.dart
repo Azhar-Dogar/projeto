@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/model/card_model.dart';
-import 'package:projeto/provider/data_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
-import 'package:projeto/screens/dashboard/profile/credit/add_new_card.dart';
 import '../../../../extras/app_assets.dart';
 import '../../../../extras/app_textstyles.dart';
 import '../../../../extras/colors.dart';
 import '../../../../widgets/custom_asset_image.dart';
 import '../../../../widgets/margin_widget.dart';
+import '../wallet/add_new_card.dart';
 
 class CardDetail extends StatelessWidget {
   const CardDetail({Key? key, this.isEdit = false, required this.cardModel})

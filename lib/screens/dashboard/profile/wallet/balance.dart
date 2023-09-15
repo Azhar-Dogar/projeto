@@ -6,12 +6,12 @@ import 'package:projeto/provider/data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/functions.dart';
-import 'package:projeto/screens/dashboard/profile/credit/add_balance.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/card_detail.dart';
 import 'package:projeto/widgets/c_profile_app_bar.dart';
 import 'package:projeto/widgets/divider_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 
+import 'add_balance.dart';
 import 'add_new_card.dart';
 
 class Balance extends StatefulWidget {

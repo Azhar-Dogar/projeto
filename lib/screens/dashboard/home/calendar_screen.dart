@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
+import 'package:utility_extensions/extensions/context_extensions.dart';
 import '../../../widgets/custom_calendar_Widget.dart';
 
 typedef DateValue = void Function(DateTime);
@@ -43,6 +44,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 selected = date;
               });
               widget.callBack(date);
+
+              context.pop();
 
             }),
       ),
