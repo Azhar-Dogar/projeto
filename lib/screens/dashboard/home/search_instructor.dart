@@ -91,7 +91,6 @@ class _SearchInstructorState extends State<SearchInstructor> {
     }
 
     setState(() {});
-
   }
 
   bool isFirst = true;
@@ -120,11 +119,13 @@ class _SearchInstructorState extends State<SearchInstructor> {
               child: Stack(
                 children: [
                   googleMap(),
-                  Positioned(
-                    right: 0,
-                    bottom: 60,
-                    child: zoomControlls(),
-                  ),
+                  if (Platform.isIOS) ...[
+                    Positioned(
+                      right: 0,
+                      bottom: 60,
+                      child: zoomControlls(),
+                    ),
+                  ],
                   Positioned(
                     top: 15,
                     left: 15,
@@ -184,10 +185,9 @@ class _SearchInstructorState extends State<SearchInstructor> {
       onCameraMove: (position) async {
         double latitude = position.target.latitude;
         double longitude = position.target.longitude;
-        locationName = await Functions.getAddressFromLatLng(latitude, longitude);
-        setState(() {
-
-        });
+        locationName =
+            await Functions.getAddressFromLatLng(latitude, longitude);
+        setState(() {});
       },
       // myLocationEnabled: true,
       markers: _markers,

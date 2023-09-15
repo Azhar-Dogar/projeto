@@ -38,8 +38,8 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
   int _selectedIndex = 0;
 
   DateTime selectedDate = DateTime.now();
-  late int yearSelected;
-  late int monthSelected;
+   int? yearSelected;
+   int? monthSelected;
 
   late DataProvider dataProvider;
 
@@ -47,9 +47,6 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
   void initState() {
     super.initState();
 
-    DateTime now = DateTime.now();
-    yearSelected = now.year;
-    monthSelected = now.month - 1;
   }
 
   @override
@@ -107,25 +104,30 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
           const MarginWidget(
             isSliver: true,
           ),
-          SliverGrid.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                childAspectRatio: 1.34,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 25),
-            itemBuilder: (ctx, index) {
-              return yearBox(month: index);
-            },
-            itemCount: Constants.months.length,
-          ),
-          const MarginWidget(
-            isSliver: true,
-          ),
-          const DividerWidget().toSliver,
-          const MarginWidget(
-            isSliver: true,
-          ),
-          showBookings(isSliver: true, isYear: true),
+          if(yearSelected != null)...[
+            SliverGrid.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  childAspectRatio: 1.34,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 25),
+              itemBuilder: (ctx, index) {
+                return yearBox(month: index);
+              },
+              itemCount: Constants.months.length,
+            ),
+            const MarginWidget(
+              isSliver: true,
+            ),
+            const DividerWidget().toSliver,
+            const MarginWidget(
+              isSliver: true,
+            ),
+          ],
+
+          if(yearSelected != null && monthSelected != null)...[
+            showBookings(isSliver: true, isYear: true),
+          ],
           const MarginWidget(
             isSliver: true,
           ),
@@ -211,7 +213,7 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
     if (isYear) {
       bookings = dataProvider.bookings
           .where((element) =>
-              monthSelected + 1 == element.date.month &&
+              monthSelected! + 1 == element.date.month &&
               yearSelected == element.date.year)
           .toList();
     } else {

@@ -81,7 +81,7 @@ class UserModel {
     number = data["number"];
     complement = data["complement"];
 
-    credits = data["credits"] ?? 0;
+    credits = data["credits"]?.toDouble() ?? 0;
 
     isUser = data["isUser"];
 

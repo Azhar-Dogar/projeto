@@ -3,18 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/constants.dart';
+import 'package:projeto/model/card_model.dart';
 import 'package:projeto/provider/data_provider.dart';
+import 'package:projeto/screens/dashboard/profile/wallet/success_message.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
-import 'package:projeto/screens/dashboard/profile/credit/add_new_card.dart';
-import 'package:projeto/screens/dashboard/profile/credit/bar_code_scan.dart';
-import 'package:projeto/screens/dashboard/profile/credit/success_message.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/card_detail.dart';
 import 'package:projeto/widgets/c_profile_app_bar.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import '../../../../extras/functions.dart';
 import '../../../../widgets/divider_widget.dart';
+import 'add_new_card.dart';
+import 'bar_code_scan.dart';
 
 class SelectPaymentType extends StatefulWidget {
   const SelectPaymentType({Key? key, required this.amount}) : super(key: key);
@@ -33,6 +34,18 @@ class _SelectPaymentTypeState extends State<SelectPaymentType> {
   String? selected;
 
   @override
+  void initState() {
+    super.initState();
+    dataProvider = context.read<DataProvider>();
+
+    CardModel? cardModel = dataProvider.userModel!.cardsList.where((element) => element.mainCard).firstOrNull;
+
+    if (cardModel != null) {
+      selected = cardModel.number;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     width = context.width;
     padding = width * 0.04;
@@ -48,6 +61,7 @@ class _SelectPaymentTypeState extends State<SelectPaymentType> {
               ButtonWidget(
                   name: "Selecionar",
                   onPressed: () {
+                    print("here");
                     if (selected == null) {
                       Functions.showSnackBar(context, "Selecione a opção de pagamento primeiro");
                       return;

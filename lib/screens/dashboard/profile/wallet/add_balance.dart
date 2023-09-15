@@ -1,12 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
+import 'package:projeto/model/card_model.dart';
+import 'package:projeto/provider/data_provider.dart';
+import 'package:projeto/screens/dashboard/profile/wallet/select_payment_type.dart';
+import 'package:projeto/screens/dashboard/profile/wallet/success_message.dart';
+import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/functions.dart';
-import 'package:projeto/screens/dashboard/profile/credit/select_payment_type.dart';
 import 'package:projeto/widgets/c_profile_app_bar.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
+
+import '../../../../extras/constants.dart';
 
 class AddBalance extends StatefulWidget {
   const AddBalance({Key? key}) : super(key: key);
@@ -24,6 +31,14 @@ class _AddBalanceState extends State<AddBalance> {
 
   int selected = 5000;
 
+  late DataProvider dataProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    dataProvider = context.read<DataProvider>();
+  }
+
   @override
   Widget build(BuildContext context) {
     width = context.width;
@@ -37,25 +52,9 @@ class _AddBalanceState extends State<AddBalance> {
         child: Column(
           children: [
             amountSelection(),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    "Forma de Pagamento",
-                    style: AppTextStyles.captionRegular(),
-                  ),
-                ),
-                Text(
-                  "**** 1234 (Crédito)",
-                  style: AppTextStyles.captionRegular(),
-                ),
-                const MarginWidget(isHorizontal: true, factor: 0.5),
-                const Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 20,
-                ),
-              ],
-            ),
+            if (dataProvider.userModel!.cardsList.isNotEmpty) ...[
+              choosenCard(),
+            ],
             const MarginWidget(),
             ButtonWidget(
                 name: "Inserir Crédito",
@@ -66,15 +65,81 @@ class _AddBalanceState extends State<AddBalance> {
                   } else {
                     amount = selected.toDouble();
                   }
-                  Functions.push(
-                      context,
-                      SelectPaymentType(
-                        amount: amount,
-                      ));
+
+                  CardModel? model = dataProvider.userModel!.cardsList
+                      .where((element) => element.mainCard)
+                      .firstOrNull;
+
+                  if (model != null) {
+                    try {
+                    Constants.users.doc(Constants.uid()).update({
+                      "credits": amount + dataProvider.userModel!.credits!,
+                    });
+                  } on FirebaseException catch (e) {
+                    print(e);
+                  }
+
+                  otherC.text = "";
+
+                  context.push(child: const SuccessMessage());
+                  } else {
+                    Functions.push(
+                        context,
+                        SelectPaymentType(
+                          amount: amount,
+                        ));
+                  }
                 }),
             const MarginWidget(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget choosenCard() {
+    CardModel? cardModel = dataProvider.userModel!.cardsList
+        .where((element) => element.mainCard)
+        .firstOrNull;
+
+    double amount = 0;
+    if (selected == 0) {
+      if (otherC.text.isNotEmpty) {
+        amount = double.parse(otherC.text.trim());
+      }
+    } else {
+      amount = selected.toDouble();
+    }
+
+    return InkWell(
+      onTap: (){
+        if (amount != 0) {
+          Functions.push(
+              context,
+              SelectPaymentType(
+                amount: amount,
+              ));
+        }
+
+      },
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Forma de Pagamento",
+              style: AppTextStyles.captionRegular(),
+            ),
+          ),
+          Text(
+            "**** ${cardModel!.number.substring(cardModel.number.length - 4)} (Crédito)",
+            style: AppTextStyles.captionRegular(),
+          ),
+          const MarginWidget(isHorizontal: true, factor: 0.5),
+          const Icon(
+            Icons.arrow_forward_ios_rounded,
+            size: 20,
+          ),
+        ],
       ),
     );
   }

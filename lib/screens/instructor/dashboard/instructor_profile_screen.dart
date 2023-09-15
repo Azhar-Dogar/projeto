@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
@@ -12,14 +11,10 @@ import 'package:projeto/widgets/drop_down_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/functions.dart';
-import 'package:projeto/screens/dashboard/profile/credit/balance.dart';
-import 'package:projeto/screens/dashboard/profile/student_progress.dart';
 import 'package:projeto/screens/dashboard/profile/terms_condition.dart';
-import 'package:projeto/screens/dashboard/profile/widgets/profile_header_widget.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/margin_widget.dart';
-
 import '../../../generated/assets.dart';
 import '../../../widgets/textfield_widget.dart';
 import '../../auth/login_screen.dart';

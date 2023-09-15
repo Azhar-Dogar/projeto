@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/constants.dart';
@@ -37,19 +36,11 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
   int _selectedIndex = 0;
 
   DateTime selectedDate = DateTime.now();
-  late int yearSelected;
-  late int monthSelected;
+   int? yearSelected;
+   int? monthSelected;
 
   late DataProvider dataProvider;
 
-  @override
-  void initState() {
-    super.initState();
-
-    DateTime now = DateTime.now();
-    yearSelected = now.year;
-    monthSelected = now.month - 1;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,28 +97,34 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
           const MarginWidget(
             isSliver: true,
           ),
-          SliverGrid.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                childAspectRatio: 1.34,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 25),
-            itemBuilder: (ctx, index) {
-              return yearBox(month: index);
-            },
-            itemCount: Constants.months.length,
-          ),
-          const MarginWidget(
-            isSliver: true,
-          ),
-          const DividerWidget().toSliver,
-          const MarginWidget(
-            isSliver: true,
-          ),
-          showBookings(isSliver: true, isYear: true),
-          const MarginWidget(
-            isSliver: true,
-          ),
+          if(yearSelected != null)...[
+            SliverGrid.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  childAspectRatio: 1.34,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 25),
+              itemBuilder: (ctx, index) {
+                return yearBox(month: index);
+              },
+              itemCount: Constants.months.length,
+            ),
+            const MarginWidget(
+              isSliver: true,
+            ),
+            const DividerWidget().toSliver,
+            const MarginWidget(
+              isSliver: true,
+            ),
+          ],
+
+          if(yearSelected != null && monthSelected != null)...[
+            showBookings(isSliver: true, isYear: true),
+            const MarginWidget(
+              isSliver: true,
+            ),
+          ],
+
         ],
       ),
     );
@@ -209,7 +206,7 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
     if (isYear) {
       bookings = dataProvider.bookings
           .where((element) =>
-              monthSelected + 1 == element.date.month &&
+              monthSelected! + 1 == element.date.month &&
               yearSelected == element.date.year)
           .toList();
     } else {

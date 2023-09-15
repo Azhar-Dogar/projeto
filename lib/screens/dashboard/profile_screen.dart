@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
@@ -7,11 +6,12 @@ import 'package:projeto/extras/constants.dart';
 import 'package:projeto/generated/assets.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/auth/login_screen.dart';
+import 'package:projeto/screens/dashboard/profile/wallet/add_balance.dart';
+import 'package:projeto/screens/dashboard/profile/wallet/balance.dart';
 import 'package:projeto/widgets/drop_down_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/extras/functions.dart';
-import 'package:projeto/screens/dashboard/profile/credit/balance.dart';
 import 'package:projeto/screens/dashboard/profile/student_progress.dart';
 import 'package:projeto/screens/dashboard/profile/terms_condition.dart';
 import 'package:projeto/screens/dashboard/profile/widgets/profile_header_widget.dart';
@@ -76,16 +76,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 isDetails = true;
               });
             }),
-            InkWell(
-              onTap: () {
-                context.push(child: const StudentProgress());
-              },
-              child: listTile("Meu Progresso", AppIcons.trending),
-            ),
-            listTile("Carteira", AppIcons.brief),
-            listTile("Inserir Crédito", AppIcons.dollar, onTap: () {
-              Functions.push(context, const Balance());
-            }),
+            listTile("Meu Progresso", AppIcons.trending,
+                widget: StudentProgress()),
+            listTile("Carteira", AppIcons.brief, widget: Balance()),
+            listTile("Inserir Crédito", AppIcons.dollar, widget: AddBalance()),
             const Expanded(child: SizedBox()),
             InkWell(
               onTap: () {
@@ -136,12 +130,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   border: Border.all(
                       color: Colors.black.withOpacity(0.5), width: 4)),
               child: ClipOval(
-                child: Image(
-                  image: provider.userModel!.image == null ?
-                  AssetImage(Assets.imagesPlaceHolder) : NetworkImage(provider.userModel!.image!) as ImageProvider,
-                  fit: BoxFit.cover,
-                )
-              ),
+                  child: Image(
+                image: provider.userModel!.image == null
+                    ? AssetImage(Assets.imagesPlaceHolder)
+                    : NetworkImage(provider.userModel!.image!) as ImageProvider,
+                fit: BoxFit.cover,
+              )),
             ),
             const MarginWidget(isHorizontal: true, factor: 1.4),
             Column(
@@ -155,18 +149,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 InkWell(
                   onTap: () async {
                     var file = await Functions.pickImage();
-                    if(file != null){
+                    if (file != null) {
                       Functions.showLoading(context);
-                      var link = await Functions.uploadImage(file, path: "profile/${Constants.uid()}.${file.path.split(".").last}");
+                      var link = await Functions.uploadImage(file,
+                          path:
+                              "profile/${Constants.uid()}.${file.path.split(".").last}");
 
                       Constants.users.doc(Constants.uid()).update({
-                        "image" : link,
+                        "image": link,
                       });
 
                       Navigator.of(context, rootNavigator: true).pop();
-
                     }
-
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -211,9 +205,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget listTile(String header, String icon, {Function()? onTap}) {
+  Widget listTile(String header, String icon,
+      {Widget? widget, void Function()? onTap}) {
     return InkWell(
-      onTap: onTap,
+      onTap: onTap ??
+          () {
+            context.push(child: widget!);
+          },
       child: Column(
         children: [
           const MarginWidget(),

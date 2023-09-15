@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -188,11 +190,13 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                 onSelect: (value) {
                   setState(() {
                     selectedClasses = value;
+                    amount.text = "${int.parse(value) * 80}";
                   });
                 },
                 label: "Quantidade de Aulas"),
             const MarginWidget(),
             TextFieldWidget(
+              enabled: false,
               controller: amount,
               borderColor: CColors.textFieldBorder,
               label: "Valor Total",
@@ -228,7 +232,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                     BookingModel booking = BookingModel(
                         id: doc.id,
                         date: selectedDate,
-                        amount: double.parse(amount.text) * totalCl,
+                        amount: double.parse(amount.text),
                         instructorID: instructor.uid,
                         totalClasses: totalCl,
                         userID: Constants.uid(),
