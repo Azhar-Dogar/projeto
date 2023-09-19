@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
@@ -22,30 +21,28 @@ class Balance extends StatefulWidget {
 }
 
 class _BalanceState extends State<Balance> {
-
   late DataProvider dataProvider;
+
   @override
   Widget build(BuildContext context) {
     double padding = context.width * 0.04;
-    return Consumer<DataProvider>(
-      builder: (context, value, child) {
-        dataProvider = value;
-        return Scaffold(
-          appBar: CustomAppBar("Pagamento"),
-          body: Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: Colors.black,
-            child: Column(
-              children: [
-                topWidget(context),
-                cardDetailSection(padding,context),
-              ],
-            ),
+    return Consumer<DataProvider>(builder: (context, value, child) {
+      dataProvider = value;
+      return Scaffold(
+        appBar: CustomAppBar("Pagamento"),
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.black,
+          child: Column(
+            children: [
+              topWidget(context),
+              cardDetailSection(padding, context),
+            ],
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 
   Widget cardDetailSection(double padding, BuildContext context) {
@@ -70,15 +67,17 @@ class _BalanceState extends State<Balance> {
                 style: AppTextStyles.subTitleMedium(),
               ),
               const MarginWidget(factor: 2),
-
-              for(var card in dataProvider.userModel!.cardsList)...[
-                 CardDetail(cardModel: card,isEdit: true,),
+              for (var card in dataProvider.userModel!.cardsList) ...[
+                CardDetail(
+                  cardModel: card,
+                  isEdit: true,
+                ),
                 const DividerWidget(),
                 const MarginWidget(),
               ],
               const MarginWidget(),
               InkWell(
-                onTap: (){
+                onTap: () {
                   Functions.push(context, const AddNewCard());
                 },
                 child: Row(
@@ -88,7 +87,8 @@ class _BalanceState extends State<Balance> {
                     const MarginWidget(isHorizontal: true),
                     Text(
                       "Adicionar Cartão",
-                      style: AppTextStyles.captionMedium(color: CColors.primary),
+                      style:
+                          AppTextStyles.captionMedium(color: CColors.primary),
                     )
                   ],
                 ),
@@ -106,7 +106,7 @@ class _BalanceState extends State<Balance> {
       children: [
         const MarginWidget(factor: 2.5),
         Text(
-          "R\$ ${dataProvider.userModel!.credits}",
+          "R\$ ${dataProvider.userModel!.credits!.toInt()},00",
           style: AppTextStyles.h4Medium(color: Colors.white),
         ),
         const MarginWidget(),
@@ -124,7 +124,7 @@ class _BalanceState extends State<Balance> {
 
   Widget addCredit(BuildContext context) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         Functions.push(context, const AddBalance());
       },
       child: Container(

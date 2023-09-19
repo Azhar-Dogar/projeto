@@ -108,7 +108,24 @@ class _AddNewCardState extends State<AddNewCard> {
                       const MarginWidget(),
                       Center(
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () async{
+                            UserModel model = context.read<DataProvider>().userModel!;
+                            model.cardsList.removeWhere((element) => element.number == widget.cardModel!.number);
+                            try{
+
+                              Functions.showLoading(context);
+                              await Constants.users.doc(model.uid).update({
+                                "cardsList" : model.cardsList.map((e) => e.toMap()).toList()
+                              });
+                              context.pop(rootNavigator: true);
+                              context.pop();
+
+
+                            }on FirebaseException catch(e){
+                              print(e);
+                            }
+
+                          },
                           child: Text(
                             "Excluir Cartão",
                             style: AppTextStyles.captionMedium(

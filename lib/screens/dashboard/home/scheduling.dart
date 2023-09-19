@@ -43,11 +43,13 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
   String? selectedClasses;
 
   late UserModel instructor;
+  late DataProvider dataProvider;
 
   @override
   void initState() {
     super.initState();
     instructor = widget.instructor;
+    dataProvider = context.read<DataProvider>();
   }
 
   @override
@@ -160,7 +162,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
               style: AppTextStyles.captionMedium(),
             ),
             Text(
-              "R\$ 800,00",
+              "R\$ ${dataProvider.userModel?.credits ?? 0}",
               style: AppTextStyles.captionMedium(color: CColors.primary),
             )
           ],

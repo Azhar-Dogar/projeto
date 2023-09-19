@@ -9,8 +9,10 @@ import 'package:projeto/generated/assets.dart';
 import 'package:projeto/model/booking_model.dart';
 import 'package:projeto/model/car_model.dart';
 import 'package:projeto/model/user_model.dart';
+import 'package:projeto/provider/dashboard_provider.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/dashboard/home/instructors_screen.dart';
+import 'package:projeto/screens/dashboard/home_screen.dart';
 import 'package:projeto/screens/dashboard/reviews/review_instructor.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +27,6 @@ import '../../widgets/c_profile_app_bar.dart';
 class UserClassesScreen extends StatefulWidget {
   const UserClassesScreen({super.key});
 
-
   @override
   State<UserClassesScreen> createState() => _UserClassesScreenState();
 }
@@ -36,11 +37,10 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
   int _selectedIndex = 0;
 
   DateTime selectedDate = DateTime.now();
-   int? yearSelected;
-   int? monthSelected;
+  int? yearSelected;
+  int? monthSelected;
 
   late DataProvider dataProvider;
-
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +97,7 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
           const MarginWidget(
             isSliver: true,
           ),
-          if(yearSelected != null)...[
+          if (yearSelected != null) ...[
             SliverGrid.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
@@ -117,14 +117,12 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
               isSliver: true,
             ),
           ],
-
-          if(yearSelected != null && monthSelected != null)...[
+          if (yearSelected != null && monthSelected != null) ...[
             showBookings(isSliver: true, isYear: true),
             const MarginWidget(
               isSliver: true,
             ),
           ],
-
         ],
       ),
     );
@@ -166,6 +164,7 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
     return CustomScrollView(
       slivers: [
         CCalendarWidget(
+            bookings: dataProvider.bookings,
             startDate: selectedDate,
             onSelection: (value, date) {
               setState(() {
@@ -255,7 +254,9 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
           padding: EdgeInsets.only(left: padding, right: padding),
           child: ButtonWidget(
             name: "Voltar para home e agendar",
-            onPressed: () {},
+            onPressed: () {
+              context.read<DashboardProvider>().selectedIndex = 2;
+            },
           ),
         ),
       ],
@@ -333,9 +334,9 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
               spacing: 10,
               runSpacing: 10,
               children: [
-
-                for(int i=0; i< bookingModel.totalClasses; i++)...[
-                  timeBox(Functions.formatTime(bookingModel.date.add(Duration(hours: i)))),
+                for (int i = 0; i < bookingModel.totalClasses; i++) ...[
+                  timeBox(Functions.formatTime(
+                      bookingModel.date.add(Duration(hours: i)))),
                 ],
               ],
             ),
@@ -356,13 +357,12 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
               ],
             ),
             const DividerWidget(),
-
-            if(bookingModel.status == "started")...[
+            if (bookingModel.status == "started") ...[
               Text(
                 "As aulas são iniciadas",
                 style: AppTextStyles.captionMedium(color: CColors.primary),
               )
-            ]else...[
+            ] else ...[
               if (bookingModel.status == "pending" ||
                   bookingModel.status == "confirmed" ||
                   bookingModel.status == "denied") ...[
@@ -373,7 +373,7 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
                       context.push(child: InstructorsScreen(callBack: (value) {
                         try {
                           BookingModel updated =
-                          BookingModel.fromMap(bookingModel.toMap());
+                              BookingModel.fromMap(bookingModel.toMap());
                           updated.instructorID = value.uid;
                           updated.status = "pending";
                           Constants.bookings
@@ -399,7 +399,7 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
                       child: Text(
                         "Cancelar aula",
                         style:
-                        AppTextStyles.captionMedium(color: CColors.primary),
+                            AppTextStyles.captionMedium(color: CColors.primary),
                       ),
                     ),
                   ),
@@ -419,14 +419,14 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
                         onTap: () {
                           context.push(
                               child: ReviewInstructor(
-                                instructor: instructor,
-                                bookingModel: bookingModel,
-                              ));
+                            instructor: instructor,
+                            bookingModel: bookingModel,
+                          ));
                         },
                         child: Text(
                           "Avalie seu instrutor",
-                          style:
-                          AppTextStyles.captionMedium(color: CColors.primary),
+                          style: AppTextStyles.captionMedium(
+                              color: CColors.primary),
                         ),
                       ),
                     ],

@@ -72,16 +72,16 @@ class _AddBalanceState extends State<AddBalance> {
 
                   if (model != null) {
                     try {
-                    Constants.users.doc(Constants.uid()).update({
-                      "credits": amount + dataProvider.userModel!.credits!,
-                    });
-                  } on FirebaseException catch (e) {
-                    print(e);
-                  }
+                      Constants.users.doc(Constants.uid()).update({
+                        "credits": amount + dataProvider.userModel!.credits!,
+                      });
+                    } on FirebaseException catch (e) {
+                      print(e);
+                    }
 
-                  otherC.text = "";
+                    otherC.text = "";
 
-                  context.push(child: const SuccessMessage());
+                    context.push(child: const SuccessMessage());
                   } else {
                     Functions.push(
                         context,
@@ -112,7 +112,7 @@ class _AddBalanceState extends State<AddBalance> {
     }
 
     return InkWell(
-      onTap: (){
+      onTap: () {
         if (amount != 0) {
           Functions.push(
               context,
@@ -120,7 +120,6 @@ class _AddBalanceState extends State<AddBalance> {
                 amount: amount,
               ));
         }
-
       },
       child: Row(
         children: [
@@ -156,11 +155,11 @@ class _AddBalanceState extends State<AddBalance> {
               style: AppTextStyles.titleMedium(),
             ),
             const MarginWidget(),
-            amount("R\$ 50,00", 5000),
-            amount("R\$ 100,00", 10000),
-            amount("R\$ 150,00", 15000),
-            amount("R\$ 200,00", 20000),
-            amount("R\$ 300,00", 30000),
+            amount("R\$ 50,00", 50),
+            amount("R\$ 100,00", 100),
+            amount("R\$ 150,00", 150),
+            amount("R\$ 200,00", 200),
+            amount("R\$ 300,00", 300),
             amount("Outro valor", 0),
             if (selected == 0)
               TextFieldWidget(

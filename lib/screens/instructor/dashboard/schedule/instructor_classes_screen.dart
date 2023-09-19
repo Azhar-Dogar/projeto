@@ -173,6 +173,7 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
       slivers: [
         CCalendarWidget(
             startDate: selectedDate,
+            bookings: dataProvider.bookings,
             onSelection: (value, date) {
               setState(() {
                 selectedDate = value;
