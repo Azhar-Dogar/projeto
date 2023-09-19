@@ -122,7 +122,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
                   if (Platform.isIOS) ...[
                     Positioned(
                       right: 0,
-                      bottom: 60,
+                      bottom: 100,
                       child: zoomControlls(),
                     ),
                   ],
@@ -233,6 +233,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
                       factor: 0.5,
                     ),
                     CRatingBar(
+                      ignoreGesture: true,
                       rating: Functions.getRating(instructor!),
                       itemSize: 10,
                     ),

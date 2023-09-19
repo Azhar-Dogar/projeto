@@ -57,6 +57,7 @@ class _ReviewSuccessState extends State<ReviewSuccess> {
 
   Widget rating() {
     return RatingBar.builder(
+      ignoreGestures: true,
       itemSize: 60,
       initialRating: 3,
       minRating: 1,

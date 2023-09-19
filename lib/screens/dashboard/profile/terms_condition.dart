@@ -115,6 +115,7 @@ class _TermsConditionState extends State<TermsCondition> {
 
   Widget rating() {
     return RatingBar.builder(
+      ignoreGestures: true,
       itemSize: 28,
       initialRating: 3,
       minRating: 1,

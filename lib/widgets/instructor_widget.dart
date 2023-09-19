@@ -74,6 +74,7 @@ class InstructorWidget extends StatelessWidget {
                             //   print(rating);
                             // },),
                             RatingBar.builder(
+                              ignoreGestures: true,
                               itemSize: 18,
                               initialRating: Functions.getRating(user),
                               minRating: 1,
