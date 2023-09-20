@@ -347,7 +347,7 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                           try {
                             BookingModel updated =
                                 BookingModel.fromMap(bookingModel.toMap());
-                            updated.status = "completed";
+                            updated.status = "started";
                             Constants.bookings
                                 .doc(updated.id)
                                 .update(updated.toMap());
@@ -398,7 +398,7 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                         ));
                       },
                       child: Text(
-                        "Avalie seu instrutor",
+                        "Avalie seu aluno",
                         style:
                             AppTextStyles.captionMedium(color: CColors.primary),
                       ),

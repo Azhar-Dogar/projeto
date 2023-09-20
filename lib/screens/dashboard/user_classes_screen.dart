@@ -141,7 +141,10 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
       },
       child: Center(
         child: Container(
-          padding: EdgeInsets.all(16),
+          height: 52,
+          width: 70,
+          // padding: EdgeInsets.all(16),
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(

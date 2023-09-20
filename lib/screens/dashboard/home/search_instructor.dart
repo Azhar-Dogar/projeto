@@ -119,13 +119,11 @@ class _SearchInstructorState extends State<SearchInstructor> {
               child: Stack(
                 children: [
                   googleMap(),
-                  if (Platform.isIOS) ...[
                     Positioned(
                       right: 0,
-                      bottom: 100,
-                      child: zoomControlls(),
+                      bottom: 50,
+                      child: zoomControls(),
                     ),
-                  ],
                   Positioned(
                     top: 15,
                     left: 15,
@@ -147,7 +145,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
     });
   }
 
-  Widget zoomControlls() {
+  Widget zoomControls() {
     return Column(
       children: [
         IconButton(
@@ -174,6 +172,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
 
   Widget googleMap() {
     return GoogleMap(
+      zoomControlsEnabled: false,
       initialCameraPosition: CameraPosition(
         zoom: 14,
         target: LatLng(dataProvider.latitude!, dataProvider.longitude!),

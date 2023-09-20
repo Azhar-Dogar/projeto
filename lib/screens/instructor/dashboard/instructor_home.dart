@@ -121,15 +121,20 @@ class _InstructorHomeState extends State<InstructorHome> {
               )),
             ),
             MarginWidget(),
-            RatingBarIndicator(
-              rating: dataProvider.totalRating,
-              itemBuilder: (context, index) => Icon(
-                Icons.star,
-                color: CColors.rating,
-              ),
-              itemCount: 5,
-              itemSize: 21.0,
-              direction: Axis.horizontal,
+            Builder(
+              builder: (context) {
+                print(dataProvider.totalRating);
+                return RatingBarIndicator(
+                  rating: dataProvider.totalRating,
+                  itemBuilder: (context, index) => Icon(
+                    Icons.star,
+                    color: CColors.rating,
+                  ),
+                  itemCount: 5,
+                  itemSize: 21.0,
+                  direction: Axis.horizontal,
+                );
+              }
             ),
             const MarginWidget(
               factor: 0.5,

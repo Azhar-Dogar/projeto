@@ -132,8 +132,12 @@ class DataProvider with ChangeNotifier {
           for (var r in userModel!.reviews) {
             totalRating += r.totalR;
           }
-          totalRating = (totalRating / userModel!.reviews.length);
-          this.totalRating = totalRating;
+          if (userModel!.reviews.isEmpty) {
+            totalRating = 5;
+          }  else{
+            totalRating = (totalRating / userModel!.reviews.length);
+            this.totalRating = totalRating;
+          }
         } else {
           userModel = null;
         }
