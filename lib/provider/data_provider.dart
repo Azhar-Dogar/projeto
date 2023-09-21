@@ -91,15 +91,6 @@ class DataProvider with ChangeNotifier {
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? bookingStream;
 
   List<BookingModel> bookings = [];
-  // int _selectedIndex = 2;
-  //
-  //
-  // int get selectedIndex => _selectedIndex;
-  //
-  // set selectedIndex(int value) {
-  //   _selectedIndex = value;
-  //   notifyListeners();
-  // }
 
   getBookings() {
     print("objadsfcdsfect");

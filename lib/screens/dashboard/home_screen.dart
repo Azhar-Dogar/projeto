@@ -1,6 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +15,7 @@ import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
 import '../../extras/colors.dart';
 import '../../model/booking_model.dart';
+import '../../provider/dashboard_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -220,16 +218,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Row(
       children: [
-        CircleAvatar(radius: 20, backgroundImage: avatarImage),
+        InkWell(
+          onTap: () {
+            context.read<DashboardProvider>().selectedIndex = 0;
+          },
+          child: CircleAvatar(radius: 20, backgroundImage: avatarImage),
+        ),
         const MarginWidget(
           isHorizontal: true,
         ),
         Expanded(
-            child: CustomText(
-          text: "${dataProvider.userModel!.name}",
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        )),
+          child: CustomText(
+            text: "${dataProvider.userModel!.name}",
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,10 +256,15 @@ class _HomeScreenState extends State<HomeScreen> {
           factor: 5,
           isHorizontal: true,
         ),
-        Image(
-          image: AssetImage(AppIcons.notification),
-          color: CColors.black,
-          width: 30,
+        InkWell(
+          onTap: () {
+            context.read<DashboardProvider>().selectedIndex = 3;
+          },
+          child: Image(
+            image: AssetImage(AppIcons.notification),
+            color: CColors.black,
+            width: 30,
+          ),
         )
       ],
     );

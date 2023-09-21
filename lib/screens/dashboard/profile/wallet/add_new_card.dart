@@ -35,11 +35,20 @@ class _AddNewCardState extends State<AddNewCard> {
 
   bool isMainCard = false;
 
+  late UserModel userModel;
+
   @override
   void initState() {
     super.initState();
+
+    userModel = context.read<DataProvider>().userModel!;
+
     if (widget.cardModel != null) {
       isMainCard = widget.cardModel!.mainCard;
+    } else {
+      if (userModel.cardsList.isEmpty) {
+        isMainCard = true;
+      }
     }
   }
 
@@ -99,32 +108,44 @@ class _AddNewCardState extends State<AddNewCard> {
                     Switch(
                       value: isMainCard,
                       onChanged: (value) {
-                        setState(() {
-                          isMainCard = value;
-                        });
+                        print(userModel.cardsList.length);
+                        if ((userModel.cardsList.length == 1 &&
+                                widget.cardModel != null) ||
+                            userModel.cardsList.length == 0) {
+                          // Functions.showSnackBar(context,
+                          //     "Existe apenas um cartão no momento. Não é possível mudar isso");
+                        } else {
+                          setState(() {
+                            isMainCard = value;
+                          });
+                        }
                       },
                     ),
                     if (widget.cardModel != null) ...[
                       const MarginWidget(),
                       Center(
                         child: InkWell(
-                          onTap: () async{
-                            UserModel model = context.read<DataProvider>().userModel!;
-                            model.cardsList.removeWhere((element) => element.number == widget.cardModel!.number);
-                            try{
-
+                          onTap: () async {
+                            UserModel model =
+                                context.read<DataProvider>().userModel!;
+                            model.cardsList.removeWhere((element) =>
+                                element.number == widget.cardModel!.number);
+                            try {
                               Functions.showLoading(context);
+                              if (model.cardsList.length == 1) {
+                                model.cardsList.first.mainCard = true;
+                              }
                               await Constants.users.doc(model.uid).update({
-                                "cardsList" : model.cardsList.map((e) => e.toMap()).toList()
+                                "cardsList": model.cardsList
+                                    .map((e) => e.toMap())
+                                    .toList()
                               });
+
                               context.pop(rootNavigator: true);
                               context.pop();
-
-
-                            }on FirebaseException catch(e){
+                            } on FirebaseException catch (e) {
                               print(e);
                             }
-
                           },
                           child: Text(
                             "Excluir Cartão",
@@ -142,6 +163,7 @@ class _AddNewCardState extends State<AddNewCard> {
             ButtonWidget(
                 name: widget.cardModel != null ? "Salvar" : "Adicionar Cartão",
                 onPressed: () async {
+                  print("object");
                   bool isValidate;
 
                   if (widget.cardModel != null) {
@@ -172,9 +194,6 @@ class _AddNewCardState extends State<AddNewCard> {
                           mainCard: isMainCard);
                     }
 
-                    UserModel userModel =
-                        context.read<DataProvider>().userModel!;
-
                     if (isMainCard) {
                       userModel.cardsList
                           .any((element) => element.mainCard = false);
@@ -186,6 +205,16 @@ class _AddNewCardState extends State<AddNewCard> {
                       int index =
                           userModel.cardsList.indexOf(widget.cardModel!);
                       userModel.cardsList[index] = cardModel;
+
+                      if (isMainCard == false &&
+                          userModel.cardsList.length == 2) {
+                        userModel.cardsList = userModel.cardsList.map((card) {
+                          if (card.number != cardModel.number) {
+                            card.mainCard = true;
+                          }
+                          return card;
+                        }).toList();
+                      }
                     }
 
                     await Constants.users.doc(Constants.uid()).update({

@@ -22,6 +22,7 @@ import 'package:projeto/widgets/custom_calendar_Widget.dart';
 import 'package:projeto/widgets/divider_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 
+import '../../../../provider/dashboard_provider.dart';
 import '../../../../widgets/c_profile_app_bar.dart';
 
 class InstructorClassesScreen extends StatefulWidget {
@@ -263,7 +264,9 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
           padding: EdgeInsets.only(left: padding, right: padding),
           child: ButtonWidget(
             name: "Voltar para home e agendar",
-            onPressed: () {},
+            onPressed: () {
+              context.read<DashboardProvider>().selectedIndex = 2;
+            },
           ),
         ),
       ],
