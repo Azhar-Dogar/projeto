@@ -188,7 +188,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
             const MarginWidget(),
             DropDownWidget(
                 selectedValue: selectedClasses,
-                dropdownItems: ["1", "2", "3", "4"],
+                dropdownItems: ["1", "2"],
                 onSelect: (value) {
                   setState(() {
                     selectedClasses = value;
@@ -310,40 +310,43 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
   }
 
   Widget confirmMessage() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        InkWell(
-          onTap: () {
-            setState(() {
-              sentMessage = false;
-            });
-          },
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 10),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: CColors.checkBackground,
-            ),
-            child: const Padding(
-              padding: EdgeInsets.all(4.0),
-              child: Icon(
-                Icons.check,
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          InkWell(
+            onTap: () {
+              setState(() {
+                sentMessage = false;
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: CColors.checkBackground,
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Icon(
+                  Icons.check,
+                ),
               ),
             ),
           ),
-        ),
-        Text(
-          "Sua solicitação de aula foi enviada",
-          style: AppTextStyles.subTitleMedium(size: 16),
-        ),
-        const MarginWidget(),
-        Text(
-          textAlign: TextAlign.center,
-          "Quando o instrutor confirmar sua aula, você receberá uma notificaçã",
-          style: AppTextStyles.captionMedium(size: 14),
-        )
-      ],
+          Text(
+            "Sua solicitação de aula foi enviada",
+            style: AppTextStyles.subTitleMedium(size: 16),
+          ),
+          const MarginWidget(),
+          Text(
+            textAlign: TextAlign.center,
+            "Quando o instrutor confirmar sua aula, você receberá uma notificação",
+            style: AppTextStyles.captionMedium(size: 14),
+          )
+        ],
+      ),
     );
   }
 
