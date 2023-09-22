@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/constants.dart';
@@ -15,13 +14,14 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   late double width, height;
+
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 1)).then((value) {
-      if(Constants.user() == null){
+      if (Constants.user() == null) {
         context.pushAndRemoveUntil(child: LoginScreen());
-      }else{
+      } else {
         context.pushAndRemoveUntil(child: CheckData());
       }
     });
@@ -29,7 +29,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     return Scaffold(

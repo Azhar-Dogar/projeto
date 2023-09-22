@@ -49,7 +49,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
 
   Future<Marker> _addCustomMarker(
       double latitude, double longitude, String userId) async {
-    final Uint8List markIcons = await getImages('assets/icons/car.png', 100);
+    final Uint8List markIcons = await getImages('assets/icons/car.png', 60);
     LatLng markerLocation =
         LatLng(latitude, longitude); // Replace with your marker's coordinates
     return Marker(
@@ -69,10 +69,15 @@ class _SearchInstructorState extends State<SearchInstructor> {
 
   addMarkers() async {
     _markers = {};
+    print("-------");
     print(dataProvider.instructorsLocation);
+    print("-------");
+
+
     for (var location in dataProvider.instructorsLocation) {
       var distance = Geolocator.distanceBetween(dataProvider.latitude!,
           dataProvider.longitude!, location["latitude"], location["longitude"]);
+
 
       if (this.distance == "2 km") {
         if (distance <= 2000) {
@@ -90,7 +95,10 @@ class _SearchInstructorState extends State<SearchInstructor> {
       }
     }
 
-    setState(() {});
+    Future.delayed(Duration(milliseconds: 10),(){
+      setState(() {});
+    });
+
   }
 
   bool isFirst = true;
@@ -119,11 +127,11 @@ class _SearchInstructorState extends State<SearchInstructor> {
               child: Stack(
                 children: [
                   googleMap(),
-                    Positioned(
-                      right: 0,
-                      bottom: 50,
-                      child: zoomControls(),
-                    ),
+                  Positioned(
+                    right: 0,
+                    bottom: 50,
+                    child: zoomControls(),
+                  ),
                   Positioned(
                     top: 15,
                     left: 15,

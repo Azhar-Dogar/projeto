@@ -4,6 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto/model/car_model.dart';
+import 'package:projeto/provider/dashboard_provider.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/instructor/dashboard/profile/instructor_progress.dart';
 import 'package:projeto/screens/instructor/dashboard/schedule/instructor_classes_screen.dart';
@@ -87,7 +88,8 @@ class _InstructorHomeState extends State<InstructorHome> {
   }
 
   Widget upcomingBooking() {
-    BookingModel? bookingModel = Functions.findFutureBooking(dataProvider.bookings);
+    BookingModel? bookingModel =
+        Functions.findFutureBooking(dataProvider.bookings);
     if (bookingModel == null) {
       return SizedBox();
     }
@@ -121,21 +123,19 @@ class _InstructorHomeState extends State<InstructorHome> {
               )),
             ),
             MarginWidget(),
-            Builder(
-              builder: (context) {
-                print(dataProvider.totalRating);
-                return RatingBarIndicator(
-                  rating: dataProvider.totalRating,
-                  itemBuilder: (context, index) => Icon(
-                    Icons.star,
-                    color: CColors.rating,
-                  ),
-                  itemCount: 5,
-                  itemSize: 21.0,
-                  direction: Axis.horizontal,
-                );
-              }
-            ),
+            Builder(builder: (context) {
+              print(dataProvider.totalRating);
+              return RatingBarIndicator(
+                rating: dataProvider.totalRating,
+                itemBuilder: (context, index) => Icon(
+                  Icons.star,
+                  color: CColors.rating,
+                ),
+                itemCount: 5,
+                itemSize: 21.0,
+                direction: Axis.horizontal,
+              );
+            }),
             const MarginWidget(
               factor: 0.5,
             ),
@@ -201,7 +201,8 @@ class _InstructorHomeState extends State<InstructorHome> {
                       factor: 0.3,
                     ),
                     CustomText(
-                      text: "${DateFormat("hh:mm a").format(bookingModel.date)}",
+                      text:
+                          "${DateFormat("hh:mm a").format(bookingModel.date)}",
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
@@ -240,7 +241,12 @@ class _InstructorHomeState extends State<InstructorHome> {
 
     return Row(
       children: [
-        CircleAvatar(radius: 20, backgroundImage: avatarImage),
+        InkWell(
+          onTap: (){
+            context.read<DashboardProvider>().selectedIndex = 0;
+          },
+          child: CircleAvatar(radius: 20, backgroundImage: avatarImage),
+        ),
         const MarginWidget(
           isHorizontal: true,
         ),
@@ -250,10 +256,15 @@ class _InstructorHomeState extends State<InstructorHome> {
           fontSize: 12,
           fontWeight: FontWeight.w500,
         )),
-        Image(
-          image: AssetImage(AppIcons.notification),
-          color: CColors.black,
-          width: 30,
+        InkWell(
+          onTap: () {
+            context.read<DashboardProvider>().selectedIndex = 3;
+          },
+          child: Image(
+            image: AssetImage(AppIcons.notification),
+            color: CColors.black,
+            width: 30,
+          ),
         )
       ],
     );
@@ -282,6 +293,4 @@ class _InstructorHomeState extends State<InstructorHome> {
       ),
     );
   }
-
-
 }

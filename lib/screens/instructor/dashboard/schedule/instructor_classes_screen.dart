@@ -39,15 +39,14 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
   int _selectedIndex = 0;
 
   DateTime selectedDate = DateTime.now();
-   int? yearSelected;
-   int? monthSelected;
+  int? yearSelected;
+  int? monthSelected;
 
   late DataProvider dataProvider;
 
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -105,7 +104,7 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
           const MarginWidget(
             isSliver: true,
           ),
-          if(yearSelected != null)...[
+          if (yearSelected != null) ...[
             SliverGrid.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
@@ -125,8 +124,7 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
               isSliver: true,
             ),
           ],
-
-          if(yearSelected != null && monthSelected != null)...[
+          if (yearSelected != null && monthSelected != null) ...[
             showBookings(isSliver: true, isYear: true),
           ],
           const MarginWidget(
@@ -150,7 +148,9 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
       },
       child: Center(
         child: Container(
-          padding: EdgeInsets.all(16),
+          height: 52,
+          width: 70,
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(

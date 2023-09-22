@@ -31,7 +31,6 @@ class _DashBoardState extends State<DashBoard> {
     ChatScreen(),
   ];
 
-  // int selectedIndex = 2;
 
   late List<PersistentBottomNavBarItem> bottomNavBarItems;
 

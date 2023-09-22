@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:projeto/extras/constants.dart';
@@ -7,8 +5,8 @@ import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/dashboard_screen.dart';
 import 'package:projeto/screens/instructor/instructor_dashboard.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-    as bg;
+// import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+//     as bg;
 import 'package:utility_extensions/utility_extensions.dart';
 
 class CheckData extends StatefulWidget {
@@ -22,34 +20,49 @@ class _CheckDataState extends State<CheckData> {
   @override
   void initState() {
     super.initState();
+
+
+
   }
 
   listenLocation() async {
-    bg.BackgroundGeolocation.onLocation((bg.Location location) {
-      saveData(location);
+
+    Geolocator.getPositionStream().listen((event) {
+      print("-----------");
+      print(event.latitude);
+      print(event.longitude);
+      print("-----------");
+
+      saveData(event);
+
     });
-    bg.BackgroundGeolocation.ready(bg.Config(
-            desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
-            distanceFilter: 10.0,
-            stopOnTerminate: false,
-            startOnBoot: true,
-            debug: true,
-            logLevel: bg.Config.LOG_LEVEL_VERBOSE))
-        .then((bg.State state) {
-      if (!state.enabled) {
-        bg.BackgroundGeolocation.start();
-      }
-    });
+
+    // bg.BackgroundGeolocation.onLocation((bg.Location location) {
+    //   saveData(location);
+    // });
+
+    // bg.BackgroundGeolocation.ready(bg.Config(
+    //         desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+    //         distanceFilter: 10.0,
+    //         stopOnTerminate: false,
+    //         startOnBoot: true,
+    //         debug: true,
+    //         logLevel: bg.Config.LOG_LEVEL_VERBOSE))
+    //     .then((bg.State state) {
+    //   if (!state.enabled) {
+    //     bg.BackgroundGeolocation.start();
+    //   }
+    // });
   }
 
-  saveData(bg.Location location) async {
+  saveData(Position location) async {
     if (Constants.user() != null) {
       await Constants.databaseReference
           .child("location")
           .child(Constants.uid())
           .set({
-        "latitude": location.coords.latitude,
-        "longitude": location.coords.longitude,
+        "latitude": location.latitude,
+        "longitude": location.longitude,
       });
     }
   }
@@ -108,6 +121,7 @@ class _CheckDataState extends State<CheckData> {
     }
 
     var position = await Geolocator.getCurrentPosition();
+
     provider.longitude = position.longitude;
     provider.latitude = position.latitude;
   }

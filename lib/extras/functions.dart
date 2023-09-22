@@ -194,8 +194,6 @@ class Functions {
         String? country = placemark.country;
 
         location = "${city}, ${country}";
-        print('City: $city');
-        print('Country: $country');
       } else {
         print('No placemarks found.');
       }

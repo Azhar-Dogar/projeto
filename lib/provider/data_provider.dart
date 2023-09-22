@@ -52,7 +52,7 @@ class DataProvider with ChangeNotifier {
 
   callOthers() {
     Future.delayed(Duration(seconds: 1)).then((value) {
-      if (userModel == null || _latitude == null) {
+      if ((userModel == null) || (userModel!.isUser && _latitude == null)) {
         callOthers();
       } else {
         getCars();
@@ -93,7 +93,6 @@ class DataProvider with ChangeNotifier {
   List<BookingModel> bookings = [];
 
   getBookings() {
-    print("objadsfcdsfect");
     var query = Constants.bookings.where("userID", isEqualTo: Constants.uid());
     if (!userModel!.isUser) {
       query =
@@ -125,7 +124,7 @@ class DataProvider with ChangeNotifier {
           }
           if (userModel!.reviews.isEmpty) {
             totalRating = 5;
-          }  else{
+          } else {
             totalRating = (totalRating / userModel!.reviews.length);
             this.totalRating = totalRating;
           }
@@ -149,6 +148,7 @@ class DataProvider with ChangeNotifier {
     }
     carsStream = query.snapshots().listen((snapshot) {
       var docs = snapshot.docs.where((element) => element.exists).toList();
+      print(docs.length);
       cars = List.generate(
           docs.length, (index) => CarModel.fromMap(docs[index].data()));
       notifyListeners();
@@ -295,23 +295,24 @@ class DataProvider with ChangeNotifier {
   StreamSubscription<DatabaseEvent>? locationStream;
 
   bool markersUpdate = false;
+
   getLocations() {
-    locationStream = Constants.databaseReference.child("location").onValue.listen((event) {
+    locationStream =
+        Constants.databaseReference.child("location").onValue.listen((event) {
       var children = event.snapshot.children.where((element) => element.exists);
       instructorsLocation = [];
       for (var child in children) {
         var c = child.value as Map<Object?, Object?>;
-        var distance = Geolocator.distanceBetween(
-            _latitude!, _longitude!, c["latitude"] as double, c["longitude"] as double);
-
-        if(distance < 10000 || true){
+        var distance = Geolocator.distanceBetween(_latitude!, _longitude!,
+            c["latitude"] as double, c["longitude"] as double);
+        if (distance < 10000 || true) {
           var user = users.where((element) => element.uid == child.key);
-          if(user.isNotEmpty){
+          if (user.isNotEmpty) {
             nearbyInstructors.add(user.first);
             instructorsLocation.add({
-              "user" : child.key,
-              "latitude" : c["latitude"],
-              "longitude" : c["longitude"],
+              "user": child.key,
+              "latitude": c["latitude"],
+              "longitude": c["longitude"],
             });
           }
         }
