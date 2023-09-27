@@ -78,7 +78,7 @@ class _AddCarState extends State<AddCar> {
                     onSelect: (value) {
                       brand.text = value;
                     },
-                    selectedValue: brand.text,
+                    selectedValue: brand.text.isEmpty ? null : brand.text,
                     label: "Marca",
                     isEdit: isEditing,
                   ),
@@ -91,7 +91,7 @@ class _AddCarState extends State<AddCar> {
                       onSelect: (value) {
                         year.text = value;
                       },
-                      selectedValue: year.text,
+                      selectedValue: year.text.isEmpty ? null : year.text,
                       label: "Ano",
                       isEdit: isEditing,
                     );
@@ -102,7 +102,7 @@ class _AddCarState extends State<AddCar> {
                     onSelect: (value) {
                       vehicle.text = value;
                     },
-                    selectedValue: vehicle.text,
+                    selectedValue: vehicle.text.isEmpty ? null : vehicle.text,
                     label: "Veículo",
                     isEdit: isEditing,
                   ),
@@ -115,7 +115,7 @@ class _AddCarState extends State<AddCar> {
               ButtonWidget(
                 name: "Salvar Alterações",
                 onPressed: () {
-                  if(widget.car == null){
+                  if (widget.car == null) {
                     if (validateFields([brand, year, vehicle])) {
                       if (vehiclePhoto == null ||
                           vehicleDocument == null ||
@@ -130,13 +130,12 @@ class _AddCarState extends State<AddCar> {
                       Functions.showSnackBar(context,
                           "Por favor, preencha todos os campos obrigatórios.");
                     }
-                  }else{
+                  } else {
                     updateCar();
-                    if(isPrimary){
+                    if (isPrimary) {
                       setOthers();
                     }
                   }
-
                 },
               )
             else
@@ -171,9 +170,12 @@ class _AddCarState extends State<AddCar> {
         ),
         const MarginWidget(),
         documentWidget(
-          image: vehiclePhoto == null
-              ? Icons.file_upload_outlined
-              : Icons.access_time_outlined,
+          file: vehiclePhoto,
+          image: (widget.car != null)
+              ? Icons.access_time_outlined
+              : vehiclePhoto == null
+                  ? Icons.file_upload_outlined
+                  : Icons.access_time_outlined,
           text: vehiclePhoto == null
               ? "Foto do Veículo"
               : "Foto enviada para aprovação",
@@ -189,9 +191,12 @@ class _AddCarState extends State<AddCar> {
 
         if (widget.car == null || !isEditing) ...[
           documentWidget(
-            image: vehicleDocument == null
-                ? Icons.file_upload_outlined
-                : Icons.access_time_outlined,
+            file: vehicleDocument,
+            image: (widget.car != null)
+                ? Icons.access_time_outlined
+                : vehicleDocument == null
+                    ? Icons.file_upload_outlined
+                    : Icons.access_time_outlined,
             text: vehicleDocument == null
                 ? "Documento do Veículo"
                 : "Documento enviado para aprovação",
@@ -206,9 +211,12 @@ class _AddCarState extends State<AddCar> {
           ),
         ],
         documentWidget(
-          image: vehicleLicense == null
-              ? Icons.file_upload_outlined
-              : Icons.access_time_outlined,
+          file: vehicleLicense,
+          image: (widget.car != null)
+              ? Icons.access_time_outlined
+              : vehicleLicense == null
+                  ? Icons.file_upload_outlined
+                  : Icons.access_time_outlined,
           text: vehicleLicense == null
               ? "Licencimento do Veículo"
               : "Licenciamento enviado para aprovação",
@@ -222,9 +230,12 @@ class _AddCarState extends State<AddCar> {
           factor: 0.7,
         ),
         documentWidget(
-          image: vehicleInsurance == null
-              ? Icons.file_upload_outlined
-              : Icons.access_time_outlined,
+          file: vehicleInsurance,
+          image: (widget.car != null)
+              ? Icons.access_time_outlined
+              : vehicleInsurance == null
+                  ? Icons.file_upload_outlined
+                  : Icons.access_time_outlined,
           text: vehicleInsurance == null
               ? "Seguro do Veículo"
               : "Seguro enviado para aprovação",
@@ -293,6 +304,7 @@ class _AddCarState extends State<AddCar> {
   }
 
   Widget documentWidget({
+    File? file,
     required IconData image,
     required String text,
     required Function(File) onTap,
@@ -325,7 +337,9 @@ class _AddCarState extends State<AddCar> {
               }
             },
             child: Text(
-              widget.car == null ? "Enviar documento" : "Alterar documento",
+              widget.car == null
+                  ? (file == null ? "Enviar documento" : "Alterar documento")
+                  : "Alterar documento",
               style: AppTextStyles.poppins(
                 style: TextStyle(
                   color: CColors.textColor,
@@ -340,17 +354,16 @@ class _AddCarState extends State<AddCar> {
     );
   }
 
-
   setOthers() async {
     var provider = Provider.of<DataProvider>(context, listen: false);
-    var cars = provider.cars.where((element) => element.id != widget.car!.id).toList();
+    var cars =
+        provider.cars.where((element) => element.id != widget.car!.id).toList();
 
-    for(var car in cars){
-      await Constants.cars.doc(car.id).update(
-        (car..isPrimary = false).toMap()
-      );
+    for (var car in cars) {
+      await Constants.cars.doc(car.id).update((car..isPrimary = false).toMap());
     }
   }
+
   Future<void> addCar() async {
     Functions.showLoading(context);
     var doc = Constants.cars.doc();
@@ -391,17 +404,26 @@ class _AddCarState extends State<AddCar> {
       vehicle: vehicle.text,
       carType: "own",
       isDualCommand: false,
-      vehiclePhoto: vehiclePhoto != null ? await Functions.uploadImage(vehiclePhoto!,
-          path: "vehiclePhoto/${doc.id}.${vehiclePhoto!.path.split(".").last}")  : widget.car!.vehiclePhoto,
-      vehicleDocument: vehicleDocument ==null ? widget.car!.vehicleDocument : await Functions.uploadImage(vehicleDocument!,
-          path:
-              "vehicleDocument/${doc.id}.${vehicleDocument!.path.split(".").last}"),
-      vehicleLicense: vehicleLicense == null ? widget.car!.vehicleLicense: await Functions.uploadImage(vehicleLicense!,
-          path:
-              "vehicleLicense/${doc.id}.${vehicleLicense!.path.split(".").last}"),
-      vehicleInsurance: vehicleInsurance == null ? widget.car!.vehicleInsurance : await Functions.uploadImage(vehicleInsurance!,
-          path:
-              "vehicleInsurance/${doc.id}.${vehicleInsurance!.path.split(".").last}"),
+      vehiclePhoto: vehiclePhoto != null
+          ? await Functions.uploadImage(vehiclePhoto!,
+              path:
+                  "vehiclePhoto/${doc.id}.${vehiclePhoto!.path.split(".").last}")
+          : widget.car!.vehiclePhoto,
+      vehicleDocument: vehicleDocument == null
+          ? widget.car!.vehicleDocument
+          : await Functions.uploadImage(vehicleDocument!,
+              path:
+                  "vehicleDocument/${doc.id}.${vehicleDocument!.path.split(".").last}"),
+      vehicleLicense: vehicleLicense == null
+          ? widget.car!.vehicleLicense
+          : await Functions.uploadImage(vehicleLicense!,
+              path:
+                  "vehicleLicense/${doc.id}.${vehicleLicense!.path.split(".").last}"),
+      vehicleInsurance: vehicleInsurance == null
+          ? widget.car!.vehicleInsurance
+          : await Functions.uploadImage(vehicleInsurance!,
+              path:
+                  "vehicleInsurance/${doc.id}.${vehicleInsurance!.path.split(".").last}"),
       isPrimary: isPrimary,
     );
     model.id = doc.id;

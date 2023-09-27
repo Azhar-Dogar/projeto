@@ -124,7 +124,6 @@ class _InstructorHomeState extends State<InstructorHome> {
             ),
             MarginWidget(),
             Builder(builder: (context) {
-              print(dataProvider.totalRating);
               return RatingBarIndicator(
                 rating: dataProvider.totalRating,
                 itemBuilder: (context, index) => Icon(
@@ -287,7 +286,7 @@ class _InstructorHomeState extends State<InstructorHome> {
             style: AppTextStyles.subTitleMedium(),
           ),
           MyCarsWidget(
-            car: carModel!,
+            car: carModel,
           ),
         ],
       ),

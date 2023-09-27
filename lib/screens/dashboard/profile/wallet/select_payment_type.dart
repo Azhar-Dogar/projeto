@@ -61,7 +61,6 @@ class _SelectPaymentTypeState extends State<SelectPaymentType> {
               ButtonWidget(
                   name: "Selecionar",
                   onPressed: () {
-                    print("here");
                     if (selected == null) {
                       Functions.showSnackBar(context, "Selecione a opção de pagamento primeiro");
                       return;

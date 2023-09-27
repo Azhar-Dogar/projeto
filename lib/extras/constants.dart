@@ -67,18 +67,21 @@ class Constants {
   ];
 
   static List<String> banksInPortugal = [
-    'Banco Comercial Português (BCP)',
-    'Caixa Geral de Depósitos (CGD)',
-    'Novo Banco',
-    'Banco Santander Totta',
-    'Banco BPI',
-    'Crédito Agrícola',
-    'Banco Popular Portugal',
-    'Bankinter Portugal',
-    'Montepio Geral',
-    'EuroBic',
-    'Caixa Económica Montepio Geral',
-    'Banif - Banco Internacional do Funchal (Note: Banif was dissolved in 2015, and its assets were transferred to Santander Totta and Oitante)',
+    "Banco do Brasil",
+    "Caixa Econômica Federal",
+    "Banco Bradesco",
+    "Itaú Unibanco",
+    "Santander Brasil",
+    "Banco BTG Pactual",
+    "Banco Votorantim",
+    "Banco Safra",
+    "Banco Original",
+    "Banco Inter",
+    "Central Bank of Brazil",
+    "Nubank",
+    "Daycoval",
+    "Banco do Nordeste",
+    "Citibank",
   ];
 
 

@@ -69,10 +69,6 @@ class _SearchInstructorState extends State<SearchInstructor> {
 
   addMarkers() async {
     _markers = {};
-    print("-------");
-    print(dataProvider.instructorsLocation);
-    print("-------");
-
 
     for (var location in dataProvider.instructorsLocation) {
       var distance = Geolocator.distanceBetween(dataProvider.latitude!,

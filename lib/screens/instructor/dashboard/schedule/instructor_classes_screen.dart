@@ -5,15 +5,11 @@ import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
-import 'package:projeto/generated/assets.dart';
 import 'package:projeto/model/booking_model.dart';
 import 'package:projeto/model/car_model.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:projeto/provider/data_provider.dart';
-import 'package:projeto/screens/dashboard/home/instructors_screen.dart';
-import 'package:projeto/screens/dashboard/reviews/review_instructor.dart';
 import 'package:projeto/screens/instructor/dashboard/schedule/review_student.dart';
-import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/widgets/button_widget.dart';
@@ -21,8 +17,6 @@ import 'package:projeto/widgets/calendar_widget.dart';
 import 'package:projeto/widgets/custom_calendar_Widget.dart';
 import 'package:projeto/widgets/divider_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
-
-import '../../../../provider/dashboard_provider.dart';
 import '../../../../widgets/c_profile_app_bar.dart';
 
 class InstructorClassesScreen extends StatefulWidget {
@@ -210,7 +204,6 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
   }
 
   Widget showBookings({bool isSliver = false, bool isYear = false}) {
-    print(dataProvider.bookings.length);
     List<BookingModel> bookings;
     if (isYear) {
       bookings = dataProvider.bookings
@@ -260,15 +253,15 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
           style: AppTextStyles.subTitleRegular(),
         ),
         const MarginWidget(),
-        Padding(
-          padding: EdgeInsets.only(left: padding, right: padding),
-          child: ButtonWidget(
-            name: "Voltar para home e agendar",
-            onPressed: () {
-              context.read<DashboardProvider>().selectedIndex = 2;
-            },
-          ),
-        ),
+        // Padding(
+        //   padding: EdgeInsets.only(left: padding, right: padding),
+        //   child: ButtonWidget(
+        //     name: "Voltar para home e agendar",
+        //     onPressed: () {
+        //       context.read<DashboardProvider>().selectedIndex = 2;
+        //     },
+        //   ),
+        // ),
       ],
     );
   }
@@ -296,7 +289,7 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      title("Instrutor"),
+                      title("Aluno"),
                       const MarginWidget(factor: 0.2),
                       subTitle("${userModel!.name}"),
                     ],
@@ -378,12 +371,6 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                         }
                       : null),
             ] else if (bookingModel.status == "completed") ...[
-              if (bookingModel.studentRating) ...[
-                Text(
-                  "Obrigado por avaliar seu aluno.",
-                  style: AppTextStyles.captionMedium(color: CColors.primary),
-                ),
-              ] else ...[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -408,7 +395,6 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                     ),
                   ],
                 ),
-              ],
             ],
             const MarginWidget(factor: 0.5),
           ],

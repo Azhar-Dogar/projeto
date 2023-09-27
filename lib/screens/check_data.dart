@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:projeto/extras/constants.dart';
+import 'package:projeto/provider/dashboard_provider.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/dashboard_screen.dart';
 import 'package:projeto/screens/instructor/instructor_dashboard.dart';
@@ -28,10 +29,6 @@ class _CheckDataState extends State<CheckData> {
   listenLocation() async {
 
     Geolocator.getPositionStream().listen((event) {
-      print("-----------");
-      print(event.latitude);
-      print(event.longitude);
-      print("-----------");
 
       saveData(event);
 
@@ -71,10 +68,15 @@ class _CheckDataState extends State<CheckData> {
 
   @override
   Widget build(BuildContext context) {
+
+    Future.delayed(Duration(milliseconds: 10),(){
+      context.read<DashboardProvider>().selectedIndex = 2;
+    });
     // Constants.auth().signOut();
     return Consumer<DataProvider>(builder: (context, data, child) {
       provider = data;
       if (data.userModel != null) {
+
         if (data.userModel!.isUser) {
           if (provider.latitude == null) {
             determinePosition();

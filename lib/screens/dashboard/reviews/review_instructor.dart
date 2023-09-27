@@ -138,9 +138,11 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
                                 (instructorR + vehicleR + courseR) / 3.0;
 
                             ReviewModel model = ReviewModel(
+                              bookingID: widget.bookingModel.id,
                               userID: Constants.uid(),
                               date: DateTime.now(),
-                              time: DateFormat("hh:mm a").format(widget.bookingModel.date),
+                              time: DateFormat("hh:mm a")
+                                  .format(widget.bookingModel.date),
                               instructorR: instructorR,
                               vehicleR: vehicleR,
                               courseR: courseR,

@@ -9,6 +9,7 @@ class ReviewModel {
   double? courseR;
   late double totalR;
   late String opinion;
+  late String bookingID;
 
   ReviewModel(
       {this.id,
@@ -20,7 +21,9 @@ class ReviewModel {
       this.courseR,
       required this.totalR,
       required this.opinion,
-      this.instructorID});
+      this.instructorID,
+        required this.bookingID,
+      });
 
   Map<String, dynamic> toMap() {
     return {
@@ -34,6 +37,8 @@ class ReviewModel {
       "courseR": courseR,
       "totalR": totalR,
       "opinion": opinion,
+      "bookingID": bookingID,
+
     };
   }
 
@@ -48,6 +53,7 @@ class ReviewModel {
     vehicleR = data["vehicleR"];
     totalR = data["totalR"].toDouble();
     opinion = data["opinion"];
+    bookingID = data["bookingID"] ?? "";
   }
 
 }

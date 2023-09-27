@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/colors.dart';
+import 'package:projeto/model/notification_model.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/widgets/notification_widget.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +13,7 @@ import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/divider_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 
+import '../../model/booking_model.dart';
 import '../../widgets/c_profile_app_bar.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -33,46 +36,65 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Consumer<DataProvider>(builder: (context, data, child) {
       return Scaffold(
         appBar: CustomAppBar("Notificações", isInstructor: widget.isInstructor),
-        body: Padding(
-          padding: EdgeInsets.only(left: padding, right: padding),
-          child: ListView.separated(
-            itemBuilder: (ctx, i) {
-              return NotificationWidget(notification: data.notifications[i]);
-            },
-            separatorBuilder: (ctx, i) {
-              return const DividerWidget();
-            },
-            itemCount: data.notifications.length,
-          ),
-
-          // SingleChildScrollView(
-          //   child: Column(
-          //     children: [
-          //       notificationRow(AppIcons.message),
-          //       const DividerWidget(),
-          //       notificationRow(AppIcons.message),
-          //       const DividerWidget(),
-          //       notificationRow(AppIcons.message),
-          //       const DividerWidget(),
-          //       notificationRow(AppIcons.setting),
-          //       const DividerWidget(),
-          //       notificationRow(AppIcons.approval),
-          //       const DividerWidget(),
-          //       InkWell(
-          //         onTap: (){
-          //           showDialog(context: context, builder: (BuildContext context){
-          //             return requestsLessonDialogue(context);
-          //           });
-          //         },
-          //         child: notificationRow(AppIcons.calendar),
-          //       ),
-          //       const DividerWidget(),
-          //     ],
-          //   ),
-          // ),
-        ),
+        body: notificationsDisplay(data),
       );
     });
+  }
+
+  Widget notificationsDisplay(DataProvider data) {
+    List<NotificationModel> notifications = [];
+
+    data.notifications.forEach((element) {
+      if (element.type == "booking") {
+        BookingModel bookingModel = BookingModel.fromMap(element.metaData!);
+
+        print(FirebaseAuth.instance.currentUser!.uid);
+        BookingModel? updatedBooking =
+            context.read<DataProvider>().getbookingById(bookingModel.id);
+        if (updatedBooking != null) {
+          notifications.add(element);
+        }
+      }
+    });
+
+    return Padding(
+      padding: EdgeInsets.only(left: padding, right: padding),
+      child: ListView.separated(
+        itemBuilder: (ctx, i) {
+          return NotificationWidget(notification: notifications[i]);
+        },
+        separatorBuilder: (ctx, i) {
+          return const DividerWidget();
+        },
+        itemCount: notifications.length,
+      ),
+
+      // SingleChildScrollView(
+      //   child: Column(
+      //     children: [
+      //       notificationRow(AppIcons.message),
+      //       const DividerWidget(),
+      //       notificationRow(AppIcons.message),
+      //       const DividerWidget(),
+      //       notificationRow(AppIcons.message),
+      //       const DividerWidget(),
+      //       notificationRow(AppIcons.setting),
+      //       const DividerWidget(),
+      //       notificationRow(AppIcons.approval),
+      //       const DividerWidget(),
+      //       InkWell(
+      //         onTap: (){
+      //           showDialog(context: context, builder: (BuildContext context){
+      //             return requestsLessonDialogue(context);
+      //           });
+      //         },
+      //         child: notificationRow(AppIcons.calendar),
+      //       ),
+      //       const DividerWidget(),
+      //     ],
+      //   ),
+      // ),
+    );
   }
 
   Widget notificationRow(String path) {
@@ -111,6 +133,4 @@ class _NotificationScreenState extends State<NotificationScreen> {
       ],
     );
   }
-
-
 }

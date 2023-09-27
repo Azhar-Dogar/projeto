@@ -132,8 +132,21 @@ class _AvailabilityWidgetState extends State<AvailabilityWidget> {
                   ),
                   Expanded(
                     child: InkWell(
-                      onTap: () {
-                        pickTime(widget.availability.breakEnd);
+                      onTap: () async {
+                        await pickTime(widget.availability.breakEnd);
+                        if (validateFields([
+                          widget.availability.startTime,
+                          widget.availability.endTime,
+                          widget.availability.breakStart,
+                          widget.availability.breakEnd,
+                        ])) {
+                          await Constants.users
+                              .doc(Constants.uid())
+                              .collection("availability")
+                              .doc((days.indexOf(widget.availability.day) + 1)
+                                  .toString())
+                              .update(widget.availability.toMap());
+                        }
                       },
                       child: TextFieldWidget(
                         controller: widget.availability.breakEnd,
@@ -149,44 +162,20 @@ class _AvailabilityWidgetState extends State<AvailabilityWidget> {
                   ),
                 ],
               ),
-              TextButton(
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                ),
-                onPressed: () async {
-                  if (validateFields([
-                    widget.availability.startTime,
-                    widget.availability.endTime,
-                    widget.availability.breakStart,
-                    widget.availability.breakEnd,
-                  ])) {
-                    await Constants.users
-                        .doc(Constants.uid())
-                        .collection("availability")
-                        .doc((days.indexOf(widget.availability.day) + 1)
-                            .toString())
-                        .update(widget.availability.toMap());
-
-                    Functions.showSnackBar(context, "Salvo com sucesso");
-                  }
-                },
-                child: Text(
-                  "Salvar",
-                ),
-              ),
+              const MarginWidget(factor: 0.7),
             ],
           ),
       ],
     );
   }
 
-  pickTime(TextEditingController controller) {
+  pickTime(TextEditingController controller) async {
     var duration = controller.text.trim().isEmpty
         ? Duration()
         : Duration(
             hours: int.tryParse(controller.text.split(":").first) ?? 0,
             minutes: int.tryParse(controller.text.split(":").last) ?? 0);
-    showCupertinoModalPopup<void>(
+    await showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) {
         return _buildContainer(CTimerPicker(

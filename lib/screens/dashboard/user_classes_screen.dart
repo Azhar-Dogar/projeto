@@ -22,6 +22,7 @@ import 'package:projeto/widgets/calendar_widget.dart';
 import 'package:projeto/widgets/custom_calendar_Widget.dart';
 import 'package:projeto/widgets/divider_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
+import '../../model/notification_model.dart';
 import '../../widgets/c_profile_app_bar.dart';
 
 class UserClassesScreen extends StatefulWidget {
@@ -384,6 +385,19 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
                         } on FirebaseException catch (e) {
                           print(e);
                         }
+
+                        UserModel user =
+                            context.read<DataProvider>().userModel!;
+
+                        print(instructor.uid);
+//
+                        Functions.sendNotification(
+                            NotificationModel(
+                                metaData: bookingModel.toMap(),
+                                text: "${user.name} solicita aulas",
+                                type: "booking",
+                                time: DateTime.now().millisecondsSinceEpoch),
+                            value.uid);
                       }));
                     }),
                 if (bookingModel.status != "denied") ...[

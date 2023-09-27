@@ -7,7 +7,8 @@ import '../screens/dashboard/profile_screen.dart';
 import '../screens/dashboard/user_classes_screen.dart';
 
 class DashboardProvider with ChangeNotifier {
-  int _selectedIndex = 0;
+
+  int _selectedIndex = 2;
 
   int get selectedIndex => _selectedIndex;
 

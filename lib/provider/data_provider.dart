@@ -100,11 +100,14 @@ class DataProvider with ChangeNotifier {
     }
     bookingStream = query.snapshots().listen((snapshot) {
       var docs = snapshot.docs.where((element) => element.exists).toList();
+      print("----");
       print(docs.length);
+      print("--");
       bookings = List.generate(
           docs.length, (index) => BookingModel.fromMap(docs[index].data()));
       notifyListeners();
     });
+    print("booking length ${bookings.length}");
   }
 
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? profileStream;
@@ -182,6 +185,7 @@ class DataProvider with ChangeNotifier {
   }
 
   BookingModel? getbookingById(String id) {
+
     BookingModel? bookingModel;
 
     bookingModel = bookings.where((element) => element.id == id).firstOrNull;
@@ -277,12 +281,17 @@ class DataProvider with ChangeNotifier {
   List<NotificationModel> notifications = [];
 
   getNotifications() {
+    print(Constants.uid());
     notificationStream = Constants.users
         .doc(Constants.uid())
         .collection("notifications")
         .snapshots()
         .listen((snapshots) {
       var docs = snapshots.docs.where((element) => element.exists).toList();
+      print("+++++++++");
+      print(docs.length);
+      print("+++++++++");
+
       notifications = List.generate(docs.length,
           (index) => NotificationModel.fromMap(docs[index].data()));
       notifyListeners();

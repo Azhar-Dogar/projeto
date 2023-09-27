@@ -317,6 +317,7 @@ class _ProfileFormState extends State<ProfileForm> {
 
   //rate
   TextEditingController amount = TextEditingController();
+  bool bankExist = true;
 
   setData() {
     var user = provider.userModel!;
@@ -334,6 +335,9 @@ class _ProfileFormState extends State<ProfileForm> {
     complement.text = user.complement;
 
     bank.text = user.bank ?? "";
+    if (user.bank!.isNotEmpty && !Constants.banksInPortugal.contains(bank.text)) {
+      bankExist = false;
+    }
     agency.text = user.agency ?? "";
     account.text = user.account ?? "";
 
@@ -354,6 +358,8 @@ class _ProfileFormState extends State<ProfileForm> {
         isSet = true;
       }
       return Column(
+
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const MarginWidget(),
           TextFieldWidget(
@@ -464,7 +470,7 @@ class _ProfileFormState extends State<ProfileForm> {
             },
             isEdit: widget.isEdit,
             label: "Banco",
-            selectedValue: bank.text,
+            selectedValue: bankExist ?  bank.text : null,
           ),
           const MarginWidget(),
           TextFieldWidget(

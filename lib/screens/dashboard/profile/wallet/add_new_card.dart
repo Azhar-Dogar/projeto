@@ -108,7 +108,6 @@ class _AddNewCardState extends State<AddNewCard> {
                     Switch(
                       value: isMainCard,
                       onChanged: (value) {
-                        print(userModel.cardsList.length);
                         if ((userModel.cardsList.length == 1 &&
                                 widget.cardModel != null) ||
                             userModel.cardsList.length == 0) {

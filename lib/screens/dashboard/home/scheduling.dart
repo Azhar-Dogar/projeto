@@ -186,6 +186,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
             const MarginWidget(),
             timeField(),
             const MarginWidget(),
+            
             DropDownWidget(
                 selectedValue: selectedClasses,
                 dropdownItems: ["1", "2"],
