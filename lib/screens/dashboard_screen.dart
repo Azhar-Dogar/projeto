@@ -31,7 +31,6 @@ class _DashBoardState extends State<DashBoard> {
     ChatScreen(),
   ];
 
-
   late List<PersistentBottomNavBarItem> bottomNavBarItems;
 
   late PersistentTabController _controller;
@@ -48,94 +47,93 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   Widget build(BuildContext context) {
+    return Consumer<DashboardProvider>(builder: (ctx, value, child) {
+      dashboardProvider = value;
+      _controller.jumpToTab(dashboardProvider.selectedIndex);
+      bottomNavBarItems = [
+        PersistentBottomNavBarItem(
+          icon: CustomAssetImage(
+            path: AppIcons.user,
+            height: 24,
+            color: dashboardProvider.selectedIndex == 0
+                ? Colors.white
+                : CColors.textFieldBorder,
+          ),
+          title: "Profile",
+          activeColorPrimary: CColors.primary,
+          inactiveColorPrimary: CColors.textFieldBorder,
+        ),
+        PersistentBottomNavBarItem(
+          icon: CustomAssetImage(
+            path: AppIcons.calendar,
+            height: 24,
+            color: dashboardProvider.selectedIndex == 1
+                ? Colors.white
+                : CColors.textFieldBorder,
+          ),
+          title: "Aulas",
+          activeColorPrimary: CColors.primary,
+          inactiveColorPrimary: CColors.textFieldBorder,
+        ),
+        PersistentBottomNavBarItem(
+          icon: CustomAssetImage(
+            path: AppIcons.home,
+            height: 24,
+            color: dashboardProvider.selectedIndex == 2
+                ? Colors.white
+                : CColors.textFieldBorder,
+          ),
+          title: "Home",
+          activeColorPrimary: CColors.primary,
+          inactiveColorPrimary: CColors.textFieldBorder,
+        ),
+        PersistentBottomNavBarItem(
+          icon: CustomAssetImage(
+            path: AppIcons.notification,
+            height: 24,
+            color: dashboardProvider.selectedIndex == 3
+                ? Colors.white
+                : CColors.textFieldBorder,
+          ),
+          title:
+              dashboardProvider.selectedIndex == 3 ? "Notif..." : "Notificação",
+          activeColorPrimary: CColors.primary,
+          inactiveColorPrimary: CColors.textFieldBorder,
+        ),
+        PersistentBottomNavBarItem(
+          icon: CustomAssetImage(
+            path: AppIcons.chat,
+            height: 24,
+            color: dashboardProvider.selectedIndex == 4
+                ? Colors.white
+                : CColors.textFieldBorder,
+          ),
+          title: "Chat",
+          activeColorPrimary: CColors.primary,
+          inactiveColorPrimary: CColors.textFieldBorder,
+        ),
+      ];
+      return Scaffold(
+        backgroundColor: CColors.dashboard,
+        body: PersistentTabView.custom(
+          context,
 
-
-    return Consumer<DashboardProvider>(
-      builder: (ctx, value, child) {
-        dashboardProvider = value;
-        _controller.jumpToTab(dashboardProvider.selectedIndex);
-        bottomNavBarItems = [
-          PersistentBottomNavBarItem(
-            icon: CustomAssetImage(
-              path: AppIcons.user,
-              height: 24,
-              color: dashboardProvider.selectedIndex == 0
-                  ? Colors.white
-                  : CColors.textFieldBorder,
-            ),
-            title: "Profile",
-            activeColorPrimary: CColors.primary,
-            inactiveColorPrimary: CColors.textFieldBorder,
+          controller: _controller,
+          screens: pages,
+          confineInSafeArea: false,
+          handleAndroidBackButtonPress: true,
+          resizeToAvoidBottomInset: false,
+          hideNavigationBarWhenKeyboardShows: true,
+          onWillPop: (context) async {
+            return true;
+          },
+          screenTransitionAnimation: const ScreenTransitionAnimation(
+            animateTabTransition: true,
+            curve: Curves.easeInOut,
+            duration: Duration(milliseconds: 200),
           ),
-          PersistentBottomNavBarItem(
-            icon: CustomAssetImage(
-              path: AppIcons.calendar,
-              height: 24,
-              color: dashboardProvider.selectedIndex == 1
-                  ? Colors.white
-                  : CColors.textFieldBorder,
-            ),
-            title: "Aulas",
-            activeColorPrimary: CColors.primary,
-            inactiveColorPrimary: CColors.textFieldBorder,
-          ),
-          PersistentBottomNavBarItem(
-            icon: CustomAssetImage(
-              path: AppIcons.home,
-              height: 24,
-              color: dashboardProvider.selectedIndex == 2
-                  ? Colors.white
-                  : CColors.textFieldBorder,
-            ),
-            title: "Home",
-            activeColorPrimary: CColors.primary,
-            inactiveColorPrimary: CColors.textFieldBorder,
-          ),
-          PersistentBottomNavBarItem(
-            icon: CustomAssetImage(
-              path: AppIcons.notification,
-              height: 24,
-              color: dashboardProvider.selectedIndex == 3
-                  ? Colors.white
-                  : CColors.textFieldBorder,
-            ),
-            title: dashboardProvider.selectedIndex == 3 ? "Notif..." : "Notificação",
-            activeColorPrimary: CColors.primary,
-            inactiveColorPrimary: CColors.textFieldBorder,
-          ),
-          PersistentBottomNavBarItem(
-            icon: CustomAssetImage(
-              path: AppIcons.chat,
-              height: 24,
-              color: dashboardProvider.selectedIndex == 4
-                  ? Colors.white
-                  : CColors.textFieldBorder,
-            ),
-            title: "Chat",
-            activeColorPrimary: CColors.primary,
-            inactiveColorPrimary: CColors.textFieldBorder,
-          ),
-        ];
-        return Scaffold(
-          backgroundColor: CColors.dashboard,
-          body: PersistentTabView.custom(
-            context,
-            controller: _controller,
-            screens: pages,
-            confineInSafeArea: true,
-            handleAndroidBackButtonPress: true,
-            resizeToAvoidBottomInset: true,
-            hideNavigationBarWhenKeyboardShows: true,
-            onWillPop: (context) async {
-              return true;
-            },
-
-            screenTransitionAnimation: const ScreenTransitionAnimation(
-              animateTabTransition: true,
-              curve: Curves.easeInOut,
-              duration: Duration(milliseconds: 200),
-            ),
-            customWidget: CustomNavBarWidget(
+          customWidget: Container(
+            child: CustomNavBarWidget(
               bottomNavBarItems,
               selectedIndex: dashboardProvider.selectedIndex,
               onItemSelected: (int value) {
@@ -144,12 +142,13 @@ class _DashBoardState extends State<DashBoard> {
                 setState(() {});
               },
             ),
-            itemCount: 5,
-            // navBarStyle: NavBarStyle.simple, // Choose the nav bar style with this property.
           ),
-        );
-      }
-    );
+          itemCount: 5,
+
+          // navBarStyle: NavBarStyle.simple, // Choose the nav bar style with this property.
+        ),
+      );
+    });
   }
 }
 
@@ -202,10 +201,21 @@ class CustomNavBarWidget extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => Container(
-        color: Colors.white,
+        height: 400,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2), // Shadow color
+              spreadRadius: 1, // Spread radius
+              blurRadius: 5, // Blur radius
+              offset: Offset(0, -4), // Offset to make it appear at the top
+            ),
+          ],
+          color: Colors.white,
+        ),
         child: SizedBox(
           width: double.infinity,
-          height: kBottomNavigationBarHeight,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: items.map((final item) {

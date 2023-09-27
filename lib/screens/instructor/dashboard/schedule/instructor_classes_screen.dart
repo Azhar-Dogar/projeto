@@ -371,30 +371,32 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                         }
                       : null),
             ] else if (bookingModel.status == "completed") ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.star_border,
-                      color: CColors.primary,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.star_border,
+                    color: CColors.primary,
+                  ),
+                  const MarginWidget(isHorizontal: true),
+                  InkWell(
+                    onTap: () {
+                      context.push(
+                          child: ReviewStudent(
+                        user: userModel,
+                        bookingModel: bookingModel,
+                      ));
+                    },
+                    child: Text(
+                      bookingModel.studentRating
+                          ? "Ver sua avaliação de progresso"
+                          : "Avalie seu aluno",
+                      style:
+                          AppTextStyles.captionMedium(color: CColors.primary),
                     ),
-                    const MarginWidget(isHorizontal: true),
-                    InkWell(
-                      onTap: () {
-                        context.push(
-                            child: ReviewStudent(
-                          user: userModel,
-                          bookingModel: bookingModel,
-                        ));
-                      },
-                      child: Text(
-                        "Avalie seu aluno",
-                        style:
-                            AppTextStyles.captionMedium(color: CColors.primary),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
             ],
             const MarginWidget(factor: 0.5),
           ],

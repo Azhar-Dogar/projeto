@@ -213,7 +213,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                         context, "Selecione a hora primeiro");
                     return;
                   }
-                  if (time.text.isEmpty) {
+                  if (selectedClasses == null) {
                     Functions.showSnackBar(context,
                         "por favor selecione Quantidade de Aulas primeiro");
                     return;
