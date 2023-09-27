@@ -25,7 +25,6 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   late double width, padding;
 
-
   late DataProvider dataProvider;
 
   @override
@@ -33,17 +32,16 @@ class _ChatScreenState extends State<ChatScreen> {
     width = context.width;
     padding = width * 0.04;
 
-    return Consumer<DataProvider>(
-        builder: (context, value, child) {
-          dataProvider = value;
-          return Scaffold(
-            appBar: CustomAppBar("Chat", isInstructor: widget.isInstructor),
-            body: Padding(
-              padding: EdgeInsets.only(left: padding, right: padding),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                  const MarginWidget(),
+    return Consumer<DataProvider>(builder: (context, value, child) {
+      dataProvider = value;
+      return Scaffold(
+        appBar: CustomAppBar("Chat", isInstructor: widget.isInstructor),
+        body: Padding(
+          padding: EdgeInsets.only(left: padding, right: padding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const MarginWidget(),
               Text(
                 "Conversas",
                 style: AppTextStyles.titleMedium(),
@@ -52,25 +50,26 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: ListView.separated(
                   itemBuilder: (ctx, i) {
                     var chat = dataProvider.chats[i];
-                    return ChatWidget(chat: chat, key: Key(chat.to),);
+                    return ChatWidget(
+                      chat: chat,
+                      key: Key(chat.to),
+                    );
                   },
                   separatorBuilder: (ctx, i) {
                     return const DividerWidget();
                   },
-                  itemCount: dataProvider.chats.length,),
+                  itemCount: dataProvider.chats.length,
+                ),
               ),
-
               Text(
-              "Conversar com o suporte",
-              style: AppTextStyles.captionMedium(color: CColors.primary),
-            ),
-            const MarginWidget(),
+                "Conversar com o suporte",
+                style: AppTextStyles.captionMedium(color: CColors.primary),
+              ),
+              const MarginWidget(),
             ],
-          ),)
-          ,
-          );
-        }
-    );
+          ),
+        ),
+      );
+    });
   }
-
 }

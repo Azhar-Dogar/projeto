@@ -92,7 +92,7 @@ class _InboxScreenState extends State<InboxScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: padding, right: padding),
+              padding: EdgeInsets.only(left: padding, right: padding,bottom: 10),
               child: Container(
                 height: 80,
                 width: double.infinity,
