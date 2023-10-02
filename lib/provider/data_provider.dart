@@ -185,7 +185,6 @@ class DataProvider with ChangeNotifier {
   }
 
   BookingModel? getbookingById(String id) {
-
     BookingModel? bookingModel;
 
     bookingModel = bookings.where((element) => element.id == id).firstOrNull;
@@ -271,6 +270,7 @@ class DataProvider with ChangeNotifier {
               endTime: TextEditingController(),
               breakStart: TextEditingController(),
               breakEnd: TextEditingController(),
+              isAvailable: false,
             ).toMap(),
           );
     }

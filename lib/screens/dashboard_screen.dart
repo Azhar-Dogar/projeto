@@ -120,7 +120,7 @@ class _DashBoardState extends State<DashBoard> {
 
           controller: _controller,
           screens: pages,
-          confineInSafeArea: false,
+          confineInSafeArea: true,
           handleAndroidBackButtonPress: true,
           resizeToAvoidBottomInset: false,
           hideNavigationBarWhenKeyboardShows: true,

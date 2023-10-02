@@ -45,12 +45,29 @@ class _AvailabilityWidgetState extends State<AvailabilityWidget> {
             },
             child: Row(
               children: [
-                Container(
-                  width: 18,
-                  height: 18,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: CColors.white,
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      widget.availability.isAvailable =
+                          !widget.availability.isAvailable;
+                    });
+                  },
+                  child: Container(
+                    width: 18,
+                    height: 18,
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: CColors.white,
+                    ),
+                    child: !widget.availability.isAvailable
+                        ? null
+                        : Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: CColors.primary,
+                            ),
+                          ),
                   ),
                 ),
                 Expanded(
