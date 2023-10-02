@@ -137,6 +137,13 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
             yearSelected = year;
           } else {
             monthSelected = month!;
+            setState(() {
+              selectedDate = DateTime(yearSelected!, monthSelected! + 1, 1);
+              _selectedIndex = 1;
+              yearSelected = null;
+              monthSelected = null;
+            });
+
           }
         });
       },

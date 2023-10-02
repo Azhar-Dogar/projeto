@@ -64,7 +64,7 @@ class _AvailabilityState extends State<Availability> {
                       await Constants.users
                           .doc(Constants.uid())
                           .collection("availability")
-                          .doc((days.indexOf(availability.day) + 1)
+                          .doc((Constants.days.indexOf(availability.day) + 1)
                           .toString())
                           .update(availability.toMap());
                     }
@@ -78,13 +78,4 @@ class _AvailabilityState extends State<Availability> {
     });
   }
 
-  var days = [
-    "Segundas-feiras",
-    "Terças-feiras",
-    "Quartas-feiras",
-    "Quintas-feiras",
-    "Sextas-feiras",
-    "Sábados",
-    "Domingos",
-  ];
 }

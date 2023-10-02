@@ -160,7 +160,7 @@ class _AvailabilityWidgetState extends State<AvailabilityWidget> {
                           await Constants.users
                               .doc(Constants.uid())
                               .collection("availability")
-                              .doc((days.indexOf(widget.availability.day) + 1)
+                              .doc((Constants.days.indexOf(widget.availability.day) + 1)
                                   .toString())
                               .update(widget.availability.toMap());
                         }
@@ -260,13 +260,4 @@ class _AvailabilityWidgetState extends State<AvailabilityWidget> {
     );
   }
 
-  var days = [
-    "Segundas-feiras",
-    "Terças-feiras",
-    "Quartas-feiras",
-    "Quintas-feiras",
-    "Sextas-feiras",
-    "Sábados",
-    "Domingos",
-  ];
 }

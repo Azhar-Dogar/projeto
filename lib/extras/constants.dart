@@ -33,20 +33,13 @@ class Constants {
   ];
 
   static List<int> years() {
-
-
-    int year = DateTime
-        .now()
-        .year - 7;
+    int year = DateTime.now().year - 7;
     List<int> list = [];
     for (int i = 0; i < 8; i++) {
       list.add(year + i);
     }
     return list;
   }
-
-
-
 
   static List<String> drivingLicenseCategoriesPortugal = [
     'Categoria A1 - Motociclos até 125cc',
@@ -84,7 +77,6 @@ class Constants {
     "Citibank",
   ];
 
-
   static List<String> portugueseVehicleBrands = [
     "Renault",
     "Peugeot",
@@ -108,6 +100,15 @@ class Constants {
     "Jeep",
   ];
 
+  static var days = [
+    "Segundas-feiras",
+    "Terças-feiras",
+    "Quartas-feiras",
+    "Quintas-feiras",
+    "Sextas-feiras",
+    "Sábados",
+    "Domingos",
+  ];
 
   static Map<String, String> monthMap = {
     'January': 'Janeiro',
@@ -138,11 +139,12 @@ class Constants {
     return auth().currentUser!.uid;
   }
 
-
-
-  static FirebaseDatabase database =
-  FirebaseDatabase(app: null,databaseURL: "https://mazzi-b3641-default-rtdb.europe-west1.firebasedatabase.app/");
+  static FirebaseDatabase database = FirebaseDatabase(
+      app: null,
+      databaseURL:
+          "https://mazzi-b3641-default-rtdb.europe-west1.firebasedatabase.app/");
   static var databaseReference = database.reference();
+
   //coleections
   static var firestore = FirebaseFirestore.instance;
   static var users = firestore.collection("users");
@@ -150,5 +152,4 @@ class Constants {
   static var messages = firestore.collection("messages");
   static var cars = firestore.collection("cars");
   static var bookings = firestore.collection("bookings");
-
 }
