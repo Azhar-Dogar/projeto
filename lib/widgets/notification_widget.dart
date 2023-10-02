@@ -26,6 +26,10 @@ class NotificationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    if(!notification.isRead){
+
+    }
     bool isBooking = false;
     String path = "";
     switch (notification.type) {

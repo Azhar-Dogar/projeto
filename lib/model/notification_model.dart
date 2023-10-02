@@ -5,11 +5,14 @@ class NotificationModel {
   late int time;
   Map<String, dynamic>? metaData;
 
+  late bool isRead;
   NotificationModel(
       {required this.text,
       required this.type,
       required this.time,
-      this.metaData});
+      required this.isRead,
+      this.metaData,
+      });
 
   NotificationModel.fromMap(Map<String, dynamic> data) {
     id = data["id"];
@@ -17,6 +20,7 @@ class NotificationModel {
     type = data["type"];
     time = data["time"];
     metaData = data["metaData"];
+    isRead = data["isRead"] ?? false;
   }
 
   Map<String, dynamic> toMap() {
@@ -26,6 +30,7 @@ class NotificationModel {
       "text": text,
       "type": type,
       "time": time,
+      "isRead": isRead,
     };
   }
 }

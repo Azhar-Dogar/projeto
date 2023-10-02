@@ -83,7 +83,7 @@ class ChatProvider with ChangeNotifier {
     );
 
 
-    var notification = NotificationModel(text: "${sender.name} enviou uma mensagem.", type: "chat", time: DateTime.now().millisecondsSinceEpoch);
+    var notification = NotificationModel(text: "${sender.name} enviou uma mensagem.", type: "chat", time: DateTime.now().millisecondsSinceEpoch, isRead: false);
     Functions.sendNotification(notification, receiver.uid);
     await senderMessageDoc.set(message.toMap());
     await receiverMessageDoc.set(message.toMap());

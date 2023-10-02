@@ -17,7 +17,9 @@ import 'package:projeto/widgets/calendar_widget.dart';
 import 'package:projeto/widgets/custom_calendar_Widget.dart';
 import 'package:projeto/widgets/divider_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
+import '../../../../generated/assets.dart';
 import '../../../../widgets/c_profile_app_bar.dart';
+import '../../../../widgets/custom_asset_image.dart';
 
 class InstructorClassesScreen extends StatefulWidget {
   const InstructorClassesScreen({super.key});
@@ -292,9 +294,23 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                       title("Aluno"),
                       const MarginWidget(factor: 0.2),
                       subTitle("${userModel!.name}"),
+
                     ],
                   ),
                 ),
+                if(bookingModel.status == "cancelled" || bookingModel.status == "icancelled")
+                Container(
+                  height: 35,
+                  width: 35,
+                  decoration: BoxDecoration(
+                      color: CColors.pink,
+                      shape: BoxShape.circle),
+                  alignment: Alignment.center,
+                  child: CustomAssetImage(
+                    path: Assets.iconsCancel,
+                    height: 18,
+                  ),
+                )
               ],
             ),
             const MarginWidget(factor: 0.2),
@@ -370,6 +386,28 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                           }
                         }
                       : null),
+              if(bookingModel.status == "confirmed")...[
+                const MarginWidget(),
+                Align(
+                  alignment: Alignment.center,
+                  child: InkWell(
+                    onTap: () {
+                      try {
+                        Constants.bookings.doc(bookingModel.id).update({
+                          "status" : "icancelled",
+                        });
+                      } on FirebaseException catch (e) {
+                        print(e);
+                      }
+                    },
+                    child: Text(
+                      "Cancelar aula",
+                      style:
+                      AppTextStyles.captionMedium(color: CColors.primary),
+                    ),
+                  ),
+                ),
+              ]
             ] else if (bookingModel.status == "completed") ...[
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -397,6 +435,9 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                   ),
                 ],
               ),
+            ]else if(bookingModel.status == "cancelled" || bookingModel.status == "icancelled")...[
+              const MarginWidget(),
+              Center(child: Text("A reserva foi cancelada",style: AppTextStyles.poppins(style: TextStyle(color: CColors.primary)),))
             ],
             const MarginWidget(factor: 0.5),
           ],

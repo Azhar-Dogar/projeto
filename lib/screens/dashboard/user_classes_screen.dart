@@ -270,6 +270,8 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
     UserModel? instructor = dataProvider.getUserById(bookingModel.instructorID);
     CarModel? carModel = dataProvider.getCarById(bookingModel.instructorID);
 
+    print(bookingModel.status);
+
     return Padding(
       padding: EdgeInsets.only(left: padding, right: padding),
       child: Container(
@@ -318,7 +320,9 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
                 "O instrutor confirmou sua aula!",
                 style: AppTextStyles.captionMedium(color: CColors.primary),
               ),
-            ] else if (bookingModel.status == "denied") ...[
+            ] else if (bookingModel.status == "denied" ||
+                bookingModel.status == "cancelled" ||
+                bookingModel.status == "icancelled") ...[
               Text(
                 "O instrutor escolhido não poderá atender sua solicitação, escolha outro instrutor disponível.",
                 style: AppTextStyles.captionMedium(color: CColors.primary),
@@ -362,13 +366,15 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
             const DividerWidget(),
             if (bookingModel.status == "started") ...[
               Text(
-                "As aulas são iniciadas",
+                "A aula foi iniciada",
                 style: AppTextStyles.captionMedium(color: CColors.primary),
               )
             ] else ...[
               if (bookingModel.status == "pending" ||
                   bookingModel.status == "confirmed" ||
-                  bookingModel.status == "denied") ...[
+                  bookingModel.status == "denied" ||
+                  bookingModel.status == "cancelled" ||
+                  bookingModel.status == "icancelled") ...[
                 const MarginWidget(factor: 0.2),
                 ButtonWidget(
                     name: "Alterar instrutor",
@@ -396,18 +402,23 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
                                 metaData: bookingModel.toMap(),
                                 text: "${user.name} solicita aulas",
                                 type: "booking",
-                                time: DateTime.now().millisecondsSinceEpoch),
+                                time: DateTime.now().millisecondsSinceEpoch,
+                                isRead: false),
                             value.uid);
                       }));
                     }),
-                if (bookingModel.status != "denied") ...[
+                if (bookingModel.status != "denied" &&
+                    bookingModel.status != "cancelled" &&
+                    bookingModel.status != "icancelled") ...[
                   const MarginWidget(),
                   Align(
                     alignment: Alignment.center,
                     child: InkWell(
                       onTap: () {
                         try {
-                          Constants.bookings.doc(bookingModel.id).delete();
+                          Constants.bookings.doc(bookingModel.id).update({
+                            "status": "cancelled",
+                          });
                         } on FirebaseException catch (e) {
                           print(e);
                         }
@@ -466,7 +477,7 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
     switch (status) {
       case "pending":
         return CColors.blueShade;
-      case "denied":
+      case "denied" || "cancelled" || "icancelled":
         return CColors.pink;
       default:
         return CColors.primary.withOpacity(0.2);
@@ -485,7 +496,7 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
             size: 18,
           ),
         );
-      case "denied":
+      case "denied" || "cancelled" || "icancelled":
         return CustomAssetImage(
           path: Assets.iconsCancel,
           height: 18,

@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
@@ -66,6 +67,17 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                       color: CColors.white,
                       child: Column(
                         children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                Constants.monthMap[DateFormat("MMMM").format(selectedDate)] ?? "",
+                                style: AppTextStyles.titleMedium(),
+                              ),
+                            ),
+                          ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 5.0),
                             child: WeekCalendarWidget(
@@ -186,7 +198,6 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
             const MarginWidget(),
             timeField(),
             const MarginWidget(),
-            
             DropDownWidget(
                 selectedValue: selectedClasses,
                 dropdownItems: ["1", "2"],
@@ -250,8 +261,13 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                             metaData: booking.toMap(),
                             text: "${user.name} solicita aulas",
                             type: "booking",
-                            time: DateTime.now().millisecondsSinceEpoch),
-                        instructor.uid);
+                            time: DateTime.now().millisecondsSinceEpoch
+                            , isRead: false
+                        ),
+                        instructor.uid,
+
+                    );
+
 
                     context.pop(rootNavigator: true);
 

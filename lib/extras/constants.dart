@@ -109,6 +109,21 @@ class Constants {
   ];
 
 
+  static Map<String, String> monthMap = {
+    'January': 'Janeiro',
+    'February': 'Fevereiro',
+    'March': 'Março',
+    'April': 'Abril',
+    'May': 'Maio',
+    'June': 'Junho',
+    'July': 'Julho',
+    'August': 'Agosto',
+    'September': 'Setembro',
+    'October': 'Outubro',
+    'November': 'Novembro',
+    'December': 'Dezembro',
+  };
+
   //auth
 
   static FirebaseAuth auth() {
@@ -122,6 +137,7 @@ class Constants {
   static String uid() {
     return auth().currentUser!.uid;
   }
+
 
 
   static FirebaseDatabase database =
