@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:projeto/extras/app_textstyles.dart';
+import 'package:projeto/extras/constants.dart';
+import 'package:projeto/model/brand_model.dart';
 import 'package:projeto/provider/dashboard_provider.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/splash_screen.dart';
@@ -17,9 +22,27 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  getBrands();
+
   timeago.setLocaleMessages('pt', MyCustomMessages());
 
   runApp(const MyApp());
+}
+
+getBrands() async {
+  List<BrandModel> brands = [];
+  final String data = await rootBundle.loadString('assets/json/brands.json');
+
+  var d = jsonDecode(data) as Map;
+
+  d.forEach((key, value) {
+    var name = key;
+    List list = value;
+    List<String> vehicles = List<String>.generate(list.length, (index) => list[index]);
+    brands.add(BrandModel(brand: name, vehicles: vehicles));
+  });
+
+  Constants.brands = brands;
 }
 
 class MyApp extends StatelessWidget {
@@ -31,7 +54,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => DataProvider()),
         ChangeNotifierProvider(create: (_) => DashboardProvider()),
-
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

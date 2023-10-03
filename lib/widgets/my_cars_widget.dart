@@ -176,8 +176,12 @@ class MyCarsWidget extends StatelessWidget {
                       ),
                     ),
                     child: Image(
-                      image: NetworkImage(car.vehiclePhoto!),
+                      image: AssetImage("assets/cars/Jeep.jpg"),
+                      fit: BoxFit.cover,
                     ),
+                    // child: Image(
+                    //   image: NetworkImage(car.vehiclePhoto!),
+                    // ),
                   ),
                 ],
               ),

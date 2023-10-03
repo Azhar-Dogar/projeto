@@ -117,7 +117,6 @@ class _DashBoardState extends State<DashBoard> {
         backgroundColor: CColors.dashboard,
         body: PersistentTabView.custom(
           context,
-
           controller: _controller,
           screens: pages,
           confineInSafeArea: true,

@@ -43,7 +43,6 @@ class _DropDownWidgetState extends State<DropDownWidget> {
       height: 55,
       child: DropdownButtonFormField<String>(
         value: selectedValue,
-
         isExpanded: true,
         padding: EdgeInsets.zero,
         icon: const Icon(Icons.keyboard_arrow_down_outlined),

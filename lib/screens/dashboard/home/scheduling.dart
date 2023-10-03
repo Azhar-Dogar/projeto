@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:projeto/extras/app_textstyles.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
-import 'package:projeto/model/booking_model.dart';
-import 'package:projeto/model/notification_model.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/dashboard/home/calendar_screen.dart';
@@ -22,8 +18,8 @@ import 'package:projeto/widgets/instructor_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
 import '../../../extras/colors.dart';
+import '../../../model/availability_model.dart';
 import 'instructors_screen.dart';
-import 'package:geocoding/geocoding.dart';
 
 class SchedulingScreen extends StatefulWidget {
   const SchedulingScreen({super.key, required this.instructor});
@@ -46,11 +42,26 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
   late UserModel instructor;
   late DataProvider dataProvider;
 
+  List<AvailabilityModel> availability = [];
+
   @override
   void initState() {
     super.initState();
     instructor = widget.instructor;
     dataProvider = context.read<DataProvider>();
+    getInstructorAvailability();
+  }
+
+  getInstructorAvailability() async {
+    var data = await Constants.users
+        .doc(widget.instructor.uid)
+        .collection("availability")
+        .get();
+
+    var docs = data.docs;
+
+    availability = List.generate(
+        docs.length, (index) => AvailabilityModel.fromMap(docs[index].data()));
   }
 
   @override
@@ -70,10 +81,11 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
-
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                Constants.monthMap[DateFormat("MMMM").format(selectedDate)] ?? "",
+                                Constants.monthMap[DateFormat("MMMM")
+                                        .format(selectedDate)] ??
+                                    "",
                                 style: AppTextStyles.titleMedium(),
                               ),
                             ),
@@ -235,45 +247,52 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                         context, "Adicione o valor total primeiro");
                     return;
                   }
+
                   try {
-                    Functions.showLoading(context);
-
-                    DocumentReference doc = Constants.bookings.doc();
-
-                    String location = await getCity();
-
-                    int totalCl = int.parse(selectedClasses!);
-                    BookingModel booking = BookingModel(
-                        id: doc.id,
-                        date: selectedDate,
-                        amount: double.parse(amount.text),
-                        instructorID: instructor.uid,
-                        totalClasses: totalCl,
-                        userID: Constants.uid(),
-                        location: location);
-
-                    await doc.set(booking.toMap());
-
-                    UserModel user = context.read<DataProvider>().userModel!;
-
-                    Functions.sendNotification(
-                        NotificationModel(
-                            metaData: booking.toMap(),
-                            text: "${user.name} solicita aulas",
-                            type: "booking",
-                            time: DateTime.now().millisecondsSinceEpoch
-                            , isRead: false
-                        ),
-                        instructor.uid,
-
-                    );
-
-
-                    context.pop(rootNavigator: true);
-
-                    setState(() {
-                      sentMessage = true;
-                    });
+                    if (!isValid()) {
+                      Functions.showSnackBar(context,
+                          "O instrutor não está disponível nesse momento.");
+                      return;
+                    }
+                    print("Success");
+                    // Functions.showLoading(context);
+                    //
+                    // DocumentReference doc = Constants.bookings.doc();
+                    //
+                    // String location = await getCity();
+                    //
+                    // int totalCl = int.parse(selectedClasses!);
+                    // BookingModel booking = BookingModel(
+                    //     id: doc.id,
+                    //     date: selectedDate,
+                    //     amount: double.parse(amount.text),
+                    //     instructorID: instructor.uid,
+                    //     totalClasses: totalCl,
+                    //     userID: Constants.uid(),
+                    //     location: location);
+                    //
+                    // await doc.set(booking.toMap());
+                    //
+                    // UserModel user = context.read<DataProvider>().userModel!;
+                    //
+                    // Functions.sendNotification(
+                    //     NotificationModel(
+                    //         metaData: booking.toMap(),
+                    //         text: "${user.name} solicita aulas",
+                    //         type: "booking",
+                    //         time: DateTime.now().millisecondsSinceEpoch
+                    //         , isRead: false
+                    //     ),
+                    //     instructor.uid,
+                    //
+                    // );
+                    //
+                    //
+                    // context.pop(rootNavigator: true);
+                    //
+                    // setState(() {
+                    //   sentMessage = true;
+                    // });
                   } on FirebaseException catch (e) {
                     context.pop(rootNavigator: true);
                     Functions.showSnackBar(context, "algo aconteceu");
@@ -284,6 +303,85 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
         ),
       ),
     );
+  }
+
+  bool isValid() {
+    bool isValid = true;
+
+    int selectedStartTimeI = int.parse(time.text.split(":")[0]);
+    int selectedEndTimeI = selectedStartTimeI + int.parse(selectedClasses!);
+
+    int day = getDay(DateFormat("EEE").format(selectedDate));
+
+    AvailabilityModel model = availability[day];
+
+    if (model.isAvailable) {
+      if (model.startTime.text.isEmpty) {
+        isValid = false;
+      } else if (model.startTime.text.isNotEmpty) {
+        int startTimeI = int.parse(model.startTime.text.split(":")[0]);
+
+        if (model.endTime.text.isNotEmpty) {
+          int endTimeI = int.parse(model.endTime.text.split(":")[0]);
+
+          if (model.breakStart.text.isEmpty || model.breakEnd.text.isEmpty) {
+            if (!(selectedStartTimeI >= startTimeI &&
+                selectedEndTimeI <= endTimeI)) {
+              isValid = false;
+            }
+          } else {
+            int breakStartTimeI =
+                int.parse(model.breakStart.text.split(":")[0]);
+            int breakEndTimeI = int.parse(model.breakEnd.text.split(":")[0]);
+            if ((selectedStartTimeI >= startTimeI &&
+                    selectedStartTimeI <= breakStartTimeI &&
+                    selectedEndTimeI <= breakStartTimeI) ||
+                (selectedStartTimeI >= breakEndTimeI &&
+                    selectedStartTimeI <= endTimeI &&
+                    selectedEndTimeI <= endTimeI)) {
+            } else {
+              isValid = false;
+            }
+          }
+        } else {
+          if (selectedStartTimeI < startTimeI) {
+            isValid = false;
+          }
+        }
+      }
+    } else {
+      isValid = false;
+    }
+    return isValid;
+  }
+
+  int getDay(String day) {
+    int index = 0;
+    switch (day) {
+      case "Mon":
+        index = 0;
+        break;
+      case "Tue":
+        index = 1;
+        break;
+      case "Wed":
+        index = 2;
+        break;
+      case "Thu":
+        index = 3;
+        break;
+      case "Fri":
+        index = 4;
+        break;
+      case "Sat":
+        index = 5;
+        break;
+      case "Sun":
+        index = 6;
+        break;
+    }
+
+    return index;
   }
 
   Widget timeField() {

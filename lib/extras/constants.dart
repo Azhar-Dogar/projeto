@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:projeto/model/brand_model.dart';
 
 import 'colors.dart';
 
@@ -16,6 +17,8 @@ class Constants {
       ),
     ];
   }
+
+  static List<BrandModel> brands = [];
 
   static List<String> months = [
     "Jan",

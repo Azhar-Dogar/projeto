@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_textstyles.dart';
+import 'package:projeto/extras/functions.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/widgets/availability_widget.dart';
 import 'package:projeto/widgets/button_widget.dart';
@@ -54,21 +55,27 @@ class _AvailabilityState extends State<Availability> {
               ButtonWidget(
                 name: "Salvar",
                 onPressed: () async {
-                  for(var availability in provider.availability){
-                    if (validateFields([
-                      availability.startTime,
-                      availability.endTime,
-                      availability.breakStart,
-                      availability.breakEnd,
-                    ])) {
-                      await Constants.users
-                          .doc(Constants.uid())
-                          .collection("availability")
-                          .doc((Constants.days.indexOf(availability.day) + 1)
-                          .toString())
-                          .update(availability.toMap());
-                    }
+                  // String names = "";
+                  for (var availability in provider.availability) {
+                    // if (validateFields([
+                    //   availability.startTime,
+                    //   availability.endTime,
+                    //   availability.breakStart,
+                    //   availability.breakEnd,
+                    // ])) {
+                    await Constants.users
+                        .doc(Constants.uid())
+                        .collection("availability")
+                        .doc((Constants.days.indexOf(availability.day) + 1)
+                            .toString())
+                        .update(availability.toMap());
+                    // }
+                    // else{
+                    //   names += "${availability.day}, ";
+                    // }
                   }
+
+                  // Functions.showSnackBar(context, "${names} Os dados não são salvos porque havia campos vazios.");
                 },
               ),
             ],
@@ -77,5 +84,4 @@ class _AvailabilityState extends State<Availability> {
       );
     });
   }
-
 }

@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
+import 'package:projeto/model/brand_model.dart';
 import 'package:projeto/model/car_model.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:projeto/widgets/drop_down_widget.dart';
@@ -467,6 +469,10 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget vehicleWidget() {
+    for (var b in Constants.brands) {
+      print(b.toString());
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -477,9 +483,12 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
         const MarginWidget(),
         DropDownWidget(
-          dropdownItems: Constants.portugueseVehicleBrands,
+          dropdownItems: List.generate(Constants.brands.length,
+              (index) => Constants.brands[index].brand),
           onSelect: (value) {
-            brand.text = value;
+            setState(() {
+              brand.text = value;
+            });
           },
           label: "Marca",
         ),
@@ -493,6 +502,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 List.generate(40, (i) => (currentYear - i).toString()),
             onSelect: (value) {
               year.text = value;
+              vehicle.text = "";
             },
             label: "Ano",
           );
@@ -500,13 +510,19 @@ class _SignupScreenState extends State<SignupScreen> {
         const MarginWidget(
           factor: 1,
         ),
-        DropDownWidget(
-          dropdownItems: Constants.portugueseVehicleBrands,
-          onSelect: (value) {
-            vehicle.text = value;
-          },
-          label: "Veículo",
-        ),
+        Builder(builder: (context) {
+          BrandModel? model = Constants.brands
+              .where((element) => element.brand == brand.text)
+              .firstOrNull;
+          return DropDownWidget(
+            key: Key("${Random().nextInt(10000)}"),
+            dropdownItems: model?.vehicles ?? [],
+            onSelect: (value) {
+              vehicle.text = value;
+            },
+            label: "Veículo",
+          );
+        }),
         const MarginWidget(
           factor: 1,
         ),

@@ -2,6 +2,26 @@
 class Assets {
   Assets._();
 
+  static const String carsAudi = 'assets/cars/Audi.jpg';
+  static const String carsBMW = 'assets/cars/BMW.jpg';
+  static const String carsCitroen = 'assets/cars/Citroen.jpg';
+  static const String carsFiat = 'assets/cars/Fiat.jpg';
+  static const String carsFord = 'assets/cars/Ford.jpg';
+  static const String carsHyundai = 'assets/cars/Hyundai.jpg';
+  static const String carsJeep = 'assets/cars/Jeep.jpg';
+  static const String carsKia = 'assets/cars/Kia.jpg';
+  static const String carsMazda = 'assets/cars/Mazda.jpg';
+  static const String carsMercedesBenz = 'assets/cars/Mercedes-Benz.jpg';
+  static const String carsMitsubishi = 'assets/cars/Mitsubishi.jpg';
+  static const String carsNissan = 'assets/cars/Nissan.jpg';
+  static const String carsOpel = 'assets/cars/Opel.jpg';
+  static const String carsPeugeot = 'assets/cars/Peugeot.jpg';
+  static const String carsRenault = 'assets/cars/Renault.jpg';
+  static const String carsSeat = 'assets/cars/Seat.jpg';
+  static const String carsSkoda = 'assets/cars/Skoda.jpg';
+  static const String carsToyota = 'assets/cars/Toyota.jpg';
+  static const String carsVolkswagen = 'assets/cars/Volkswagen.jpg';
+  static const String carsVolvo = 'assets/cars/Volvo.jpg';
   static const String iconsApproval = 'assets/icons/approval.png';
   static const String iconsBrief = 'assets/icons/brief.png';
   static const String iconsCalendar = 'assets/icons/calendar.png';
@@ -36,5 +56,6 @@ class Assets {
   static const String imagesPlaceHolder = 'assets/images/placeHolder.png';
   static const String imagesProfile = 'assets/images/profile.png';
   static const String imagesSplashImage = 'assets/images/splash_image.png';
+  static const String jsonIndustries = 'assets/json/brands.json';
 
 }
