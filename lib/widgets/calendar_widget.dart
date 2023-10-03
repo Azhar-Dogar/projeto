@@ -113,13 +113,19 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
               Text(
                 dayName,
                 style: AppTextStyles.captionRegular(
-                    color: CColors.textFieldBorder, size: 10),
+                    color: widget.selectedDate == dateList[index]
+                        ? CColors.primary
+                        : CColors.textFieldBorder,
+                    size: 10),
               ),
               const MarginWidget(factor: 0.3),
               Text(
                 "${DateFormat("dd").format(dateList[index])}",
                 style: AppTextStyles.captionRegular(
-                    color: CColors.textFieldBorder),
+                  color: widget.selectedDate == dateList[index]
+                      ? CColors.primary
+                      : CColors.textFieldBorder,
+                ),
               ),
               if (isBookingDate(index)) ...[
                 const MarginWidget(factor: 0.3),
@@ -140,8 +146,8 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
       List<BookingModel> bookings = context
           .read<DataProvider>()
           .bookings
-          .where((element) =>
-              Functions.isSameDay(element.date, dateList[index]))
+          .where(
+              (element) => Functions.isSameDay(element.date, dateList[index]))
           .toList();
       return bookings.isNotEmpty;
     } else {
