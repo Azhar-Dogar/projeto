@@ -367,7 +367,7 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 subTitle("R\$ 80,00"),
-                subTitle("R\$ ${bookingModel.amount}"),
+                subTitle("R\$ ${bookingModel.amount.toInt()},00"),
               ],
             ),
             const DividerWidget(),
@@ -438,9 +438,8 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
                     ),
                   ),
                 ]
-              ] else ...[
+              ] else if(bookingModel.status == "completed") ...[
                 const MarginWidget(),
-                if (!bookingModel.instructorRating) ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -465,12 +464,6 @@ class _UserClassesScreenState extends State<UserClassesScreen> {
                       ),
                     ],
                   ),
-                ] else ...[
-                  Text(
-                    "Obrigado por avaliar seu instrutor.",
-                    style: AppTextStyles.captionMedium(color: CColors.primary),
-                  )
-                ],
               ],
             ],
             const MarginWidget(factor: 0.5),

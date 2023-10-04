@@ -244,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontWeight: FontWeight.w500,
               ),
               CustomText(
-                text: "R\$ ${dataProvider.userModel!.credits}",
+                text: "R\$ ${dataProvider.userModel!.credits!.toInt()},00",
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 textColor: CColors.primary,

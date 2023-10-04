@@ -55,7 +55,7 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
 
       return Scaffold(
         backgroundColor: Colors.white,
-        appBar: CustomAppBar("Agenda"),
+        appBar: CustomAppBar("Agenda", isInstructor: true),
         body: Column(
           children: [
             segmentSwitch(),
@@ -294,23 +294,22 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                       title("Aluno"),
                       const MarginWidget(factor: 0.2),
                       subTitle("${userModel!.name}"),
-
                     ],
                   ),
                 ),
-                if(bookingModel.status == "cancelled" || bookingModel.status == "icancelled")
-                Container(
-                  height: 35,
-                  width: 35,
-                  decoration: BoxDecoration(
-                      color: CColors.pink,
-                      shape: BoxShape.circle),
-                  alignment: Alignment.center,
-                  child: CustomAssetImage(
-                    path: Assets.iconsCancel,
-                    height: 18,
-                  ),
-                )
+                if (bookingModel.status == "cancelled" ||
+                    bookingModel.status == "icancelled")
+                  Container(
+                    height: 35,
+                    width: 35,
+                    decoration: BoxDecoration(
+                        color: CColors.pink, shape: BoxShape.circle),
+                    alignment: Alignment.center,
+                    child: CustomAssetImage(
+                      path: Assets.iconsCancel,
+                      height: 18,
+                    ),
+                  )
               ],
             ),
             const MarginWidget(factor: 0.2),
@@ -345,7 +344,7 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 subTitle("R\$ 80,00"),
-                subTitle("R\$ ${bookingModel.amount}"),
+                subTitle("R\$ ${bookingModel.amount.toInt()},00"),
               ],
             ),
             const DividerWidget(),
@@ -386,7 +385,7 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                           }
                         }
                       : null),
-              if(bookingModel.status == "confirmed")...[
+              if (bookingModel.status == "confirmed") ...[
                 const MarginWidget(),
                 Align(
                   alignment: Alignment.center,
@@ -394,7 +393,7 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                     onTap: () {
                       try {
                         Constants.bookings.doc(bookingModel.id).update({
-                          "status" : "icancelled",
+                          "status": "icancelled",
                         });
                       } on FirebaseException catch (e) {
                         print(e);
@@ -403,7 +402,7 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                     child: Text(
                       "Cancelar aula",
                       style:
-                      AppTextStyles.captionMedium(color: CColors.primary),
+                          AppTextStyles.captionMedium(color: CColors.primary),
                     ),
                   ),
                 ),
@@ -435,9 +434,15 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
                   ),
                 ],
               ),
-            ]else if(bookingModel.status == "cancelled" || bookingModel.status == "icancelled")...[
+            ] else if (bookingModel.status == "cancelled" ||
+                bookingModel.status == "icancelled") ...[
               const MarginWidget(),
-              Center(child: Text("A reserva foi cancelada",style: AppTextStyles.poppins(style: TextStyle(color: CColors.primary)),))
+              Center(
+                  child: Text(
+                "A reserva foi cancelada",
+                style: AppTextStyles.poppins(
+                    style: TextStyle(color: CColors.primary)),
+              ))
             ],
             const MarginWidget(factor: 0.5),
           ],

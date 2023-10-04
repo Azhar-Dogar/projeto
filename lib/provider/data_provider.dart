@@ -285,8 +285,10 @@ class DataProvider with ChangeNotifier {
     notificationStream = Constants.users
         .doc(Constants.uid())
         .collection("notifications")
+        .orderBy("time", descending: true)
         .snapshots()
         .listen((snapshots) {
+          notifications = [];
       var docs = snapshots.docs.where((element) => element.exists).toList();
       print("+++++++++");
       print(docs.length);

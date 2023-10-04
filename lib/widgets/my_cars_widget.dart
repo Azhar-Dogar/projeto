@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:projeto/model/car_model.dart';
 import 'package:projeto/screens/instructor/dashboard/add_car.dart';
 import 'package:utility_extensions/utility_extensions.dart';
-
 import '../extras/app_textstyles.dart';
 import '../extras/colors.dart';
-import '../generated/assets.dart';
+
 
 class MyCarsWidget extends StatelessWidget {
   const MyCarsWidget({Key? key, required this.car}) : super(key: key);
@@ -176,7 +175,7 @@ class MyCarsWidget extends StatelessWidget {
                       ),
                     ),
                     child: Image(
-                      image: AssetImage("assets/cars/Jeep.jpg"),
+                      image: AssetImage("assets/cars/${car.brand}.jpg"),
                       fit: BoxFit.cover,
                     ),
                     // child: Image(

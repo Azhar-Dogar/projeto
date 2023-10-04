@@ -16,11 +16,13 @@ class WeekCalendarWidget extends StatefulWidget {
     this.isAgenda = false,
     required this.onTap,
     required this.selectedDate,
+    this.rebuild = false,
   });
 
   final bool isAgenda;
   final Function(DateTime) onTap;
   final DateTime selectedDate;
+  final bool rebuild;
 
   @override
   State<WeekCalendarWidget> createState() => _WeekCalendarWidgetState();
@@ -37,6 +39,15 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
   @override
   void initState() {
     super.initState();
+
+    print(dateTime);
+
+    dateList = [];
+
+    if (widget.rebuild) {
+      dateTime = widget.selectedDate.subtract(Duration(days: 15));
+    }
+
     for (int i = 0; i < 30; i++) {
       dateList.add(dateTime.add(Duration(days: i)));
     }

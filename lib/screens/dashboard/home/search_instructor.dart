@@ -255,9 +255,19 @@ class _SearchInstructorState extends State<SearchInstructor> {
                         "${carModel!.vehicle}, ${carModel.year}",
                         style: AppTextStyles.subTitleRegular(),
                       ),
-                      Text(
-                        "R\$ ${instructor.amount}",
-                        style: AppTextStyles.subTitleRegular(),
+                      Builder(
+                        builder: (context) {
+                          String value;
+                          if (instructor.amount!.contains(",")) {
+                            value = instructor.amount!;
+                          }  else{
+                            value = "${double.parse(instructor.amount!).toInt()},00";
+                          }
+                          return Text(
+                            "R\$ ${value}",
+                            style: AppTextStyles.subTitleRegular(),
+                          );
+                        }
                       )
                     ],
                   ),

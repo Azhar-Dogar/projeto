@@ -6,6 +6,7 @@ import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/dashboard_screen.dart';
 import 'package:projeto/screens/instructor/instructor_dashboard.dart';
 import 'package:provider/provider.dart';
+
 // import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
 //     as bg;
 import 'package:utility_extensions/utility_extensions.dart';
@@ -22,16 +23,14 @@ class _CheckDataState extends State<CheckData> {
   void initState() {
     super.initState();
 
-
-
+    Future.delayed(Duration(milliseconds: 10), () {
+      context.read<DashboardProvider>().selectedIndex = 2;
+    });
   }
 
   listenLocation() async {
-
     Geolocator.getPositionStream().listen((event) {
-
       saveData(event);
-
     });
 
     // bg.BackgroundGeolocation.onLocation((bg.Location location) {
@@ -68,15 +67,10 @@ class _CheckDataState extends State<CheckData> {
 
   @override
   Widget build(BuildContext context) {
-
-    Future.delayed(Duration(milliseconds: 10),(){
-      context.read<DashboardProvider>().selectedIndex = 2;
-    });
     // Constants.auth().signOut();
     return Consumer<DataProvider>(builder: (context, data, child) {
       provider = data;
       if (data.userModel != null) {
-
         if (data.userModel!.isUser) {
           if (provider.latitude == null) {
             determinePosition();
@@ -119,7 +113,8 @@ class _CheckDataState extends State<CheckData> {
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      showError('Location permissions are permanently denied, we cannot request permissions. Turn these on from settings');
+      showError(
+          'Location permissions are permanently denied, we cannot request permissions. Turn these on from settings');
     }
 
     var position = await Geolocator.getCurrentPosition();

@@ -9,6 +9,7 @@ import '../../../../extras/colors.dart';
 class ProfileHeaderWidget extends StatelessWidget {
   const ProfileHeaderWidget({Key? key}) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     return Consumer<DataProvider>(
@@ -23,7 +24,7 @@ class ProfileHeaderWidget extends StatelessWidget {
                 style: AppTextStyles.captionMedium(),
               ),
               Text(
-                "R\$ ${value.userModel!.credits}",
+                "R\$ ${value.userModel!.credits?.toInt()},00",
                 style: AppTextStyles.subTitleMedium(color: CColors.primary),
               ),
             ],

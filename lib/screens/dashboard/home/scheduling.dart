@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,8 @@ import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
 import '../../../extras/colors.dart';
 import '../../../model/availability_model.dart';
+import '../../../model/booking_model.dart';
+import '../../../model/notification_model.dart';
 import 'instructors_screen.dart';
 
 class SchedulingScreen extends StatefulWidget {
@@ -43,6 +47,8 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
   late DataProvider dataProvider;
 
   List<AvailabilityModel> availability = [];
+
+  bool rebuild = false;
 
   @override
   void initState() {
@@ -93,9 +99,11 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 5.0),
                             child: WeekCalendarWidget(
+                              rebuild: rebuild,
                               onTap: (value) {
                                 setState(() {
                                   selectedDate = value;
+                                  rebuild = false;
                                 });
                               },
                               selectedDate: selectedDate,
@@ -108,10 +116,12 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                               onTap: () {
                                 context.push(
                                   child: CalendarScreen(
+                                      key: Key("${Random().nextInt(1000)}"),
                                       selectedDate: selectedDate,
                                       callBack: (date) {
                                         setState(() {
                                           selectedDate = date;
+                                          rebuild = true;
                                         });
                                       }),
                                 );
@@ -186,7 +196,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
               style: AppTextStyles.captionMedium(),
             ),
             Text(
-              "R\$ ${dataProvider.userModel?.credits ?? 0}",
+              "R\$ ${dataProvider.userModel?.credits!.toInt() ?? 0},00",
               style: AppTextStyles.captionMedium(color: CColors.primary),
             )
           ],
@@ -254,45 +264,41 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                           "O instrutor não está disponível nesse momento.");
                       return;
                     }
-                    print("Success");
-                    // Functions.showLoading(context);
-                    //
-                    // DocumentReference doc = Constants.bookings.doc();
-                    //
-                    // String location = await getCity();
-                    //
-                    // int totalCl = int.parse(selectedClasses!);
-                    // BookingModel booking = BookingModel(
-                    //     id: doc.id,
-                    //     date: selectedDate,
-                    //     amount: double.parse(amount.text),
-                    //     instructorID: instructor.uid,
-                    //     totalClasses: totalCl,
-                    //     userID: Constants.uid(),
-                    //     location: location);
-                    //
-                    // await doc.set(booking.toMap());
-                    //
-                    // UserModel user = context.read<DataProvider>().userModel!;
-                    //
-                    // Functions.sendNotification(
-                    //     NotificationModel(
-                    //         metaData: booking.toMap(),
-                    //         text: "${user.name} solicita aulas",
-                    //         type: "booking",
-                    //         time: DateTime.now().millisecondsSinceEpoch
-                    //         , isRead: false
-                    //     ),
-                    //     instructor.uid,
-                    //
-                    // );
-                    //
-                    //
-                    // context.pop(rootNavigator: true);
-                    //
-                    // setState(() {
-                    //   sentMessage = true;
-                    // });
+                    Functions.showLoading(context);
+
+                    DocumentReference doc = Constants.bookings.doc();
+
+                    String location = await getCity();
+
+                    int totalCl = int.parse(selectedClasses!);
+                    BookingModel booking = BookingModel(
+                        id: doc.id,
+                        date: selectedDate,
+                        amount: double.parse(amount.text),
+                        instructorID: instructor.uid,
+                        totalClasses: totalCl,
+                        userID: Constants.uid(),
+                        location: location);
+
+                    await doc.set(booking.toMap());
+
+                    UserModel user = context.read<DataProvider>().userModel!;
+
+                    Functions.sendNotification(
+                      NotificationModel(
+                          metaData: booking.toMap(),
+                          text: "${user.name} solicita aulas",
+                          type: "booking",
+                          time: DateTime.now().millisecondsSinceEpoch,
+                          isRead: false),
+                      instructor.uid,
+                    );
+
+                    context.pop(rootNavigator: true);
+
+                    setState(() {
+                      sentMessage = true;
+                    });
                   } on FirebaseException catch (e) {
                     context.pop(rootNavigator: true);
                     Functions.showSnackBar(context, "algo aconteceu");

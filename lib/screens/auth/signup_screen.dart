@@ -488,6 +488,7 @@ class _SignupScreenState extends State<SignupScreen> {
           onSelect: (value) {
             setState(() {
               brand.text = value;
+              vehicle.text = "";
             });
           },
           label: "Marca",
@@ -502,7 +503,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 List.generate(40, (i) => (currentYear - i).toString()),
             onSelect: (value) {
               year.text = value;
-              vehicle.text = "";
             },
             label: "Ano",
           );

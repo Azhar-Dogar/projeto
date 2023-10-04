@@ -64,6 +64,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   const MarginWidget(
                     factor: 1.5,
                   ),
+                  Container(
+                    decoration: BoxDecoration(
+
+                    ),
+                  ),
                   TextFieldWidget(
                     backColor: Colors.transparent,
                     borderColor: Colors.white,
@@ -88,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       InkWell(
-                        onTap : (){
+                        onTap: () {
                           context.push(child: ForgotPassword());
                         },
                         child: Text(
@@ -181,7 +186,18 @@ class _LoginScreenState extends State<LoginScreen> {
     }).catchError((error) {
       context.pop();
       var e = error as FirebaseAuthException;
-      Functions.showSnackBar(context, e.message ?? "");
+      switch (e.code) {
+        case "user-not-found":
+          Functions.showSnackBar(context,
+              "E-mail inválido. Nenhum usuário encontrado com este e-mail");
+          break;
+        case "wrong-password":
+          Functions.showSnackBar(context, "Senha errada digitada");
+          break;
+        default:
+          Functions.showSnackBar(context, "Incapaz de entrar. Algo deu errado");
+          break;
+      }
     });
   }
 }

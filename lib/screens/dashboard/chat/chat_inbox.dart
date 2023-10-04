@@ -112,6 +112,7 @@ class _InboxScreenState extends State<InboxScreen> {
                     InkWell(
                       onTap: () {
                         chat.sendMessage("text", null);
+
                       },
                       child: CustomAssetImage(
                         path: AppIcons.send,

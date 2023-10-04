@@ -10,12 +10,14 @@ import 'package:projeto/extras/functions.dart';
 import 'package:projeto/model/booking_model.dart';
 import 'package:projeto/model/review_model.dart';
 import 'package:projeto/model/user_model.dart';
+import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/screens/dashboard/reviews/review_success.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
+import '../../../provider/data_provider.dart';
 import '../../../widgets/c_profile_app_bar.dart';
 
 class ReviewInstructor extends StatefulWidget {
@@ -35,6 +37,27 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
 
   double instructorR = 1, vehicleR = 1, courseR = 1;
   TextEditingController opinionC = TextEditingController();
+
+  ReviewModel? reviewModel;
+
+  @override
+  void initState() {
+    super.initState();
+
+    reviewModel = context
+        .read<DataProvider>()
+        .getUserById(widget.bookingModel.instructorID)!
+        .reviews
+        .where((element) => element.bookingID == widget.bookingModel.id)
+        .firstOrNull;
+
+    if (reviewModel != null) {
+      instructorR = reviewModel!.instructorR!;
+      vehicleR = reviewModel!.vehicleR!;
+      courseR = reviewModel!.courseR!;
+      opinionC.text = reviewModel!.opinion;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,62 +142,65 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
                     ),
                     const MarginWidget(),
                     TextFieldWidget(
+                      enabled: reviewModel == null,
                       controller: opinionC,
                       hint: '',
                       maxLines: 5,
                     ),
                     const MarginWidget(factor: 2),
-                    ButtonWidget(
-                        name: "Enviar",
-                        onPressed: () async {
-                          if (opinionC.text.isEmpty) {
-                            Functions.showSnackBar(
-                                context, "Por favor insira sua opinião");
-                            return;
-                          }
+                    if (reviewModel == null) ...[
+                      ButtonWidget(
+                          name: "Enviar",
+                          onPressed: () async {
+                            if (opinionC.text.isEmpty) {
+                              Functions.showSnackBar(
+                                  context, "Por favor insira sua opinião");
+                              return;
+                            }
 
-                          try {
-                            double rating =
-                                (instructorR + vehicleR + courseR) / 3.0;
+                            try {
+                              double rating =
+                                  (instructorR + vehicleR + courseR) / 3.0;
+                              ReviewModel model = ReviewModel(
+                                bookingID: widget.bookingModel.id,
+                                userID: Constants.uid(),
+                                date: DateTime.now(),
+                                time: DateFormat("hh:mm a")
+                                    .format(widget.bookingModel.date),
+                                instructorR: instructorR,
+                                vehicleR: vehicleR,
+                                courseR: courseR,
+                                totalR: rating,
+                                opinion: opinionC.text,
+                              );
 
-                            ReviewModel model = ReviewModel(
-                              bookingID: widget.bookingModel.id,
-                              userID: Constants.uid(),
-                              date: DateTime.now(),
-                              time: DateFormat("hh:mm a")
-                                  .format(widget.bookingModel.date),
-                              instructorR: instructorR,
-                              vehicleR: vehicleR,
-                              courseR: courseR,
-                              totalR: rating,
-                              opinion: opinionC.text,
-                            );
+                              Functions.showLoading(context);
 
-                            Functions.showLoading(context);
+                              UserModel updated = widget.instructor;
+                              updated.reviews.add(model);
 
-                            UserModel updated = widget.instructor;
-                            updated.reviews.add(model);
+                              await Constants.users.doc(updated.uid).update({
+                                "reviews": updated.reviews
+                                    .map((e) => e.toMap())
+                                    .toList()
+                              });
 
-                            await Constants.users.doc(updated.uid).update({
-                              "reviews":
-                                  updated.reviews.map((e) => e.toMap()).toList()
-                            });
+                              await Constants.bookings
+                                  .doc(widget.bookingModel.id)
+                                  .update({
+                                "instructorRating": true,
+                              });
 
-                            await Constants.bookings
-                                .doc(widget.bookingModel.id)
-                                .update({
-                              "instructorRating": true,
-                            });
+                              context.pop(rootNavigator: true);
 
-                            context.pop(rootNavigator: true);
-
-                            context.pushReplacement(
-                                child: const ReviewSuccess());
-                          } on FirebaseException catch (e) {
-                            print(e);
-                          }
-                        }),
-                    const MarginWidget(),
+                              context.pushReplacement(
+                                  child: const ReviewSuccess());
+                            } on FirebaseException catch (e) {
+                              print(e);
+                            }
+                          }),
+                      const MarginWidget(),
+                    ],
                   ],
                 ),
               ),
@@ -187,6 +213,7 @@ class _ReviewInstructorState extends State<ReviewInstructor> {
 
   Widget rating(double rating, void Function(double) onUpdate) {
     return RatingBar.builder(
+      ignoreGestures: reviewModel != null,
       itemSize: 30,
       initialRating: rating,
       minRating: 1,

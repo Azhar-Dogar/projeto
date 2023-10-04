@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +18,7 @@ import 'package:utility_extensions/utility_extensions.dart';
 
 import '../../../extras/app_textstyles.dart';
 import '../../../extras/colors.dart';
+import '../../../model/brand_model.dart';
 import '../../../widgets/custom_text.dart';
 import '../../../widgets/margin_widget.dart';
 
@@ -74,9 +76,13 @@ class _AddCarState extends State<AddCar> {
               child: Column(
                 children: [
                   DropDownWidget(
-                    dropdownItems: Constants.portugueseVehicleBrands,
+                    dropdownItems: List.generate(Constants.brands.length,
+                        (index) => Constants.brands[index].brand),
                     onSelect: (value) {
-                      brand.text = value;
+                      setState(() {
+                        brand.text = value;
+                        vehicle.text = value;
+                      });
                     },
                     selectedValue: brand.text.isEmpty ? null : brand.text,
                     label: "Marca",
@@ -97,15 +103,25 @@ class _AddCarState extends State<AddCar> {
                     );
                   }),
                   MarginWidget(),
-                  DropDownWidget(
-                    dropdownItems: Constants.portugueseVehicleBrands,
-                    onSelect: (value) {
-                      vehicle.text = value;
-                    },
-                    selectedValue: vehicle.text.isEmpty ? null : vehicle.text,
-                    label: "Veículo",
-                    isEdit: isEditing,
-                  ),
+                  Builder(builder: (context) {
+                    BrandModel? model = Constants.brands
+                        .where((element) => element.brand == brand.text)
+                        .firstOrNull;
+                    print(vehicle.text);
+                    if (model != null && !model.vehicles.contains(vehicle.text)) {
+                      vehicle.text = model.vehicles.first;
+                    }
+                    return DropDownWidget(
+                      key: Key("${Random().nextInt(10000)}"),
+                      dropdownItems: model?.vehicles ?? [],
+                      onSelect: (value) {
+                        vehicle.text = value;
+                      },
+                      selectedValue: vehicle.text.isEmpty ? null : vehicle.text,
+                      label: "Veículo",
+                      isEdit: isEditing,
+                    );
+                  }),
                   MarginWidget(),
                   documentsWidget(),
                 ],

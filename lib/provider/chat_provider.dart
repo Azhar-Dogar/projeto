@@ -26,7 +26,6 @@ class ChatProvider with ChangeNotifier {
   late CollectionReference<Map<String, dynamic>> reference;
   var messageController = TextEditingController();
 
-
   Future<void> sendMessage(String type, String? mediaLink) async {
     var text = messageController.text;
     messageController.text = "";
@@ -35,15 +34,13 @@ class ChatProvider with ChangeNotifier {
       time: time.millisecondsSinceEpoch,
       lastMessage: text,
       to: receiver.uid,
-      name:
-          receiver.name,
+      name: receiver.name,
       image: receiver.image,
       type: type,
     );
 
     var forReceiverChat = ChatModel(
       time: time.millisecondsSinceEpoch,
-
       lastMessage: text,
       to: sender.uid,
       name: sender.name,
@@ -82,8 +79,11 @@ class ChatProvider with ChangeNotifier {
       forReceiverChat.toMap(),
     );
 
-
-    var notification = NotificationModel(text: "${sender.name} enviou uma mensagem.", type: "chat", time: DateTime.now().millisecondsSinceEpoch, isRead: false);
+    var notification = NotificationModel(
+        text: "${sender.name} enviou uma mensagem.",
+        type: "chat",
+        time: DateTime.now().millisecondsSinceEpoch,
+        isRead: false);
     Functions.sendNotification(notification, receiver.uid);
     await senderMessageDoc.set(message.toMap());
     await receiverMessageDoc.set(message.toMap());
@@ -113,22 +113,25 @@ class ChatProvider with ChangeNotifier {
               (element) => element.senderId != Constants.uid() && !element.read)
           .toList();
 
-
       print(unReadMessages.length);
-      for(var msg in unReadMessages){
+      for (var msg in unReadMessages) {
         Constants.messages
             .doc(receiver.uid)
             .collection("chats")
-            .doc(sender.uid )
-            .collection("messages").doc(msg.id).update({
-          "read" : true,
+            .doc(sender.uid)
+            .collection("messages")
+            .doc(msg.id)
+            .update({
+          "read": true,
         });
-        reference..doc(msg.id).update({
-          "read" : true,
-        });
+        reference
+          ..doc(msg.id).update({
+            "read": true,
+          });
       }
 
-      controller.animateTo(0, duration: Duration(seconds: 1), curve: ElasticInCurve());
+      controller.animateTo(0,
+          duration: Duration(seconds: 1), curve: ElasticInCurve());
       state = 1;
       notifyListeners();
     });

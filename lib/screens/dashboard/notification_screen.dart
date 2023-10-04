@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/app_assets.dart';
@@ -54,6 +56,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
         if (updatedBooking != null) {
           notifications.add(element);
         }
+      } else {
+        notifications.add(element);
       }
     });
 
@@ -61,7 +65,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
       padding: EdgeInsets.only(left: padding, right: padding),
       child: ListView.separated(
         itemBuilder: (ctx, i) {
-          return NotificationWidget(notification: notifications[i]);
+          return NotificationWidget(
+            notification: notifications[i],
+            key: Key("${Random().nextInt(10000)}"),
+          );
         },
         separatorBuilder: (ctx, i) {
           return const DividerWidget();
@@ -97,40 +104,40 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
-  Widget notificationRow(String path) {
-    return Column(
-      children: [
-        const MarginWidget(),
-        Padding(
-          padding: const EdgeInsets.only(left: 8, right: 8),
-          child: Row(
-            children: [
-              CustomAssetImage(
-                path: path,
-                height: 24,
-                color: Colors.black,
-              ),
-              const MarginWidget(isHorizontal: true),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Annette Johnson enviou uma mensagem",
-                    style: AppTextStyles.captionRegular(),
-                  ),
-                  const MarginWidget(factor: 0.5),
-                  Text(
-                    "1 hora atrás",
-                    style: AppTextStyles.captionRegular(
-                        color: CColors.textFieldBorder),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const MarginWidget(),
-      ],
-    );
-  }
+  // Widget notificationRow(String path) {
+  //   return Column(
+  //     children: [
+  //       const MarginWidget(),
+  //       Padding(
+  //         padding: const EdgeInsets.only(left: 8, right: 8),
+  //         child: Row(
+  //           children: [
+  //             CustomAssetImage(
+  //               path: path,
+  //               height: 24,
+  //               color: Colors.black,
+  //             ),
+  //             const MarginWidget(isHorizontal: true),
+  //             Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(
+  //                   "Annette Johnson enviou uma mensagem",
+  //                   style: AppTextStyles.captionRegular(),
+  //                 ),
+  //                 const MarginWidget(factor: 0.5),
+  //                 Text(
+  //                   "1 hora atrás",
+  //                   style: AppTextStyles.captionRegular(
+  //                       color: CColors.textFieldBorder),
+  //                 ),
+  //               ],
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       const MarginWidget(),
+  //     ],
+  //   );
+  // }
 }

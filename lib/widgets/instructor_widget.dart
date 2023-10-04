@@ -133,7 +133,19 @@ class InstructorWidget extends StatelessWidget {
                       color: CColors.divider,
                       height: 1,
                     ),
-                    info("Hora / Aula", "R\$ ${user.amount}"),
+                    Builder(
+                      builder: (context) {
+                        String value;
+                        if (user.amount!.contains(",")) {
+                          value = user.amount!;
+                        }  else{
+                          value = "${double.parse(user.amount!).toInt()},00";
+                        }
+                        return info("Hora / Aula", "R\$ ${value}");
+                      }
+                    ),
+
+                    // info("Hora / Aula", "R\$ ${user.amount}"),
                     Divider(
                       color: CColors.divider,
                       height: 1,

@@ -140,51 +140,45 @@ class _RegisterPasswordState extends State<RegisterPassword> {
                                 "licenseDocument/${Constants.uid()}.${user.licenseDocumentFile!.path.split(".").last}");
                         user.licenseDocument = imageDocumentLink;
 
-
-
-
                         user.uid = Constants.uid();
                         Constants.users.doc(Constants.uid()).set(user.isUser
                             ? user.toMapUserCreate()
                             : user.toMapInstructorCreate());
 
-
-
-
-                        if(widget.car != null){
-
+                        if (widget.car != null) {
                           var car = widget.car!;
                           var carDoc = Constants.cars.doc();
                           car.vehiclePhoto = car.vehiclePhotoFile == null
                               ? null
-                              : await Functions.uploadFile(car.vehiclePhotoFile!,
-                              path:
-                              "vehiclePhoto/${carDoc.id}.${car.vehiclePhotoFile!.path.split(".").last}");
+                              : await Functions.uploadFile(
+                                  car.vehiclePhotoFile!,
+                                  path:
+                                      "vehiclePhoto/${carDoc.id}.${car.vehiclePhotoFile!.path.split(".").last}");
                           car.vehicleDocument = car.vehicleDocumentFile == null
                               ? null
                               : await Functions.uploadFile(
-                              car.vehicleDocumentFile!,
-                              path:
-                              "vehicleDocument/${carDoc.id}.${car.vehicleDocumentFile!.path.split(".").last}");
+                                  car.vehicleDocumentFile!,
+                                  path:
+                                      "vehicleDocument/${carDoc.id}.${car.vehicleDocumentFile!.path.split(".").last}");
                           car.vehicleLicense = car.vehicleLicenseFile == null
                               ? null
                               : await Functions.uploadFile(
-                              car.vehicleLicenseFile!,
-                              path:
-                              "vehicleLicense/${carDoc.id}.${car.vehicleLicenseFile!.path.split(".").last}");
+                                  car.vehicleLicenseFile!,
+                                  path:
+                                      "vehicleLicense/${carDoc.id}.${car.vehicleLicenseFile!.path.split(".").last}");
                           car.vehicleInsurance = car.vehicleInsuranceFile ==
-                              null
+                                  null
                               ? null
                               : await Functions.uploadFile(
-                              car.vehicleInsuranceFile!,
-                              path:
-                              "vehicleInsurance/${carDoc.id}.${car.vehicleInsuranceFile!.path.split(".").last}");
+                                  car.vehicleInsuranceFile!,
+                                  path:
+                                      "vehicleInsurance/${carDoc.id}.${car.vehicleInsuranceFile!.path.split(".").last}");
                           car.leaseAgreement = car.leaseAgreementFile == null
                               ? null
                               : await Functions.uploadFile(
-                              car.leaseAgreementFile!,
-                              path:
-                              "leaseAgreement/${carDoc.id}.${car.leaseAgreementFile!.path.split(".").last}");
+                                  car.leaseAgreementFile!,
+                                  path:
+                                      "leaseAgreement/${carDoc.id}.${car.leaseAgreementFile!.path.split(".").last}");
 
                           car.id = carDoc.id;
                           car.uid = user.uid;
@@ -216,7 +210,21 @@ class _RegisterPasswordState extends State<RegisterPassword> {
       return true;
     } catch (e) {
       var exception = e as FirebaseAuthException;
-      Functions.showSnackBar(context, exception.message ?? "");
+      print(exception.code);
+      switch (exception.code) {
+        case 'email-already-in-use':
+          Functions.showSnackBar(
+              context, "Uma conta já está registrada com este e-mail");
+          break;
+        case 'invalid-email':
+          Functions.showSnackBar(
+              context, "Seu endereço de e-mail não é válido");
+          break;
+        default:
+          Functions.showSnackBar(
+              context, "Não foi possível inscrever-se. Algo deu errado");
+          break;
+      }
       return false;
     }
   }
