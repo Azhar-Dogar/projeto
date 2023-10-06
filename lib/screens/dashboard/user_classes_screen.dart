@@ -12,7 +12,6 @@ import 'package:projeto/model/user_model.dart';
 import 'package:projeto/provider/dashboard_provider.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/dashboard/home/instructors_screen.dart';
-import 'package:projeto/screens/dashboard/home_screen.dart';
 import 'package:projeto/screens/dashboard/reviews/review_instructor.dart';
 import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:provider/provider.dart';

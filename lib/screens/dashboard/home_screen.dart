@@ -14,7 +14,9 @@ import 'package:projeto/widgets/instructor_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
 import 'package:projeto/widgets/textfield_widget.dart';
 import '../../extras/colors.dart';
+import '../../extras/constants.dart';
 import '../../model/booking_model.dart';
+import '../../model/notification_model.dart';
 import '../../provider/dashboard_provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -258,11 +260,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         InkWell(
           onTap: () {
+            Functions.readNotifications(context);
             context.read<DashboardProvider>().selectedIndex = 3;
           },
           child: Badge(
             smallSize: 10,
-            isLabelVisible: dataProvider.notifications.where((element) => element.isRead).isNotEmpty,
+            isLabelVisible: dataProvider.notifications
+                .where((element) => !element.isRead)
+                .isNotEmpty,
             child: Image(
               image: AssetImage(AppIcons.notification),
               color: CColors.black,

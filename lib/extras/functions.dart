@@ -11,11 +11,13 @@ import 'package:mime/mime.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/model/notification_model.dart';
+import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebasestorage;
 import 'package:firebase_storage/firebase_storage.dart';
 import '../model/booking_model.dart';
 import '../model/user_model.dart';
+import '../provider/data_provider.dart';
 import '../widgets/loading_widget.dart';
 import 'app_textstyles.dart';
 import 'colors.dart';
@@ -202,6 +204,24 @@ class Functions {
     }
 
     return location;
+  }
+
+  static void readNotifications(BuildContext context){
+    List<NotificationModel> notifications = context
+        .read<DataProvider>()
+        .notifications
+        .where((element) => !element.isRead)
+        .toList();
+
+    notifications.forEach((element) {
+      Constants.users
+          .doc(Constants.uid())
+          .collection("notifications")
+          .doc(element.id)
+          .update({
+        "isRead": true,
+      });
+    });
   }
 
 }

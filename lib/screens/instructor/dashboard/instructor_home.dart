@@ -257,12 +257,17 @@ class _InstructorHomeState extends State<InstructorHome> {
         )),
         InkWell(
           onTap: () {
+            Functions.readNotifications(context);
             context.read<DashboardProvider>().selectedIndex = 3;
           },
-          child: Image(
-            image: AssetImage(AppIcons.notification),
-            color: CColors.black,
-            width: 30,
+          child: Badge(
+            smallSize: 10,
+            isLabelVisible: dataProvider.notifications.where((element) => !element.isRead).isNotEmpty,
+            child: Image(
+              image: AssetImage(AppIcons.notification),
+              color: CColors.black,
+              width: 30,
+            ),
           ),
         )
       ],

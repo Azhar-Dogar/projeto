@@ -69,6 +69,8 @@ class _AvailabilityState extends State<Availability> {
                         .doc((Constants.days.indexOf(availability.day) + 1)
                             .toString())
                         .update(availability.toMap());
+                    Functions.showSnackBar(
+                        context, "disponibilidade salva com sucesso");
                     // }
                     // else{
                     //   names += "${availability.day}, ";

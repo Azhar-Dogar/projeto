@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:projeto/extras/functions.dart';
 import 'package:projeto/screens/instructor/dashboard/instructor_home.dart';
 import 'package:projeto/screens/instructor/dashboard/instructor_profile_screen.dart';
 import 'package:projeto/screens/instructor/dashboard/schedule.dart';
 import 'package:provider/provider.dart';
 import '../../extras/app_assets.dart';
 import '../../extras/colors.dart';
+import '../../extras/constants.dart';
+import '../../model/notification_model.dart';
 import '../../provider/dashboard_provider.dart';
+import '../../provider/data_provider.dart';
 import '../../widgets/custom_asset_image.dart';
 import '../dashboard/chat_screen.dart';
 import '../dashboard/notification_screen.dart';
@@ -144,6 +148,14 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
               dashboardProvider.selectedIndex = value;
               _controller.jumpToTab(dashboardProvider.selectedIndex);
               setState(() {});
+
+
+              if (dashboardProvider.selectedIndex == 3) {
+
+                Functions.readNotifications(context);
+
+              }
+
             },
           ),
           itemCount: 5,

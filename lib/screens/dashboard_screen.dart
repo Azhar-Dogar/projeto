@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:projeto/extras/app_assets.dart';
+import 'package:projeto/extras/functions.dart';
+import 'package:projeto/model/notification_model.dart';
 import 'package:projeto/provider/dashboard_provider.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/dashboard/chat_screen.dart';
@@ -12,6 +14,7 @@ import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:provider/provider.dart';
 
 import '../extras/colors.dart';
+import '../extras/constants.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({Key? key}) : super(key: key);
@@ -139,6 +142,9 @@ class _DashBoardState extends State<DashBoard> {
                 dashboardProvider.selectedIndex = value;
                 _controller.jumpToTab(dashboardProvider.selectedIndex);
                 setState(() {});
+                if (dashboardProvider.selectedIndex == 3) {
+                  Functions.readNotifications(context);
+                }
               },
             ),
           ),

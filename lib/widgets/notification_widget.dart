@@ -26,10 +26,6 @@ class NotificationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    if(!notification.isRead){
-
-    }
     bool isBooking = false;
     String path = "";
     switch (notification.type) {
@@ -44,6 +40,9 @@ class NotificationWidget extends StatelessWidget {
         break;
       case "booking":
         isBooking = true;
+        path = AppIcons.calendar;
+        break;
+      case "bookingStatus":
         path = AppIcons.calendar;
         break;
     }
@@ -69,6 +68,7 @@ class NotificationWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 8, right: 8),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomAssetImage(
                   path: path,
@@ -76,28 +76,30 @@ class NotificationWidget extends StatelessWidget {
                   color: Colors.black,
                 ),
                 const MarginWidget(isHorizontal: true),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      notification.text,
-                      style: AppTextStyles.captionRegular(),
-                    ),
-                    const MarginWidget(factor: 0.5),
-                    Timeago(
-                      builder: (_, value) {
-                        return Text(
-                          value,
-                          style: AppTextStyles.subTitleRegular(
-                              color: CColors.textFieldBorder),
-                        );
-                      },
-                      date: DateTime.fromMillisecondsSinceEpoch(
-                          notification.time),
-                      locale: "pt",
-                      allowFromNow: true,
-                    ),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        notification.text,
+                        style: AppTextStyles.captionRegular(),
+                      ),
+                      const MarginWidget(factor: 0.5),
+                      Timeago(
+                        builder: (_, value) {
+                          return Text(
+                            value,
+                            style: AppTextStyles.subTitleRegular(
+                                color: CColors.textFieldBorder),
+                          );
+                        },
+                        date: DateTime.fromMillisecondsSinceEpoch(
+                            notification.time),
+                        locale: "pt",
+                        allowFromNow: true,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -164,6 +166,20 @@ class NotificationWidget extends StatelessWidget {
                       Constants.bookings.doc(bookingModel.id).update({
                         "status": "denied",
                       });
+
+                      UserModel? user = context.read<DataProvider>().userModel;
+
+                      Functions.sendNotification(
+                        NotificationModel(
+                            metaData: bookingModel.toMap(),
+                            text:
+                                "${user?.name ?? ""} O instrutor rejeitou a solicitação da aula ${bookingModel.date.toString()}",
+                            type: "bookingStatus",
+                            time: DateTime.now().millisecondsSinceEpoch,
+                            isRead: false),
+                        bookingModel.userID,
+                      );
+
                       context.pop();
                     } on FirebaseException catch (e) {
                       print(e);
@@ -188,6 +204,21 @@ class NotificationWidget extends StatelessWidget {
                           Constants.bookings.doc(bookingModel.id).update({
                             "status": "confirmed",
                           });
+
+                          UserModel? user =
+                              context.read<DataProvider>().userModel;
+
+                          Functions.sendNotification(
+                            NotificationModel(
+                                metaData: bookingModel.toMap(),
+                                text:
+                                    "${user?.name ?? ""} O instrutor aceitou a solicitação da aula ${bookingModel.date.toString()}",
+                                type: "bookingStatus",
+                                time: DateTime.now().millisecondsSinceEpoch,
+                                isRead: false),
+                            bookingModel.userID,
+                          );
+
                           context.pop();
                         } on FirebaseException catch (e) {
                           print(e);

@@ -41,20 +41,6 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
     super.initState();
 
     print(dateTime);
-
-    dateList = [];
-
-    if (widget.rebuild) {
-      dateTime = widget.selectedDate.subtract(Duration(days: 15));
-    }
-
-    for (int i = 0; i < 30; i++) {
-      dateList.add(dateTime.add(Duration(days: i)));
-    }
-
-    scrollToIndex = dateList.length ~/ 2;
-
-    navigate();
   }
 
   navigate() {
@@ -71,6 +57,20 @@ class _WeekCalendarWidgetState extends State<WeekCalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    dateList = [];
+
+    if (widget.rebuild) {
+      dateTime = widget.selectedDate.subtract(Duration(days: 15));
+    }
+
+    for (int i = 0; i < 30; i++) {
+      dateList.add(dateTime.add(Duration(days: i)));
+    }
+
+    scrollToIndex = dateList.length ~/ 2;
+
+    navigate();
+
     return IntrinsicHeight(
       child: Container(
         height: 84,

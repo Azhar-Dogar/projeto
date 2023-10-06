@@ -37,6 +37,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
     selectedValue = widget.selectedValue;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -54,10 +55,12 @@ class _DropDownWidgetState extends State<DropDownWidget> {
             ),
           );
         }).toList(),
-        onChanged: !widget.isEdit ? null : (String? newValue) {
-          selectedValue = newValue;
-          widget.onSelect(newValue!);
-        },
+        onChanged: !widget.isEdit
+            ? null
+            : (String? newValue) {
+                selectedValue = newValue;
+                widget.onSelect(newValue!);
+              },
         style: AppTextStyles.sanFransiscoDisplay(
             fontSize: (widget.fontSize != null) ? widget.fontSize : 14,
             fontWeight: FontWeight.normal,

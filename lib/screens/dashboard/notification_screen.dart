@@ -1,20 +1,12 @@
 import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto/extras/app_assets.dart';
-import 'package:projeto/extras/app_textstyles.dart';
-import 'package:projeto/extras/colors.dart';
 import 'package:projeto/model/notification_model.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/widgets/notification_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
-import 'package:projeto/widgets/button_widget.dart';
-import 'package:projeto/widgets/custom_asset_image.dart';
 import 'package:projeto/widgets/divider_widget.dart';
-import 'package:projeto/widgets/margin_widget.dart';
-
 import '../../model/booking_model.dart';
 import '../../widgets/c_profile_app_bar.dart';
 
