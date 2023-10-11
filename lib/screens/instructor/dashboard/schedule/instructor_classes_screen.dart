@@ -139,6 +139,12 @@ class _InstructorClassesScreenState extends State<InstructorClassesScreen> {
             yearSelected = year;
           } else {
             monthSelected = month!;
+            setState(() {
+              selectedDate = DateTime(yearSelected!, monthSelected! + 1, 1);
+              _selectedIndex = 1;
+              yearSelected = null;
+              monthSelected = null;
+            });
           }
         });
       },

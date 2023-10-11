@@ -10,7 +10,6 @@ import 'package:projeto/provider/data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
 import 'package:utility_extensions/extensions/context_extensions.dart';
-
 import '../extras/app_assets.dart';
 import '../extras/app_textstyles.dart';
 import '../extras/colors.dart';
