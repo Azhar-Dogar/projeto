@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
+import '../../../dialogs/no_instructor_dialog.dart';
 import '../../../extras/app_textstyles.dart';
 import '../../../extras/colors.dart';
 import '../../../extras/constants.dart';
@@ -74,14 +75,10 @@ class _SearchInstructorState extends State<SearchInstructor> {
   addMarkers() async {
     _markers = {};
 
-    print(latitude);
     for (var location in dataProvider.instructorsLocation) {
 
       var distance = Geolocator.distanceBetween(latitude ?? dataProvider.latitude!,
           longitude ?? dataProvider.longitude!, location["latitude"], location["longitude"]);
-
-      print(distance);
-
       if (this.distance == "2 km") {
         if (distance <= 2000) {
           _markers.add(await _addCustomMarker(
@@ -101,7 +98,14 @@ class _SearchInstructorState extends State<SearchInstructor> {
     }
 
     Future.delayed(Duration(milliseconds: 10),(){
-      setState(() {});
+
+      if(_markers.isEmpty){
+        print("object");
+        showDialog(context: context, builder: (_)=> NoInstructorDialog());
+      }else{
+        setState(() {});
+      }
+
     });
 
   }
