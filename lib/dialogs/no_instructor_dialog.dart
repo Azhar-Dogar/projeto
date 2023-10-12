@@ -42,8 +42,9 @@ class NoInstructorDialog extends StatelessWidget {
                     height: 20,
                   ),
                   TextButton(
-                    onPressed: () {
-                      context.pop();
+                    onPressed: () async {
+                      context.pop(data: true);
+
                       // context.pop(rootNavigator: true);
 
                     },

@@ -52,6 +52,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
   String locationName = "Localização atual";
 
 
+  bool canShow = true;
   List<String> users = [];
   Future<Marker> _addCustomMarker(
       double latitude, double longitude, String userId) async {
@@ -103,9 +104,19 @@ class _SearchInstructorState extends State<SearchInstructor> {
     }
 
     Future.delayed(Duration(milliseconds: 10), () async {
-      if (_markers.isEmpty) {
+      if (_markers.isEmpty && dataProvider.instructorsLocation.isNotEmpty) {
         await Future.delayed(Duration(seconds: 2));
-        showDialog(context: context, builder: (_) => NoInstructorDialog());
+        if(canShow){
+          canShow = false;
+          showDialog(context: context, builder: (_) => NoInstructorDialog()).then((value){
+            if(value != null){
+              // await Future.delayed(Duration(seconds: 1));
+              context.pop();
+              canShow = true;
+            }
+          });
+        }
+
       } else {
 
         var provider = Provider.of<DataProvider>(context, listen: false);
