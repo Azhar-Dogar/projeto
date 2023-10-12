@@ -9,6 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/src/places.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/model/car_model.dart';
+import 'package:projeto/model/notification_model.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/dashboard/home/scheduling.dart';
@@ -50,6 +51,8 @@ class _SearchInstructorState extends State<SearchInstructor> {
 
   String locationName = "Localização atual";
 
+
+  List<String> users = [];
   Future<Marker> _addCustomMarker(
       double latitude, double longitude, String userId) async {
     final Uint8List markIcons = await getImages('assets/icons/car.png', 60);
@@ -70,15 +73,17 @@ class _SearchInstructorState extends State<SearchInstructor> {
 
   late DataProvider dataProvider;
 
-
   double? latitude, longitude;
+
   addMarkers() async {
     _markers = {};
 
     for (var location in dataProvider.instructorsLocation) {
-
-      var distance = Geolocator.distanceBetween(latitude ?? dataProvider.latitude!,
-          longitude ?? dataProvider.longitude!, location["latitude"], location["longitude"]);
+      var distance = Geolocator.distanceBetween(
+          latitude ?? dataProvider.latitude!,
+          longitude ?? dataProvider.longitude!,
+          location["latitude"],
+          location["longitude"]);
       if (this.distance == "2 km") {
         if (distance <= 2000) {
           _markers.add(await _addCustomMarker(
@@ -89,25 +94,36 @@ class _SearchInstructorState extends State<SearchInstructor> {
           _markers.add(await _addCustomMarker(
               location["latitude"], location["longitude"], location["user"]));
         }
-      } else if (this.distance == "10 km"){
+      } else if (this.distance == "10 km") {
         if (distance <= 10000) {
-        _markers.add(await _addCustomMarker(
-            location["latitude"], location["longitude"], location["user"]));
+          _markers.add(await _addCustomMarker(
+              location["latitude"], location["longitude"], location["user"]));
         }
       }
     }
 
-    Future.delayed(Duration(milliseconds: 10),(){
+    Future.delayed(Duration(milliseconds: 10), () async {
+      if (_markers.isEmpty) {
+        await Future.delayed(Duration(seconds: 2));
+        showDialog(context: context, builder: (_) => NoInstructorDialog());
+      } else {
 
-      if(_markers.isEmpty){
-        print("object");
-        showDialog(context: context, builder: (_)=> NoInstructorDialog());
-      }else{
+        var provider = Provider.of<DataProvider>(context, listen: false);
+        for (var marker in _markers) {
+
+          if(!users.contains(marker.markerId.value)){
+            Functions.sendNotification(
+              NotificationModel(
+                  metaData: provider.userModel!.toMapUserCreate(),
+                  text: "${provider.userModel!.name} precisa de aulas próximo a você", type: "search nearby", time: DateTime.now().millisecondsSinceEpoch, isRead: false),
+              marker.markerId.value,
+            );
+            users.add(marker.markerId.value);
+          }
+        }
         setState(() {});
       }
-
     });
-
   }
 
   bool isFirst = true;
@@ -124,7 +140,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
         isFirst = false;
       }
       if (dataProvider.markersUpdate) {
-        print("object");
+        print("idr idr");
         addMarkers();
         dataProvider.markersUpdate = false;
       }
@@ -187,8 +203,8 @@ class _SearchInstructorState extends State<SearchInstructor> {
 
   GoogleMapController? controller;
 
-
   CameraPosition? position;
+
   Widget googleMap() {
     return GoogleMap(
       zoomControlsEnabled: false,
@@ -205,10 +221,11 @@ class _SearchInstructorState extends State<SearchInstructor> {
         print("move");
       },
       onCameraIdle: () async {
-        if(position == null) return;
+        if (position == null) return;
         double latitude = position!.target.latitude;
         double longitude = position!.target.longitude;
-        locationName = await Functions.getAddressFromLatLng(latitude, longitude);
+        locationName =
+            await Functions.getAddressFromLatLng(latitude, longitude);
         setState(() {});
         print("stop");
       },
@@ -278,20 +295,19 @@ class _SearchInstructorState extends State<SearchInstructor> {
                         "${carModel!.vehicle}, ${carModel.year}",
                         style: AppTextStyles.subTitleRegular(),
                       ),
-                      Builder(
-                        builder: (context) {
-                          String value;
-                          if (instructor.amount!.contains(",")) {
-                            value = instructor.amount!;
-                          }  else{
-                            value = "${double.parse(instructor.amount!).toInt()},00";
-                          }
-                          return Text(
-                            "R\$ ${value}",
-                            style: AppTextStyles.subTitleRegular(),
-                          );
+                      Builder(builder: (context) {
+                        String value;
+                        if (instructor.amount!.contains(",")) {
+                          value = instructor.amount!;
+                        } else {
+                          value =
+                              "${double.parse(instructor.amount!).toInt()},00";
                         }
-                      )
+                        return Text(
+                          "R\$ ${value}",
+                          style: AppTextStyles.subTitleRegular(),
+                        );
+                      })
                     ],
                   ),
                 ),
@@ -325,7 +341,8 @@ class _SearchInstructorState extends State<SearchInstructor> {
     );
   }
 
-  var mapKey= "AIzaSyCNNmfTGsBatXy77JEAcjxuHCR2WSxVhvg";
+  var mapKey = "AIzaSyCNNmfTGsBatXy77JEAcjxuHCR2WSxVhvg";
+
   Widget currentLocation() {
     return InkWell(
       onTap: () async {
@@ -486,7 +503,6 @@ class _SearchInstructorState extends State<SearchInstructor> {
     );
   }
 
-
   Future<void> displayPrediction(Prediction? p) async {
     if (p != null) {
       GoogleMapsPlaces _places = GoogleMapsPlaces(
@@ -495,9 +511,8 @@ class _SearchInstructorState extends State<SearchInstructor> {
       );
 
       PlacesDetailsResponse detail =
-      await _places.getDetailsByPlaceId(p.placeId!);
+          await _places.getDetailsByPlaceId(p.placeId!);
       var element = detail.result;
-
 
       final lat = detail.result.geometry!.location.lat;
       final lng = detail.result.geometry!.location.lng;
@@ -505,13 +520,12 @@ class _SearchInstructorState extends State<SearchInstructor> {
       latitude = lat;
       longitude = lng;
       addMarkers();
+
       var position = LatLng(lat, lng);
       // latLng = position;
       if (controller != null) {
         controller!.animateCamera(CameraUpdate.newLatLngZoom(position, 13));
-
       }
     }
   }
-
 }

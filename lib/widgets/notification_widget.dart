@@ -7,12 +7,15 @@ import 'package:projeto/model/booking_model.dart';
 import 'package:projeto/model/notification_model.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:projeto/provider/data_provider.dart';
+import 'package:projeto/screens/dashboard/chat_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
 import 'package:utility_extensions/extensions/context_extensions.dart';
 import '../extras/app_assets.dart';
 import '../extras/app_textstyles.dart';
 import '../extras/colors.dart';
+import '../provider/chat_provider.dart';
+import '../screens/dashboard/chat/chat_inbox.dart';
 import 'button_widget.dart';
 import 'custom_asset_image.dart';
 import 'margin_widget.dart';
@@ -44,6 +47,11 @@ class NotificationWidget extends StatelessWidget {
       case "bookingStatus":
         path = AppIcons.calendar;
         break;
+      case "search nearby":
+        path = AppIcons.user;
+        break;
+      default:
+        break;
     }
     return InkWell(
       onTap: isBooking
@@ -60,7 +68,17 @@ class NotificationWidget extends StatelessWidget {
                     });
               }
             }
-          : null,
+          : notification.type == "search nearby"
+              ? () {
+        var value = Provider.of<DataProvider>(context, listen: false);
+        context.push(child: ChangeNotifierProvider(
+          create: (_) => ChatProvider(
+              sender: value.userModel!, receiver: UserModel.fromMap(notification.metaData!)),
+          child: InboxScreen(),
+        ));
+
+                }
+              : null,
       child: Column(
         children: [
           const MarginWidget(),
