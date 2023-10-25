@@ -35,12 +35,16 @@ class UserModel {
   //bank
   String? bank;
   String? agency;
+  String? credential;
   String? account;
+  String? credentialDocument;
+
 
   late bool isUser;
 
   //local data
   File? licenseDocumentFile;
+  File? credentialDocumentFile;
 
   //rate
   String? amount;
@@ -63,9 +67,12 @@ class UserModel {
     this.account,
     this.amount,
     this.credits,
+    this.credential,
+
   });
 
   UserModel.fromMap(Map<String, dynamic> data) {
+
     uid = data["uid"];
     name = data["name"];
     email = data["email"];
@@ -81,6 +88,8 @@ class UserModel {
     number = data["number"];
     complement = data["complement"];
 
+    credentialDocument = data["credentialDocument"];
+
     credits = data["credits"]?.toDouble() ?? 0;
 
     isUser = data["isUser"];
@@ -89,6 +98,7 @@ class UserModel {
     agency = data["agency"];
     account = data["account"];
     amount = data["amount"];
+    credential = data["credential"];
 
     List cardsList = data["cardsList"] ?? [];
     this.cardsList = cardsList.map((e) => CardModel.fromMap(e)).toList();
@@ -114,6 +124,8 @@ class UserModel {
       "number": number,
       "complement": complement,
       "bank": bank,
+      "credentialDocument": credentialDocument,
+      "credential": credential,
       "agency": agency,
       "account": account,
       "amount": amount,
@@ -157,6 +169,8 @@ class UserModel {
       "number": number,
       "complement": complement,
       "bank": bank,
+      "credentialDocument": credentialDocument,
+      "credential": credential,
       "agency": agency,
       "account": account,
       "amount": amount,

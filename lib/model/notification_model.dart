@@ -4,8 +4,8 @@ class NotificationModel {
   late String type;
   late int time;
   Map<String, dynamic>? metaData;
-
   late bool isRead;
+
   NotificationModel(
       {required this.text,
       required this.type,

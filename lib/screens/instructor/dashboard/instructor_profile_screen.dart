@@ -317,10 +317,15 @@ class _ProfileFormState extends State<ProfileForm> {
 
   //rate
   TextEditingController amount = TextEditingController();
+
+  TextEditingController credential = TextEditingController();
+
   bool bankExist = true;
 
   setData() {
     var user = provider.userModel!;
+
+    print(user.credential);
     name.text = user.name;
     email.text = user.email;
     phone.text = user.phone;
@@ -334,6 +339,7 @@ class _ProfileFormState extends State<ProfileForm> {
     number.text = user.number;
     complement.text = user.complement;
 
+    credential.text = user.credential ?? "";
     bank.text = user.bank ?? "";
     if (user.bank!.isNotEmpty && !Constants.banksInPortugal.contains(bank.text)) {
       bankExist = false;
@@ -351,6 +357,7 @@ class _ProfileFormState extends State<ProfileForm> {
 
   @override
   Widget build(BuildContext context) {
+
     return Consumer<DataProvider>(builder: (context, value, child) {
       provider = value;
       if (!isSet) {
@@ -451,6 +458,29 @@ class _ProfileFormState extends State<ProfileForm> {
           ),
           const MarginWidget(),
           Text(
+            "Crdential",
+            style: AppTextStyles.titleMedium(),
+          ),
+          const MarginWidget(),
+          TextFieldWidget(
+              label: "Credential", controller: credential, enabled: widget.isEdit),
+          const MarginWidget(),
+          Row(
+            children: [
+              CustomAssetImage(
+                path: AppIcons.timer,
+                height: 24,
+              ),
+              const MarginWidget(isHorizontal: true),
+              Text(
+                "Crdential em análise",
+                style: AppTextStyles.captionMedium(color: CColors.primary),
+              ),
+            ],
+          ),
+          const MarginWidget(),
+
+          Text(
             "Valor por aula",
             style: AppTextStyles.titleMedium(),
           ),
@@ -506,6 +536,7 @@ class _ProfileFormState extends State<ProfileForm> {
                     agency: agency.text,
                     account: account.text,
                     amount: amount.text,
+                    credential: credential.text
                   );
 
                   Constants.users.doc(Constants.uid()).update(

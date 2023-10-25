@@ -196,33 +196,34 @@ class NotificationWidget extends StatelessWidget {
                 factor: 2,
               ),
               Expanded(
-                  child: ButtonWidget(
-                      name: "Aceitar",
-                      onPressed: () {
-                        try {
-                          Constants.bookings.doc(bookingModel.id).update({
-                            "status": "confirmed",
-                          });
+                child: ButtonWidget(
+                  name: "Aceitar",
+                  onPressed: () {
+                    try {
+                      Constants.bookings.doc(bookingModel.id).update({
+                        "status": "confirmed",
+                      });
 
-                          UserModel? user =
-                              context.read<DataProvider>().userModel;
+                      UserModel? user = context.read<DataProvider>().userModel;
 
-                          Functions.sendNotification(
-                            NotificationModel(
-                                metaData: bookingModel.toMap(),
-                                text:
-                                    "${user?.name ?? ""} O instrutor aceitou a solicitação da aula ${bookingModel.date.toString()}",
-                                type: "bookingStatus",
-                                time: DateTime.now().millisecondsSinceEpoch,
-                                isRead: false),
-                            bookingModel.userID,
-                          );
+                      Functions.sendNotification(
+                        NotificationModel(
+                            metaData: bookingModel.toMap(),
+                            text:
+                                "${user?.name ?? ""} O instrutor aceitou a solicitação da aula ${bookingModel.date.toString()}",
+                            type: "bookingStatus",
+                            time: DateTime.now().millisecondsSinceEpoch,
+                            isRead: false),
+                        bookingModel.userID,
+                      );
 
-                          context.pop();
-                        } on FirebaseException catch (e) {
-                          print(e);
-                        }
-                      }))
+                      context.pop();
+                    } on FirebaseException catch (e) {
+                      print(e);
+                    }
+                  },
+                ),
+              )
             ],
           )
         ],

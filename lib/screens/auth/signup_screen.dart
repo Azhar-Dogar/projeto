@@ -34,6 +34,7 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController rgController = TextEditingController();
   TextEditingController drivingLicenceNumber = TextEditingController();
   TextEditingController drivingLicenceCategory = TextEditingController();
+  TextEditingController credential = TextEditingController();
 
   TextEditingController zipCode = TextEditingController();
   TextEditingController road = TextEditingController();
@@ -57,6 +58,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   File? licenseDocument;
   File? vehiclePhoto;
+  File? credentialPhoto;
   File? vehicleDocument;
   File? vehicleLicense;
   File? vehicleInsurance;
@@ -225,6 +227,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         year,
                         vehicle,
                         amount,
+                        credential
                       ])) {
                         if (!email.text.isValidEmail) {
                           Functions.showSnackBar(context,
@@ -233,7 +236,8 @@ class _SignupScreenState extends State<SignupScreen> {
                             vehiclePhoto == null ||
                             vehicleDocument == null ||
                             vehicleLicense == null ||
-                            vehicleInsurance == null) {
+                            vehicleInsurance == null ||
+                            credentialPhoto == null) {
                           Functions.showSnackBar(
                               context, "Anexe todos os documentos necessários");
                         } else if ((carType == "rented" &&
@@ -476,6 +480,33 @@ class _SignupScreenState extends State<SignupScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        CustomText(
+          text: "Credential",
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+        const MarginWidget(),
+        TextFieldWidget(
+            borderColor: CColors.textFieldBorder,
+            backColor: Colors.transparent,
+            label: "Nº Credential",
+            controller: credential,
+            hint: ''),
+        const MarginWidget(factor: 2),
+        documentWidget(
+          image: credentialPhoto == null
+              ? Icons.file_upload_outlined
+              : Icons.access_time_outlined,
+          text: credentialPhoto == null
+              ? "Foto do Credential"
+              : "Foto enviada para aprovação",
+          onTap: (file) {
+            setState(() {
+              credentialPhoto = file;
+            });
+          },
+        ),
+        const MarginWidget(factor: 2),
         CustomText(
           text: "Seu Veículo",
           fontSize: 16,
@@ -738,12 +769,14 @@ class _SignupScreenState extends State<SignupScreen> {
       complement: complement.text,
       isUser: isUser,
       bank: isUser ? null : bank.text,
+      credential: isUser? null : credential.text,
       agency: isUser ? null : agency.text,
       account: isUser ? null : account.text,
       amount: isUser ? null : amount.text,
     );
 
     model.licenseDocumentFile = licenseDocument;
+    model.credentialDocumentFile = credentialPhoto;
 
     CarModel? car;
 

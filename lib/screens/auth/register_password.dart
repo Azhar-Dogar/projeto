@@ -139,11 +139,16 @@ class _RegisterPasswordState extends State<RegisterPassword> {
                             path:
                                 "licenseDocument/${Constants.uid()}.${user.licenseDocumentFile!.path.split(".").last}");
                         user.licenseDocument = imageDocumentLink;
+                        user.credentialDocument = user.credentialDocumentFile == null ? null : await Functions.uploadFile(
+                            user.licenseDocumentFile!,
+                            path:
+                            "credentialPhoto/${Constants.uid()}.${user.credentialDocumentFile!.path.split(".").last}");
 
                         user.uid = Constants.uid();
                         Constants.users.doc(Constants.uid()).set(user.isUser
                             ? user.toMapUserCreate()
                             : user.toMapInstructorCreate());
+
 
                         if (widget.car != null) {
                           var car = widget.car!;
