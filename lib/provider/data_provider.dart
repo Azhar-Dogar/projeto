@@ -314,18 +314,16 @@ class DataProvider with ChangeNotifier {
       instructorsLocation = [];
       for (var child in children) {
         var c = child.value as Map<Object?, Object?>;
-        var distance = Geolocator.distanceBetween(_latitude!, _longitude!,
-            c["latitude"] as double, c["longitude"] as double);
-        if (distance < 10000 || true) {
-          var user = users.where((element) => element.uid == child.key);
-          if (user.isNotEmpty) {
-            nearbyInstructors.add(user.first);
-            instructorsLocation.add({
-              "user": child.key,
-              "latitude": c["latitude"],
-              "longitude": c["longitude"],
-            });
-          }
+
+
+        var user = users.where((element) => element.uid == child.key);
+        if (user.isNotEmpty) {
+          nearbyInstructors.add(user.first);
+          instructorsLocation.add({
+            "user": child.key,
+            "latitude": c["latitude"],
+            "longitude": c["longitude"],
+          });
         }
       }
       markersUpdate = true;

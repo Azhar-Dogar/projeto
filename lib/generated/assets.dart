@@ -33,6 +33,7 @@ class Assets {
   static const String iconsDollar = 'assets/icons/dollar.png';
   static const String iconsEdit = 'assets/icons/edit.png';
   static const String iconsHome = 'assets/icons/home.png';
+  static const String iconsInfoPopup = 'assets/icons/infoPopup.png';
   static const String iconsMasterCard = 'assets/icons/masterCard.png';
   static const String iconsMessage = 'assets/icons/message.png';
   static const String iconsNotification = 'assets/icons/notification.png';
@@ -56,6 +57,6 @@ class Assets {
   static const String imagesPlaceHolder = 'assets/images/placeHolder.png';
   static const String imagesProfile = 'assets/images/profile.png';
   static const String imagesSplashImage = 'assets/images/splash_image.png';
-  static const String jsonIndustries = 'assets/json/brands.json';
+  static const String jsonBrands = 'assets/json/brands.json';
 
 }

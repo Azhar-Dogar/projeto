@@ -3,10 +3,13 @@ import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/src/places.dart';
 import 'package:projeto/extras/app_assets.dart';
 import 'package:projeto/model/car_model.dart';
+import 'package:projeto/model/notification_model.dart';
 import 'package:projeto/model/user_model.dart';
 import 'package:projeto/provider/data_provider.dart';
 import 'package:projeto/screens/dashboard/home/scheduling.dart';
@@ -15,12 +18,16 @@ import 'package:provider/provider.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 import 'package:projeto/widgets/button_widget.dart';
 import 'package:projeto/widgets/margin_widget.dart';
+import '../../../dialogs/no_instructor_dialog.dart';
 import '../../../extras/app_textstyles.dart';
 import '../../../extras/colors.dart';
+import '../../../extras/constants.dart';
 import '../../../extras/functions.dart';
 import '../../../provider/chat_provider.dart';
 import '../../../widgets/c_profile_app_bar.dart';
 import '../chat/chat_inbox.dart';
+import 'package:google_geocoding/google_geocoding.dart' as gc;
+import 'package:google_api_headers/google_api_headers.dart';
 
 class SearchInstructor extends StatefulWidget {
   const SearchInstructor({super.key});
@@ -44,6 +51,9 @@ class _SearchInstructorState extends State<SearchInstructor> {
 
   String locationName = "Localização atual";
 
+
+  bool canShow = true;
+  List<String> users = [];
   Future<Marker> _addCustomMarker(
       double latitude, double longitude, String userId) async {
     final Uint8List markIcons = await getImages('assets/icons/car.png', 60);
@@ -64,14 +74,17 @@ class _SearchInstructorState extends State<SearchInstructor> {
 
   late DataProvider dataProvider;
 
+  double? latitude, longitude;
+
   addMarkers() async {
     _markers = {};
 
     for (var location in dataProvider.instructorsLocation) {
-      var distance = Geolocator.distanceBetween(dataProvider.latitude!,
-          dataProvider.longitude!, location["latitude"], location["longitude"]);
-
-
+      var distance = Geolocator.distanceBetween(
+          latitude ?? dataProvider.latitude!,
+          longitude ?? dataProvider.longitude!,
+          location["latitude"],
+          location["longitude"]);
       if (this.distance == "2 km") {
         if (distance <= 2000) {
           _markers.add(await _addCustomMarker(
@@ -82,16 +95,46 @@ class _SearchInstructorState extends State<SearchInstructor> {
           _markers.add(await _addCustomMarker(
               location["latitude"], location["longitude"], location["user"]));
         }
-      } else {
-        _markers.add(await _addCustomMarker(
-            location["latitude"], location["longitude"], location["user"]));
+      } else if (this.distance == "10 km") {
+        if (distance <= 10000) {
+          _markers.add(await _addCustomMarker(
+              location["latitude"], location["longitude"], location["user"]));
+        }
       }
     }
 
-    Future.delayed(Duration(milliseconds: 10),(){
-      setState(() {});
-    });
+    Future.delayed(Duration(milliseconds: 10), () async {
+      if (_markers.isEmpty && dataProvider.instructorsLocation.isNotEmpty) {
+        await Future.delayed(Duration(seconds: 2));
+        if(canShow){
+          canShow = false;
+          showDialog(context: context, builder: (_) => NoInstructorDialog()).then((value){
+            if(value != null){
+              // await Future.delayed(Duration(seconds: 1));
+              context.pop();
+              canShow = true;
+            }
+          });
+        }
 
+      } else {
+
+        var provider = Provider.of<DataProvider>(context, listen: false);
+        for (var marker in _markers) {
+
+          if(!users.contains(marker.markerId.value)){
+            Functions.sendNotification(
+              NotificationModel(
+                  metaData: provider.userModel!.toMapUserCreate(),
+                  text: "${provider.userModel!.name} precisa de aulas próximo a você", type: "search nearby", time: DateTime.now().millisecondsSinceEpoch, isRead: false),
+              marker.markerId.value,
+            );
+            users.add(marker.markerId.value);
+          }
+        }
+        setState(() {});
+      }
+    });
   }
 
   bool isFirst = true;
@@ -108,7 +151,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
         isFirst = false;
       }
       if (dataProvider.markersUpdate) {
-        print("object");
+        print("idr idr");
         addMarkers();
         dataProvider.markersUpdate = false;
       }
@@ -171,6 +214,8 @@ class _SearchInstructorState extends State<SearchInstructor> {
 
   GoogleMapController? controller;
 
+  CameraPosition? position;
+
   Widget googleMap() {
     return GoogleMap(
       zoomControlsEnabled: false,
@@ -183,11 +228,17 @@ class _SearchInstructorState extends State<SearchInstructor> {
         this.controller = controller;
       },
       onCameraMove: (position) async {
-        double latitude = position.target.latitude;
-        double longitude = position.target.longitude;
+        this.position = position;
+        print("move");
+      },
+      onCameraIdle: () async {
+        if (position == null) return;
+        double latitude = position!.target.latitude;
+        double longitude = position!.target.longitude;
         locationName =
             await Functions.getAddressFromLatLng(latitude, longitude);
         setState(() {});
+        print("stop");
       },
       // myLocationEnabled: true,
       markers: _markers,
@@ -255,20 +306,19 @@ class _SearchInstructorState extends State<SearchInstructor> {
                         "${carModel!.vehicle}, ${carModel.year}",
                         style: AppTextStyles.subTitleRegular(),
                       ),
-                      Builder(
-                        builder: (context) {
-                          String value;
-                          if (instructor.amount!.contains(",")) {
-                            value = instructor.amount!;
-                          }  else{
-                            value = "${double.parse(instructor.amount!).toInt()},00";
-                          }
-                          return Text(
-                            "R\$ ${value}",
-                            style: AppTextStyles.subTitleRegular(),
-                          );
+                      Builder(builder: (context) {
+                        String value;
+                        if (instructor.amount!.contains(",")) {
+                          value = instructor.amount!;
+                        } else {
+                          value =
+                              "${double.parse(instructor.amount!).toInt()},00";
                         }
-                      )
+                        return Text(
+                          "R\$ ${value}",
+                          style: AppTextStyles.subTitleRegular(),
+                        );
+                      })
                     ],
                   ),
                 ),
@@ -302,27 +352,55 @@ class _SearchInstructorState extends State<SearchInstructor> {
     );
   }
 
+  var mapKey = "AIzaSyCNNmfTGsBatXy77JEAcjxuHCR2WSxVhvg";
+
   Widget currentLocation() {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8), color: CColors.white),
-      width: width,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              child: Icon(
-                Icons.location_on_outlined,
-                color: Color(0xffE67676),
+    return InkWell(
+      onTap: () async {
+        Prediction? p = await PlacesAutocomplete.show(
+          context: context,
+          apiKey: mapKey,
+          onError: (error) {},
+          mode: Mode.overlay,
+          language: "en",
+          decoration: InputDecoration(
+            hintText: "Search",
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: const BorderSide(
+                color: Colors.white,
               ),
             ),
-            Text(
-              locationName,
-              style: AppTextStyles.captionRegular(),
-            )
+          ),
+          types: [],
+          strictbounds: false,
+          components: [
+            // Component(Component.country, "pk"),
           ],
+        );
+        displayPrediction(p);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8), color: CColors.white),
+        width: width,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Icon(
+                  Icons.location_on_outlined,
+                  color: Color(0xffE67676),
+                ),
+              ),
+              Text(
+                locationName,
+                style: AppTextStyles.captionRegular(),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -393,6 +471,7 @@ class _SearchInstructorState extends State<SearchInstructor> {
                               onTap: () {
                                 setState(() {
                                   distance = e;
+                                  addMarkers();
                                 });
                                 Navigator.pop(context);
                                 // Future.delayed(Duration(milliseconds: 20),(){
@@ -433,5 +512,31 @@ class _SearchInstructorState extends State<SearchInstructor> {
         if (showInstructor) ...[instructorInfo()]
       ],
     );
+  }
+
+  Future<void> displayPrediction(Prediction? p) async {
+    if (p != null) {
+      GoogleMapsPlaces _places = GoogleMapsPlaces(
+        apiKey: mapKey,
+        apiHeaders: await const GoogleApiHeaders().getHeaders(),
+      );
+
+      PlacesDetailsResponse detail =
+          await _places.getDetailsByPlaceId(p.placeId!);
+      var element = detail.result;
+
+      final lat = detail.result.geometry!.location.lat;
+      final lng = detail.result.geometry!.location.lng;
+
+      latitude = lat;
+      longitude = lng;
+      addMarkers();
+
+      var position = LatLng(lat, lng);
+      // latLng = position;
+      if (controller != null) {
+        controller!.animateCamera(CameraUpdate.newLatLngZoom(position, 13));
+      }
+    }
   }
 }
