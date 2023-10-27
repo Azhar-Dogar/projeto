@@ -5,6 +5,8 @@ import 'package:projeto/screens/auth/login_screen.dart';
 import 'package:projeto/screens/check_data.dart';
 import 'package:utility_extensions/utility_extensions.dart';
 
+import '../generated/assets.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -44,19 +46,10 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: width * 0.14,
-                child: Text(
-                  "Logo",
-                  style: AppTextStyles.poppins(
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w300, fontSize: 28)),
-                ),
+              Image(
+                image: AssetImage(Assets.imagesLogo),
               ),
-              SizedBox(
-                height: height * 0.6,
-              ),
+              SizedBox(height: height * 0.6),
               Padding(
                 padding: const EdgeInsets.only(left: 16.0),
                 child: RichText(
@@ -70,12 +63,13 @@ class _SplashScreenState extends State<SplashScreen> {
                       text: "O controle da ",
                       children: const [
                         TextSpan(
-                            text: "direção ",
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 28,
-                            )),
+                          text: "direção ",
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 28,
+                          ),
+                        ),
                         TextSpan(text: "em suas mãos")
                       ]),
                 ),

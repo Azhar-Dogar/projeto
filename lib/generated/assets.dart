@@ -54,6 +54,7 @@ class Assets {
   static const String imagesInstructor = 'assets/images/instructor.png';
   static const String imagesInstructor1 = 'assets/images/instructor_1.png';
   static const String imagesInstructor2 = 'assets/images/instructor_2.png';
+  static const String imagesLogo = 'assets/images/logo.png';
   static const String imagesPlaceHolder = 'assets/images/placeHolder.png';
   static const String imagesProfile = 'assets/images/profile.png';
   static const String imagesSplashImage = 'assets/images/splash_image.png';

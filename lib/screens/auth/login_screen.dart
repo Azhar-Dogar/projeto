@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto/extras/constants.dart';
 import 'package:projeto/extras/functions.dart';
+import 'package:projeto/generated/assets.dart';
 import 'package:projeto/screens/auth/forgot_password.dart';
 import 'package:projeto/screens/auth/signup_screen.dart';
 import 'package:projeto/screens/check_data.dart';
@@ -47,16 +48,20 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: width * 0.14,
-                    child: Text(
-                      "Logo",
-                      style: AppTextStyles.poppins(
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w300, fontSize: 28)),
-                    ),
+                  Image(
+                    image: AssetImage(Assets.imagesLogo),
+
                   ),
+                  // CircleAvatar(
+                  //   backgroundColor: Colors.white,
+                  //   radius: width * 0.14,
+                  //   child: Text(
+                  //     "Logo",
+                  //     style: AppTextStyles.poppins(
+                  //         style: const TextStyle(
+                  //             fontWeight: FontWeight.w300, fontSize: 28)),
+                  //   ),
+                  // ),
                   SizedBox(
                     height: height * 0.3,
                   ),
@@ -65,9 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     factor: 1.5,
                   ),
                   Container(
-                    decoration: BoxDecoration(
-
-                    ),
+                    decoration: BoxDecoration(),
                   ),
                   TextFieldWidget(
                     backColor: Colors.transparent,

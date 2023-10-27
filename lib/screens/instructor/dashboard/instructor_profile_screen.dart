@@ -463,7 +463,7 @@ class _ProfileFormState extends State<ProfileForm> {
           ),
           const MarginWidget(),
           TextFieldWidget(
-              label: "Credential", controller: credential, enabled: widget.isEdit),
+              label: "Nº Credential", controller: credential, enabled: widget.isEdit),
           const MarginWidget(),
           Row(
             children: [
